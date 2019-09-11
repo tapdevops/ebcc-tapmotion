@@ -9,4 +9,4 @@ $ cd ebcc-tapmotion
 
 ### Note
 
-view your .gitignore 
+view .gitignore 
