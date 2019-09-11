@@ -1,0 +1,73 @@
+[2014/03/09 03:57:01] 1
+[2014/03/09 03:57:01] 1
+[2014/03/09 03:57:01] 14
+[2014/03/09 03:57:01] 1
+[2014/03/09 03:57:01] INSERT INTO t_header_rencana_panen
+						(ID_Rencana, Tanggal_Rencana, NIK_Mandor, NIK_KERANI_BUAH, NIK_Pemanen, Status_Gandeng) 
+						VALUES
+						('20140309.861392027809978.41/4122/0712/439', to_date('2014-03-09','YYYY-MM-DD'), '41/4122/0912/1359', '41/4122/0412/401', '41/4122/0712/439', 'YES')
+[2014/03/09 03:57:01] nyampai sini
+[2014/03/09 03:57:01] select count(*) JUMLAH_DATA from t_detail_rencana_panen where id_rencana = '20140309.861392027809978.41/4122/0712/439' and no_rekap_bcc = '14030923501'
+[2014/03/09 03:57:01]  UPDATE T_DETAIL_RENCANA_PANEN SET LUASAN_PANEN = '1.0' WHERE ID_RENCANA = '20140309.861392027809978.41/4122/0712/439' AND NO_REKAP_BCC = '14030923501'
+[2014/03/09 03:57:01] INSERT INTO t_log_rencana_panen 
+			(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_Rencana, On_No_Rekap_BCC, New_Value_ID_BA_Afd_Blok, CreEdit_From, Sync_Server)
+			VALUES
+			('UPDATE', SYSDATE, '41/4122/0412/401', '4122.1.KB1', 't_detail_rencana_panen', '20140309.861392027809978.41/4122/0712/439', '14030923501', '41221235', 'Device', SYSDATE)
+[2014/03/09 03:57:01]  UPDATE T_HEADER_RENCANA_PANEN SET STATUS_GANDENG = 'YES' WHERE ID_RENCANA = '20140309.861392027809978.41/4122/0712/439'
+[2014/03/09 03:57:01] 14030923501111111111
+[2014/03/09 03:57:01] step 1
+[2014/03/09 03:57:01] step 2
+[2014/03/09 03:57:01] select Status_BCC from t_hasil_panen 
+			WHERE No_BCC  = '14030923501111111111' AND ID_RENCANA = '20140309.861392027809978.41/4122/0712/439'
+[2014/03/09 03:57:01] select count(*) JUMLAH_DATA from t_hasil_panen where id_rencana = '20140309.861392027809978.41/4122/0712/439' and No_BCC = '14030923501111111111'
+[2014/03/09 03:57:01] step 4
+[2014/03/09 03:57:01] UPDATE t_hasil_panen 
+					SET Status_BCC = 'DELIVERED', ID_NAB_TGL = '412211111112014-03-09'
+					WHERE No_BCC  = '14030923501111111111' AND ID_RENCANA = '20140309.861392027809978.41/4122/0712/439'
+[2014/03/09 03:57:01] INSERT INTO t_log_hasil_panen 
+				(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_No_BCC, On_Kode_Delivery_Ticket, New_Value_Status_BCC, Old_Value_Status_BCC, CreEdit_From, Sync_Server) 
+				VALUES
+				('UPDATE', SYSDATE, '41/4122/0412/401', '4122.1.KB1', 't_hasil_panen', '14030923501111111111', '11111', 'DELIVERED', 'DELIVERED', 'Device', SYSDATE)
+[2014/03/09 03:57:01] SELECT * FROM t_nab where ID_NAB_Tgl = '412211111112014-03-09'
+[2014/03/09 03:57:01] 0
+[2014/03/09 03:57:01] 1
+[2014/03/09 03:57:01] 2
+[2014/03/09 03:57:01] 3
+[2014/03/09 03:57:01] 4
+[2014/03/09 03:57:01] 5
+[2014/03/09 03:57:01] 6
+[2014/03/09 03:57:01] 7
+[2014/03/09 03:57:01] 8
+[2014/03/09 03:57:01] 9
+[2014/03/09 03:57:01] 10
+[2014/03/09 03:57:01] 11
+[2014/03/09 03:57:01] 12
+[2014/03/09 03:57:01] 13
+[2014/03/09 03:57:01] 14
+[2014/03/09 03:57:01] step 6
+[2014/03/09 03:57:01] step 7
+[2014/03/09 03:57:01] select Status_BCC from t_hasil_panen 
+		WHERE No_BCC  = '' AND ID_RENCANA = '20140309.861392027809978.41/4122/0712/439'
+[2014/03/09 03:57:01] step 8
+[2014/03/09 03:57:01] INSERT INTO t_hasilpanen_kualtas 
+			(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+			VALUES
+			('', '', '', '', '20140309.861392027809978.41/4122/0712/439')
+[2014/03/09 03:57:02] step 9
+[2014/03/09 03:57:02] UPDATE t_hasilpanen_kualtas 
+				SET QTY = ''
+				WHERE ID_BCC_Kualitas  = '' AND ID_RENCANA = '20140309.861392027809978.41/4122/0712/439'
+[2014/03/09 03:57:02] step 10
+[2014/03/09 03:57:02] INSERT INTO t_log_hasilpanen_kualitas 
+			(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+			VALUES
+			('UPDATE', SYSDATE, '41/4122/0412/401', '4122.1.KB1', 't_hasilpanen_kualtas', '', , 'Device', SYSDATE)
+[2014/03/09 03:57:02] select SEQ_DETAIL_GANDENG.nextval as ID_GANDENG from dual
+[2014/03/09 03:57:02] INSERT INTO t_detail_gandeng 
+				(ID_Gandeng, ID_Rencana, NIK_Gandeng) 
+				VALUES
+				('47', '20140309.861392027809978.41/4122/0712/439', '41/4121/0211/373')
+[2014/03/09 03:57:02] INSERT INTO t_log_detail_gandeng (
+					InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_Gandeng, CreEdit_From, Sync_Server) 
+					VALUES
+					('INSERT', SYSDATE , '41/4122/0412/401', '4122.1.KB1', 't_detail_gandeng', '47', 'Device', SYSDATE)

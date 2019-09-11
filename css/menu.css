@@ -1,0 +1,238 @@
+.vertical ul {
+	list-style-type:none;
+	border-top:1px solid;
+	width:184px;
+	padding:0
+}
+.vertical li a {
+	display:block;
+	width:180px;
+	text-decoration:none;
+	height:1em;
+	border:1px solid;
+	border-top:0;
+	padding:.1em 1px
+}
+.vertical li {
+	display:inline
+}
+.vertical li ul {
+	position:absolute;
+	margin-top:-1.3em;
+	margin-left:180px
+}
+.horizontal ul {
+	list-style-type:none;
+	border-left:0px solid;
+	display:inline;
+	height:1.2em;
+	padding:0px;
+}
+.horizontal li {
+	float:left;
+	display:inline;
+}
+.horizontal li a {
+	text-decoration:none;
+	height:1.2em;
+	float:left;
+	display:block;
+	width:135px; /* Edited by Ardo, 08-08-2016 : Export to SAP Menu */
+	border:0px solid;
+	border-left:none;
+	padding:.1em 1px;
+	border-left:1px solid #9f9f9f;
+	text-align:center
+}
+.horizontal li li a {
+	border-top:none;
+	border-left:0px solid #9f9f9f;
+	text-indent:0px;
+	margin-top:0px;
+}
+.horizontal li ul {
+	position:absolute;
+	margin-top:1.45em;
+	margin-left:-1px;
+	width:175px;
+	border:none;
+	display:block;
+	height:auto;
+	border-top:0px
+}
+.horizontal li li ul {
+	position:absolute;
+	margin-top:.1em;
+	margin-left:-85px
+}
+.horizontal li ul li a {
+	width:168px;
+	height:27px;
+	margin-left:10px;
+	margin-top:-2px;
+	background-color:#19521D
+}
+.horizontal li ul li ul li a {
+	width:98px;
+	margin-left:1px;
+	background-color:#19521D
+}
+.inaccesible li ul {
+	display:none
+}
+.arrow a span {
+	padding-left:1em;
+	font-size:90%
+}
+.arrow a:hover span {
+	padding-left:2em
+}
+.arrow a span.noshow {
+	visibility:hidden
+}
+.plus a span {
+	padding-left:.5em
+}
+.blackwhite li a {
+	background-color:#FFF;
+	color:#000;
+	border-color:#000
+}
+.blackwhite li a:hover {
+	background-color:#000;
+	color:#FFF;
+	border-color:#000
+}
+.blackwhite ul {
+	border-color:#000
+}
+.bluewhite li a {
+	background-color:#FFF;
+	color:#003;
+	border-color:#003
+}
+.bluewhite li a:hover {
+	background-color:#003;
+	color:#FFF;
+	border-color:#003
+}
+.bluewhite ul {
+	border-color:#003
+}
+.greenwhite li a {
+	color: white;
+	border-color: #FFF;
+}
+.greenwhite li a:hover {
+	background-color: #FFF;
+	color: green;
+	border-color: #FFF;
+}
+.greenwhite ul {
+	color: #FFF;
+	border-color: #FFF;
+}
+.horizontal la {
+	float:left;
+	display:inline;
+	width:135px; /* Edited by Ardo, 08-08-2016 : Export to SAP Menu */
+}
+.horizontal la a {
+	text-decoration:none;
+	height:1.2em;
+	float:left;
+	display:block;
+	width:135px; /* Edited by Ardo, 08-08-2016 : Export to SAP Menu */
+	border:0px solid;
+	border-left:none;
+	padding:.1em 1px;
+	border-left:1px solid #9f9f9f;
+	text-align:center
+}
+.horizontal la la a {
+	border-top:none;
+	border-left:1px solid;
+	border-left:1px solid #9f9f9f;
+}
+.horizontal la ul {
+	position:absolute;
+	margin-top:1.3em;
+	margin-left:-1px;
+	width:129px;
+	border:none;
+	display:block;
+	height:auto;
+	border-top:1px solid
+}
+.horizontal la la ul {
+	position:absolute;
+	margin-top:.1em;
+	margin-left:125px
+}
+.horizontal la ul la a {
+	width:125px
+}
+.inaccesible la ul {
+	display:none
+}
+.greenwhite la a {
+	color: white;
+	border-color: #FFF;
+}
+.greenwhite la a:hover {
+	background-color: #FFF;
+	color: green;
+	border-color: #FFF;
+}
+.horizontal lo {
+	float:left;
+	display:inline;
+	width:135px; /* Edited by Ardo, 08-08-2016 : Export to SAP Menu */
+}
+.horizontal lo a {
+	text-decoration:none;
+	height:1.2em;
+	float:left;
+	display:block;
+	width:135px; /* Edited by Ardo, 08-08-2016 : Export to SAP Menu */
+	border:0px solid;
+	border-left:none;
+	padding:.1em 0px;
+	border-left:0px solid #9f9f9f;
+	text-align:center
+}
+.horizontal lo lo a {
+	border-top:none;
+	border-left:1px solid;
+	border-left:1px solid #9f9f9f;
+}
+.horizontal lo ul {
+	position:absolute;
+	margin-top:1.3em;
+	margin-left:-1px;
+	width:129px;
+	border:none;
+	display:block;
+	height:auto;
+	border-top:1px solid
+}
+.horizontal lo lo ul {
+	position:absolute;
+	margin-top:.1em;
+	margin-left:125px
+}
+.horizontal lo ul lo a {
+	width:125px
+}
+.inaccesible lo ul {
+	display:none
+}
+.greenwhite lo a {
+	color: white;
+	border-color: #FFF;
+}
+.greenwhite lo a:hover {
+	background-color: #FFF;
+	color: green;
+	border-color: #FFF;
+}

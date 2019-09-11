@@ -1,0 +1,11 @@
+(08.10.2013)
+Database : 
+t_log_nab
+tambah 6 kolom all varchar(10)
+NEW_TYPE_ORDER, OLD_TYPE_ORDER,
+NEW_ID_INTERNAL_ORDER, OLD_ID_INTERNAL_ORDER,
+NEW_NO_POLISI, OLD_NO_POLISI
+Website :
+KoreksiNABSelect.php
+doSubmit.php
+userNoPol.php (autocomplete)

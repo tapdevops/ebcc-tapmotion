@@ -1,0 +1,312 @@
+[2018-03-22 14:29:32] Thu Mar 22 14:29:32
+[2018-03-22 14:29:32] Data : {"LUASAN_PANEN":"1","Comp_Name":"GAWI BAHANDEP SAWIT MEKAR","datepicker":"03\/17\/2018","ID_BAlabel":"4122","Nama_Mandorlabel":"RUDI ANSYAH","NIK_Mandor":"41\/4121\/0411\/591","No_BCClabel":"180316.320.01.007.00057.1","NO_Rekap":"18031632001","AFDlabel":"N","afd_awal":"N","selectblok":"320","blok_awal":"320","selecttph":"007","tph_awal":"007","jarakGEO":"6.6","jarakGEOAwal":"6.6","lat_bcc":"-2.95245525","long_bcc":"112.3410001","lat_tph":"-2.9524409999999999","long_tph":"112.340942","Nama_Pemanen":"AMAR","Afd_Pemanen":"N","NIK_Pemanen":"41\/4121\/0111\/45","OldQty0":"0","ID_BCC_KUALITAS0":"180316320010070005711","ID_Kualitas0":"1","NAMA_KUALITAS0":"a. Mentah","NIK_Pemanen1":"41\/4122\/0111\/273","PARAM":"NULL","ID_RENCANA":"20180316.357884082893245.41\/4122\/0111\/273","NewQty0":"0","OldQty1":"0","ID_BCC_KUALITAS1":"180316320010070005712","ID_Kualitas1":"2","NAMA_KUALITAS1":"b. Mengkal\/Kurang Masak","NewQty1":"0","OldQty2":"8","ID_BCC_KUALITAS2":"180316320010070005713","ID_Kualitas2":"3","NAMA_KUALITAS2":"c. Masak","NewQty2":"8","OldQty3":"0","ID_BCC_KUALITAS3":"180316320010070005714","ID_Kualitas3":"4","NAMA_KUALITAS3":"d. Overripe\/Terlalu Masak","NewQty3":"0","OldQty4":"0","ID_BCC_KUALITAS4":"180316320010070005716","ID_Kualitas4":"6","NAMA_KUALITAS4":"e. Busuk","NewQty4":"0","OldQty5":"0","ID_BCC_KUALITAS5":"1803163200100700057115","ID_Kualitas5":"15","NAMA_KUALITAS5":"f. Janjang Kosong","NewQty5":"0","OldQty6":"0","ID_BCC_KUALITAS6":"1803163200100700057116","ID_Kualitas6":"16","NAMA_KUALITAS6":"g. Buah Aborsi","NewQty6":"0","OldQty7":"0","ID_BCC_KUALITAS7":"180316320010070005715","ID_Kualitas7":"5","NAMA_KUALITAS7":"h. Total Brondolan","NewQty7":"0","OldQty8":"0","ID_BCC_KUALITAS8":"180316320010070005718","ID_Kualitas8":"8","NAMA_KUALITAS8":"a. Parthenocarpic\/Abnormal","NewQty8":"0","OldQty9":"0","ID_BCC_KUALITAS9":"180316320010070005717","ID_Kualitas9":"7","NAMA_KUALITAS9":"b. Buah Masak Tangkai Panjang","NewQty9":"0","OldQty10":"0","ID_BCC_KUALITAS10":"180316320010070005719","ID_Kualitas10":"9","NAMA_KUALITAS10":"c. Dimakan Hama(Tikus\/lainnya)","NewQty10":"0","OldQty11":"0","ID_BCC_KUALITAS11":"1803163200100700057110","ID_Kualitas11":"10","NAMA_KUALITAS11":"Alas Brondolan(TPH)","NewQty11":"0","OldQty12":"0","ID_BCC_KUALITAS12":"1803163200100700057114","ID_Kualitas12":"14","NAMA_KUALITAS12":"Buah Matahari","NewQty12":"0","OldQty13":"0","ID_BCC_KUALITAS13":"1803163200100700057112","ID_Kualitas13":"12","NAMA_KUALITAS13":"Buah Tinggal(Piringan\/Pasar Pikul)","NewQty13":"0","OldQty14":"0","ID_BCC_KUALITAS14":"1803163200100700057111","ID_Kualitas14":"11","NAMA_KUALITAS14":"Buah Tinggal(Pokok)","NewQty14":"0","OldQty15":"0","ID_BCC_KUALITAS15":"1803163200100700057113","ID_Kualitas15":"13","NAMA_KUALITAS15":"Penalti Brondolan(Piringan)","NewQty15":"0","roweffec_BCC":"12","No_BCC":"18031632001007000571","id_bafd_old":"4122N320","button":"SIMPAN"}
+[2018-03-22 14:29:33] Koreksi BCC STEP 1 : SELECT MIN (SYNC_SERVER) SYNC_SERVER, OLD_VALUE_ID_RENCANA
+								FROM ebcc.T_LOG_HASIL_PANEN
+							   WHERE     INSERTUPDATE = 'UPDATE'
+									 AND ON_TABLE = 't_hasil_panen'
+									 AND ON_NO_BCC LIKE '18031632001007000571'
+									 AND OLD_VALUE_ID_RENCANA is not null
+									 AND CREEDIT_FROM = 'Website'
+							GROUP BY OLD_VALUE_ID_RENCANA order by SYNC_SERVER
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 27 : select NIK_PEMANEN,NIK_MANDOR,TANGGAL_RENCANA from T_HEADER_RENCANA_PANEN
+							where ID_RENCANA = '20180316.357884082893245.41/4122/0111/273'
+[2018-03-22 14:29:33] Koreksi BCC STEP 28 : select NIK_KERANI_BUAH from T_HEADER_RENCANA_PANEN where ID_RENCANA LIKE '%20180316.357884082893245.41/4122/0111/273%'
+[2018-03-22 14:29:33] Koreksi BCC STEP 29 : INSERT INTO T_HEADER_RENCANA_PANEN (ID_RENCANA, TANGGAL_RENCANA, NIK_MANDOR, NIK_KERANI_BUAH, NIK_PEMANEN, STATUS_GANDENG)
+										VALUES ('20180317.MANUAL.41/4121/0111/45', to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss'), '41/4121/0411/591', 
+										'41/4122/0111/87', '41/4121/0111/45', 'YES')
+[2018-03-22 14:29:33] Koreksi BCC STEP 31 : INSERT INTO T_DETAIL_GANDENG(ID_GANDENG,ID_RENCANA,NIK_GANDENG) VALUES('','20180317.MANUAL.41/4121/0111/45','-')
+[2018-03-22 14:29:33] Koreksi BCC STEP 40 : SELECT ID_BA_AFD_BLOK FROM T_DETAIL_RENCANA_PANEN
+							WHERE ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+							AND ID_BA_AFD_BLOK = '4122N320'
+							
+[2018-03-22 14:29:33] Koreksi BCC STEP 54 : SELECT NO_REKAP_BCC FROM T_DETAIL_RENCANA_PANEN
+									WHERE ID_RENCANA = ''
+									AND ID_BA_AFD_BLOK = '4122N320'
+									
+[2018-03-22 14:29:33] Koreksi BCC STEP 55 : SELECT *
+									FROM T_DETAIL_RENCANA_PANEN
+									WHERE ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+									AND NO_REKAP_BCC = ''
+									AND ID_BA_AFD_BLOK = '4122N320'
+[2018-03-22 14:29:33] Koreksi BCC STEP 56 : INSERT INTO T_DETAIL_RENCANA_PANEN (ID_BA_AFD_BLOK, NO_REKAP_BCC, ID_RENCANA, LUASAN_PANEN)
+										VALUES ('4122N320', '', '20180317.MANUAL.41/4121/0111/45', '0')
+[2018-03-22 14:29:33] Koreksi BCC STEP 58 : SELECT * FROM T_HASIL_PANEN 
+									WHERE NO_BCC = '18031632001007000571' 
+									AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Koreksi BCC STEP 61 : INSERT INTO T_HASIL_PANEN
+			  (ID_RENCANA, NO_REKAP_BCC, NO_TPH, NO_BCC, KODE_DELIVERY_TICKET, LATITUDE, LONGITUDE, PICTURE_NAME, STATUS_BCC, ID_NAB_TGL, IMAGE_FILE, UPDATE_TIME_CLOB, CETAK_BCC, CETAK_DATE, VALIDASI_BCC, VALIDASI_DATE, STATUS_TPH, STATUS_DETIC, STATUS_LOKASI)
+			SELECT '20180317.MANUAL.41/4121/0111/45', t.NO_REKAP_BCC, '007', t.NO_BCC, t.KODE_DELIVERY_TICKET, t.LATITUDE, t.LONGITUDE, t.PICTURE_NAME, t.STATUS_BCC, t.ID_NAB_TGL, t.IMAGE_FILE, t.UPDATE_TIME_CLOB, t.CETAK_BCC, t.CETAK_DATE, t.VALIDASI_BCC, t.VALIDASI_DATE, t.STATUS_TPH, t.STATUS_DETIC, t.STATUS_LOKASI
+			  FROM T_HASIL_PANEN t
+			 WHERE t.NO_REKAP_BCC = '18031632001' AND t.NO_BCC = '18031632001007000571' AND t.ID_RENCANA = '20180316.357884082893245.41/4122/0111/273'
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005711' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005711', '18031632001007000571', '1', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005711', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005712' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005712', '18031632001007000571', '2', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005712', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005713' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005713', '18031632001007000571', '3', '8', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005713', '8', '8', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005714' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005714', '18031632001007000571', '4', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005714', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005716' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005716', '18031632001007000571', '6', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005716', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057115' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057115', '18031632001007000571', '15', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057115', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057116' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057116', '18031632001007000571', '16', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057116', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005715' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005715', '18031632001007000571', '5', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005715', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005718' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005718', '18031632001007000571', '8', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005718', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005717' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005717', '18031632001007000571', '7', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005717', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '180316320010070005719' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('180316320010070005719', '18031632001007000571', '9', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '180316320010070005719', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057110' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057110', '18031632001007000571', '10', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057110', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057114' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057114', '18031632001007000571', '14', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057114', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057112' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057112', '18031632001007000571', '12', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057112', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057111' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057111', '18031632001007000571', '11', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057111', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null
+[2018-03-22 14:29:33] Koreksi BCC STEP 2 : select ID_RENCANA from T_HEADER_RENCANA_PANEN
+					where NIK_MANDOR = '41/4121/0411/591'
+					and NIK_Pemanen = '41/4121/0111/45' 
+					and TANGGAL_RENCANA = to_date('03-17-2018','mm-dd-yyyy hh24:mi:ss')
+[2018-03-22 14:29:33] Koreksi BCC STEP 66 : select count (*) TTL from T_HASILPANEN_KUALTAS WHERE ID_BCC_Kualitas = '1803163200100700057113' AND ID_BCC = '18031632001007000571' AND ID_RENCANA = '20180317.MANUAL.41/4121/0111/45'
+[2018-03-22 14:29:33] Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] Koreksi BCC STEP 69 : INSERT INTO t_hasilpanen_kualtas 
+						(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+						VALUES
+						('1803163200100700057113', '18031632001007000571', '13', '0', '20180317.MANUAL.41/4121/0111/45')
+[2018-03-22 14:29:33] Koreksi BCC STEP 70 : INSERT INTO t_log_hasilpanen_kualitas 
+						(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, Old_Value_Qty, CreEdit_From, Sync_Server)
+						VALUES
+						('UPDATE', SYSDATE, '4122.ADM', '4122.ADM', 't_hasilpanen_kualtas', '1803163200100700057113', '0', '0', 'Website', SYSDATE)
+[2018-03-22 14:29:33] Total Jumlah Insert : [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[2018-03-22 14:29:33] roweffec_value_log_hasilpanen_kualitas : 1
+[2018-03-22 14:29:33] roweffec_change_data : null

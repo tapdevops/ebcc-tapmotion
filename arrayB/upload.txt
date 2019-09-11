@@ -1,0 +1,8 @@
+open 10.20.1.116
+root
+jangansentuhaku
+bin 
+has 
+cd /var/www/html/tap-motion/ebcc/array/uploads
+mput *.jpg
+bye

@@ -1,0 +1,318 @@
+[2016-08-09 13:28:11] 16080903001STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('16080903001', upper('INPUT PERENCANAAN PANEN'), to_date('2016-08-09 13:23:27','yyyy/mm/dd hh24:mi:ss'), to_date('2016-08-09 13:23:27','yyyy/mm/dd hh24:mi:ss'),'','' )
+[2016-08-09 13:28:11] 16080903001111111111STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('16080903001111111111', upper('INPUT HASIL PANEN'), to_date('2016-08-09 13:24:02','yyyy/mm/dd hh24:mi:ss'), to_date('2016-08-09 13:24:50','yyyy/mm/dd hh24:mi:ss'),'','' )
+[2016-08-09 13:28:11] 16080903002STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('16080903002', upper('INPUT PERENCANAAN PANEN'), to_date('2016-08-09 13:25:19','yyyy/mm/dd hh24:mi:ss'), to_date('2016-08-09 13:25:19','yyyy/mm/dd hh24:mi:ss'),'','' )
+[2016-08-09 13:29:16] Tue Aug 9 13:29:16
+[2016-08-09 13:29:16] 20160809.353012068057452.41/4121/0514/3351STEP 1INSERT INTO t_header_rencana_panen
+						(ID_Rencana, Tanggal_Rencana, NIK_Mandor, NIK_KERANI_BUAH, NIK_Pemanen, Status_Gandeng) 
+						VALUES
+						('20160809.353012068057452.41/4121/0514/3351', to_date('2016-08-09','YYYY-MM-DD'), '41/4121/0811/147', '41/4121/0911/67', '41/4121/0514/3351', 'YES')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 2select count(*) JUMLAH_DATA from t_detail_gandeng where id_rencana = '20160809.353012068057452.41/4121/0514/3351'
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 3select SEQ_DETAIL_GANDENG.nextval as ID_GANDENG from dual
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 4INSERT INTO t_detail_gandeng 
+										(ID_Gandeng, ID_Rencana, NIK_Gandeng) 
+										VALUES
+										('351835', '20160809.353012068057452.41/4121/0514/3351', '-')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 5INSERT INTO t_log_detail_gandeng (
+											InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_Gandeng, CreEdit_From, Sync_Server) 
+											VALUES
+											('INSERT', SYSDATE , '41/4121/0911/67', '4121.A.KB1', 't_detail_gandeng', '351835', 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 6INSERT INTO t_detail_rencana_panen 
+								(ID_BA_Afd_Blok, No_Rekap_BCC, ID_Rencana, Luasan_Panen)
+								VALUES
+								('4121B030', '16080903001', '20160809.353012068057452.41/4121/0514/3351', '2' )
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 7INSERT INTO t_log_rencana_panen 
+								(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_Rencana, On_No_Rekap_BCC, New_Value_ID_BA_Afd_Blok, CreEdit_From, Sync_Server)
+								VALUES
+								('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_detail_rencana_panen', '20160809.353012068057452.41/4121/0514/3351', '16080903001', '4121B030', 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 8INSERT INTO t_hasil_panen 
+											(ID_RENCANA, No_Rekap_BCC, No_TPH, No_BCC, Kode_Delivery_Ticket, Latitude, Longitude, Picture_Name, Status_BCC, ID_NAB_Tgl) 
+											VALUES
+											('20160809.353012068057452.41/4121/0514/3351','16080903001', '111', '16080903001111111111', '11111', 
+											'-6.2284197', '106.8246596', '353012068057452.132423.160809.030.01.00.jpg', 'RESTAN', '0')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 9INSERT INTO t_log_hasil_panen 
+											(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_No_BCC, On_Kode_Delivery_Ticket, New_Value_Status_BCC, CreEdit_From, Sync_Server) 
+											VALUES
+											('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasil_panen', '16080903001111111111', '11111', 'RESTAN', 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 10SELECT * FROM t_nab 
+														where ID_NAB_Tgl = '0' AND No_NAB  = '0' AND Tgl_NAB  = to_date('0', 'YYYY-MM-DD') AND No_Polisi  = '0' AND NIK_Supir  = '0' 
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 11INSERT INTO t_nab 
+															(ID_NAB_Tgl, No_NAB, Tgl_NAB, Tipe_Order, ID_Internal_Order, No_Polisi, NIK_Supir, NIK_Tukang_Muat1, NIK_Tukang_Muat2, NIK_Tukang_Muat3, STATUS_DOWNLOAD)
+															VALUES
+															('0', '0', to_date('0', 'YYYY-MM-DD'),'0', '0', '0', '0', '0', '0', '0', 'N')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 12INSERT INTO t_log_nab 
+															(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_NAB_Tgl, 
+															CreEdit_From, Sync_Server, 
+															New_Supir,  
+															New_Tukang_Muat_1, 
+															New_Tukang_Muat_2,  
+															New_Tukang_Muat_3,  
+															New_Status_Download) 
+															VALUES
+															('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_nab', '0', 'Device', SYSDATE, 
+															'0', 
+															'0', 
+															'0', 
+															'0',
+															'N')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351baim 141
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351baim2 141
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111111', '16080903001111111111', '1', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111111', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111112', '16080903001111111111', '2', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111112', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111113', '16080903001111111111', '3', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111113', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111114', '16080903001111111111', '4', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111114', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111116', '16080903001111111111', '6', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111116', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('1608090300111111111115', '16080903001111111111', '15', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '1608090300111111111115', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('1608090300111111111116', '16080903001111111111', '16', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '1608090300111111111116', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111115', '16080903001111111111', '5', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111115', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111118', '16080903001111111111', '8', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111118', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111117', '16080903001111111111', '7', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111117', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160809030011111111119', '16080903001111111111', '9', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160809030011111111119', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('1608090300111111111110', '16080903001111111111', '10', '1', '20160809.353012068057452.41/4121/0514/3351')
+[2016-08-09 13:29:17] 20160809.353012068057452.41/4121/0514/3351STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '1608090300111111111110', 1, 'Device', SYSDATE)
+[2016-08-09 13:29:17] Tue Aug 9 13:29:17
+[2016-08-09 13:29:18] 20160809.353012068057452.41/4121/0514/3351.160809.030.01STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('20160809.353012068057452.41/4121/0514/3351.160809.030.01', upper('INPUT AKTIVITAS AKHIR PANEN'), to_date('2016-08-09 13:28:33','yyyy/mm/dd hh24:mi:ss'), to_date('2016-08-09 13:28:43','yyyy/mm/dd hh24:mi:ss'),'','' )
+[2016-08-09 13:54:22] Tue Aug 9 13:54:22
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 1INSERT INTO t_header_rencana_panen
+						(ID_Rencana, Tanggal_Rencana, NIK_Mandor, NIK_KERANI_BUAH, NIK_Pemanen, Status_Gandeng) 
+						VALUES
+						('20160401.353012068057452.41/4121/1014/3577', to_date('2016-04-01','YYYY-MM-DD'), '41/4121/1106/585', '41/4121/0911/67', '41/4121/1014/3577', 'YES')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 2select count(*) JUMLAH_DATA from t_detail_gandeng where id_rencana = '20160401.353012068057452.41/4121/1014/3577'
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 3select SEQ_DETAIL_GANDENG.nextval as ID_GANDENG from dual
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 4INSERT INTO t_detail_gandeng 
+										(ID_Gandeng, ID_Rencana, NIK_Gandeng) 
+										VALUES
+										('351836', '20160401.353012068057452.41/4121/1014/3577', '-')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 5INSERT INTO t_log_detail_gandeng (
+											InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_Gandeng, CreEdit_From, Sync_Server) 
+											VALUES
+											('INSERT', SYSDATE , '41/4121/0911/67', '4121.A.KB1', 't_detail_gandeng', '351836', 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 6INSERT INTO t_detail_rencana_panen 
+								(ID_BA_Afd_Blok, No_Rekap_BCC, ID_Rencana, Luasan_Panen)
+								VALUES
+								('4121A001', '16040100101', '20160401.353012068057452.41/4121/1014/3577', '2' )
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 7INSERT INTO t_log_rencana_panen 
+								(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_Rencana, On_No_Rekap_BCC, New_Value_ID_BA_Afd_Blok, CreEdit_From, Sync_Server)
+								VALUES
+								('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_detail_rencana_panen', '20160401.353012068057452.41/4121/1014/3577', '16040100101', '4121A001', 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 8INSERT INTO t_hasil_panen 
+											(ID_RENCANA, No_Rekap_BCC, No_TPH, No_BCC, Kode_Delivery_Ticket, Latitude, Longitude, Picture_Name, Status_BCC, ID_NAB_Tgl) 
+											VALUES
+											('20160401.353012068057452.41/4121/1014/3577','16040100101', '111', '16040100101111111121', '11112', 
+											'-6.2283976', '106.8246365', '353012068057452.135322.160401.001.01.00.jpg', 'RESTAN', '0')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 9INSERT INTO t_log_hasil_panen 
+											(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_No_BCC, On_Kode_Delivery_Ticket, New_Value_Status_BCC, CreEdit_From, Sync_Server) 
+											VALUES
+											('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasil_panen', '16040100101111111121', '11112', 'RESTAN', 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 10SELECT * FROM t_nab 
+														where ID_NAB_Tgl = '0' AND No_NAB  = '0' AND Tgl_NAB  = to_date('0', 'YYYY-MM-DD') AND No_Polisi  = '0' AND NIK_Supir  = '0' 
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 11INSERT INTO t_nab 
+															(ID_NAB_Tgl, No_NAB, Tgl_NAB, Tipe_Order, ID_Internal_Order, No_Polisi, NIK_Supir, NIK_Tukang_Muat1, NIK_Tukang_Muat2, NIK_Tukang_Muat3, STATUS_DOWNLOAD)
+															VALUES
+															('0', '0', to_date('0', 'YYYY-MM-DD'),'0', '0', '0', '0', '0', '0', '0', 'N')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 12INSERT INTO t_log_nab 
+															(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_NAB_Tgl, 
+															CreEdit_From, Sync_Server, 
+															New_Supir,  
+															New_Tukang_Muat_1, 
+															New_Tukang_Muat_2,  
+															New_Tukang_Muat_3,  
+															New_Status_Download) 
+															VALUES
+															('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_nab', '0', 'Device', SYSDATE, 
+															'0', 
+															'0', 
+															'0', 
+															'0',
+															'N')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577baim 141
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577baim2 141
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111211', '16040100101111111121', '1', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111211', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111212', '16040100101111111121', '2', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111212', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111213', '16040100101111111121', '3', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111213', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111214', '16040100101111111121', '4', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111214', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111216', '16040100101111111121', '6', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111216', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('1604010010111111112115', '16040100101111111121', '15', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '1604010010111111112115', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('1604010010111111112116', '16040100101111111121', '16', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '1604010010111111112116', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111215', '16040100101111111121', '5', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111215', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111218', '16040100101111111121', '8', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111218', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111217', '16040100101111111121', '7', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111217', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('160401001011111111219', '16040100101111111121', '9', '1', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '160401001011111111219', 1, 'Device', SYSDATE)
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 13INSERT INTO t_hasilpanen_kualtas 
+										(ID_BCC_Kualitas, ID_BCC, ID_Kualitas, Qty, ID_RENCANA) 
+										VALUES
+										('1604010010111111112110', '16040100101111111121', '10', '0', '20160401.353012068057452.41/4121/1014/3577')
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577STEP 14INSERT INTO t_log_hasilpanen_kualitas 
+										(InsertUpdate, Tgl_CreEdit, NIK_CreEditor, Login_Name_CreEditor, On_Table, On_ID_BCC_Kualitas, New_Value_Qty, CreEdit_From, Sync_Server)
+										VALUES
+										('INSERT', SYSDATE, '41/4121/0911/67', '4121.A.KB1', 't_hasilpanen_kualtas', '1604010010111111112110', 0, 'Device', SYSDATE)
+[2016-08-09 13:54:22] Tue Aug 9 13:54:22
+[2016-08-09 13:54:22] 16040100101STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('16040100101', upper('INPUT PERENCANAAN PANEN'), to_date('2016-04-01 13:52:51','yyyy/mm/dd hh24:mi:ss'), to_date('2016-04-01 13:52:51','yyyy/mm/dd hh24:mi:ss'),'','' )
+[2016-08-09 13:54:22] 16040100101111111121STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('16040100101111111121', upper('INPUT HASIL PANEN'), to_date('2016-04-01 13:53:04','yyyy/mm/dd hh24:mi:ss'), to_date('2016-04-01 13:53:35','yyyy/mm/dd hh24:mi:ss'),'','' )
+[2016-08-09 13:54:22] 20160401.353012068057452.41/4121/1014/3577.160401.001.01STEP NICINSERT INTO t_timestamp	(ID_TIMESTAMP, TYPE_TIMESTAMP, START_INS_TIME, END_INS_TIME, START_UPD_TIME, END_UPD_TIME)
+						VALUES ('20160401.353012068057452.41/4121/1014/3577.160401.001.01', upper('INPUT AKTIVITAS AKHIR PANEN'), to_date('2016-04-01 13:53:39','yyyy/mm/dd hh24:mi:ss'), to_date('2016-04-01 13:53:43','yyyy/mm/dd hh24:mi:ss'),'','' )

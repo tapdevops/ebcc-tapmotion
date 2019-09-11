@@ -1,0 +1,101 @@
+body
+{
+
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+
+table{
+
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+
+.boton {	COLOR: #000000;  background: #6699CC ; FONT: 11px ; valign:"top" ; background:url('button_bg1.gif'); width:99% ;BACKGROUND-REPEAT: repeat-x
+}
+
+A:link {COLOR: #000000; FONT-WEIGHT: bold; FONT-SIZE: 11px; TEXT-DECORATION: none}
+A:visited {COLOR: #000000; FONT-WEIGHT: bold; FONT-SIZE: 11px; TEXT-DECORATION: none}
+A:hover {COLOR: cyan;  FONT-WEIGHT: bold; FONT-SIZE: 11px; TEXT-DECORATION: none}
+A:active {COLOR: yellow;  FONT-WEIGHT: bold; FONT-SIZE: 11px; TEXT-DECORATION: none}
+
+.bg {
+	BACKGROUND-POSITION: center center; BACKGROUND-IMAGE: url(bg.gif); BACKGROUND-REPEAT: repeat-y}
+..drag{position:relative;cursor:hand}
+..drag2{position:relative;cursor:hand}
+body{scrollbar-face-color:#6699CC;
+scrollbar-arrow-color:#BADAEB;
+scrollbar-track-color:#82ABD3;
+scrollbar-shadow-color:#6699CC;
+scrollbar-highlight-color:#6699CC;
+scrollbar-3dlight-color:#BADAEB;
+scrollbar-darkshadow-Color:#BADAEB; }
+b {background:#6699CC ; width:100%; font-size:14; color:#000000 ; background:url('button_bg1.gif');}
+
+option {
+	background: pink  top left;
+	height: 16px;
+width: 16px;
+	padding: 0px 0px 0px 5px;
+	border: 1px solid #999;
+	border-top-width: 0px;
+	margin-top: -1px; 
+    /* Fix for IE -  IE6/Win ignores the following rules */
+    margin-top /**/:0px;
+}
+select
+{
+	background: #82ABD3  top left;
+	height: 16px;
+width: 150px;
+	padding: 0px 0px 0px 5px;
+	border: 1px solid #999;
+	border-top-width: 0px;
+	margin-top: -1px; 
+    /* Fix for IE -  IE6/Win ignores the following rules */
+    margin-top /**/:0px;
+}
+.verticaltext {
+writing-mode: tb-rl;
+filter: flipv fliph;
+}
+h2{color:#000000;background:url('h2.gif'); }
+.negro {  background: #ffffff ; border style:solid ; border-width:1px ; border-color:#806a4b}
+ 
+
+#tablist{
+padding: 1px 0;
+margin-left: 0;
+margin-bottom: 0;
+margin-top: 0.5em;
+font: bold 12px Verdana;
+}
+
+#tablist li{
+list-style: none;
+display: inline;
+margin: 0;
+}
+
+#tablist li a{
+text-decoration: none;
+padding: 0.5px 1em;
+margin-left: 1px;
+border: 2px solid #000000;
+border-bottom: none;
+background: #ffffff;background:url('button_bg1.gif')
+}
+
+#tablist li a:link, #tablist li a:visited{
+color: #000000;
+}
+
+#tablist li a:hover{
+color: #ffffff;
+background: #000000;
+border-color: #cccccc;
+}
+
+#tablist li a.current{
+background: lightyellow;
+}
