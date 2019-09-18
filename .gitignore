@@ -1,3 +1,9 @@
-/qrcode
+/qrcode/print
+/qrcode/dompdfw
+/qrcode/qr_lib
+/qrcode/print_result
+/qrcode/vendor
+/qrcode/print_pdf_result
+/qrcode/qrcode
 /array/logupload
 /array/uploads
