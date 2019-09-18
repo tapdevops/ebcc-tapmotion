@@ -750,14 +750,14 @@ if(isset($_SESSION['Job_Code']) && isset($_SESSION['NIK']) && isset($_SESSION['N
 								</td>
 								<td><input style="width:46px;" maxlength="5" type='text' name='ticket1' id='ticket1' onkeypress="return isNumber(event)" value=''></td>
 								<td><input style="width:58px;" type='text' name='mentah1' id='mentah1' value='0' onblur='onChangeValue(1, this);'></td>
-								<td><input style="width:58px;" type='text' name='mengkal1' id='mengkal1' value='0' onblur='onChangeValue(1, this);'></td>
+								<td><input style="width:58px;" type='text' name='mengkal1' id='mengkal1' value='0' readonly="readonly"></td> <!--onblur='onChangeValue(1, this);' -->
 								<td><input style="width:58px;" type='text' name='masak1' id='masak1' value='0' onblur='onChangeValue(1, this);'></td>
 								<td><input style="width:58px;" type='text' name='toomasak1' id='toomasak1' value='0' onblur='onChangeValue(1, this);'></td>
 								<td><input style="width:58px;" type='text' name='busuk1' id='busuk1' value='0' onblur='onChangeValue(1, this)'></td>
 								<td><input style="width:58px;" type='text' name='jangkos1' id='jangkos1' value='0' onblur='onChangeValue(1, this)'></td>
-								<td><input style="width:58px;" type='text' name='buborsi1' id='buborsi1' value='0' onblur='onChangeValue(1, this);'></td>
+								<td><input style="width:58px;" type='text' name='buborsi1' id='buborsi1' value='0' onblur='onChangeValue(1, this);' ></td>
 								<td><input style="width:58px;" type='text' name='janjang1' id='janjang1' value='0' readonly="readonly"></td>
-								<td><input style="width:58px;" type='text' name='abnormal1' id='abnormal1' value='0' onblur='changeformat(this)'></td>
+								<td><input style="width:58px;" type='text' name='abnormal1' id='abnormal1' value='0' readonly="readonly"></td> <!--onblur='changeformat(this)'-->
 								<td><input style="width:58px;" type='text' name='tangkai_panjang1' id='tangkai_panjang1' value='0' onblur='changeformat(this)'></td>
 								<td><input style="width:58px;" type='text' name='hama1' id='hama1' value='0' onblur='changeformat(this)'></td>
 								<td><input style="width:58px;" maxlength="1" type='text' name='alas1' id='alas1' value='' onkeypress="return isDigit(event)"></td>
@@ -1031,6 +1031,7 @@ if(isset($_SESSION['Job_Code']) && isset($_SESSION['NIK']) && isset($_SESSION['N
 		el.id = 'mengkal' + iteration;
 		el.value = '0';
 		el.style.width='58px';
+		el.readOnly = 'readOnly';
 		el.onblur = function() {
 			var jmlh;
 			document.getElementById('mengkal'+iteration).value = formatCurrency(document.getElementById('mengkal'+iteration).value);
@@ -1188,6 +1189,7 @@ if(isset($_SESSION['Job_Code']) && isset($_SESSION['NIK']) && isset($_SESSION['N
 		el.id = 'abnormal' + iteration;
 		el.value = '0';
 		el.style.width='58px';
+		el.readOnly = 'readOnly';
 		el.onblur = function() {
 			document.getElementById('abnormal'+iteration).value = formatCurrency(document.getElementById('abnormal'+iteration).value);
 		}
