@@ -124,10 +124,11 @@ $Date = $_SESSION['Date'];
 
 <script type="text/javascript">
 $(function() {
-	$('#datepicker2').datepicker({
+	$('#datepicker1,#datepicker2').datepicker({
+		  dateFormat: 'yy-mm-dd',
 		  changeMonth: true,
 		  changeYear: true
-		});
+	});
 });
 function change(x)
 {
@@ -170,7 +171,11 @@ function formSubmit(x)
 {
 	if(x == 1){
 	document.getElementById("doFilter").submit();
-    }
+	}
+	if(x ==0)
+	{
+		document.getElementById("submittanggal1").submit();
+	}
 }
 </script>
 
@@ -206,7 +211,7 @@ body,td,th {
     <th height="197" scope="row" align="center"><table width="937" border="0" id="setbody2">
       <tr>
         <td height="50" colspan="3" align="left" valign="baseline"><span style="font:bold; font-size:20px; font-weight: bold;"><strong>CETAK LHM PANEN</strong></span></td>
-        <td height="50" colspan="3" align="right" valign="baseline"><input type="submit" name="button" id="button" value="CETAK" style="visibility:visible; width:120px; height: 30px" onclick="formSubmit(1)"/></td>
+        <td height="50" colspan="3" align="right" valign="baseline"><input type="submit" name="button" id="button" value="TAMPILKAN" style="visibility:visible; width:120px; height: 30px" onclick="formSubmit(0)"/></td>
       </tr>
       <tr>
         <td height="9" colspan="3" valign="bottom" style="font-size:14px ; border-bottom:solid #000">LOKASI</td>
@@ -220,7 +225,7 @@ body,td,th {
         <td width="75"><p><span>Start Date</span></p></td>
         <td width="6">:</td>
         <td width="301">
-        <input type="text" name="date1" id="datepicker" class="box_field"  onchange="this.form.submit();" value="<?=$sdate1?>" <?php if(isset($_POST["date1"])){ echo "value='$_POST[date1]'"; }?>>
+        <input type="text" name="date1" id="datepicker1" class="box_field" value="<?=$sdate1?>" <?php if(isset($_POST["date1"])){ echo "value='$_POST[date1]'"; }?>>
         </td>
       </tr>
       <tr>
@@ -229,34 +234,33 @@ body,td,th {
         <td><input name="ID_BA2" type="text" id="ID_BA2" value="<?=$subID_BA_Afd?>" style="background-color:#CCC; width:70px; height:25px; font-size:15px" onmousedown="return false"/></td>
         <td ><span>End Date</span></td>
         <td >:</td>
-        <td ><input type="text" name="date2" id="datepicker2" class="box_field" onchange="this.form.submit();" value="<?=$sdate2?>" <?php if(isset($_POST["date2"])){ echo "value='$_POST[date2]'"; }?>>
+        <td ><input type="text" name="date2" id="datepicker2" class="box_field" value="<?=$sdate2?>" <?php if(isset($_POST["date2"])){ echo "value='$_POST[date2]'"; }?>>
         
         </td>
       </tr>
-      </form>
       <tr>
         <td valign="top"> Afdeling</td>
         <td valign="top">:</td>
-        <td valign="top" style="font-size:16px"><form id="form1" name="form1" method="post" action="">
+        <td valign="top" style="font-size:16px">
           <?php
 				//Afdeling
 				
-					
 				if($jumlahAfd > 0 ){
 				//$jumlahRecord = $_SESSION['jumlahAfd'];
-				$selectoAfd = "<select name=\"Afdeling\" id=\"Afdeling\" onchange=\"this.form.submit();\" style=\"visibility:visible; font-size: 15px; height: 25px \">";
-				$optiondefAfd = "<option value=\"ALL\"> ALL </option>";
+				$selectoAfd = "<select name=\"Afdeling\" id=\"Afdeling\" style=\"visibility:visible; font-size: 15px; height: 25px \">";
+				$optiondefAfd = "<option ".($sesAfdeling=='ALL'?'selected':'')." value=\"ALL\"> ALL </option>";
 				echo $selectoAfd.$optionGetAfd.$optiondefAfd;
 				for($xAfd = 0; $xAfd < $jumlahAfd; $xAfd++){
-					echo "<option value=\"$ID_Afd[$xAfd]\">$ID_Afd[$xAfd]</option>"; 
+					echo "<option ".($sesAfdeling==$ID_Afd[$xAfd]?'selected':'')." value=\"$ID_Afd[$xAfd]\">$ID_Afd[$xAfd]</option>"; 
 				}
 				$selectcAfd = "</select>";
 				echo $selectcAfd;
 				}           
 				?>
-        </form></td>
+        </td>
         <td colspan="3" >&nbsp;</td>
       </tr>
+	  </form>
       <tr>
         <td height="28" colspan="8" valign="bottom" style="border-bottom:solid #000">&nbsp;</td>
       </tr>
