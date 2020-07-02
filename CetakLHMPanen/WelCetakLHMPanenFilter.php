@@ -208,7 +208,8 @@ body,td,th {
 </style>
 <table width="978" height="390" border="0" align="center">
   <tr>
-    <th height="197" scope="row" align="center"><table width="937" border="0" id="setbody2">
+    <th height="197" scope="row" align="center">
+      <table width="937" border="0" id="setbody2" style="margin-bottom: 0px;">
       <tr>
         <td height="50" colspan="3" align="left" valign="baseline"><span style="font:bold; font-size:20px; font-weight: bold;"><strong>CETAK LHM PANEN</strong></span></td>
         <td height="50" colspan="3" align="right" valign="baseline"><input type="submit" name="button" id="button" value="TAMPILKAN" style="visibility:visible; width:120px; height: 30px" onclick="formSubmit(0)"/></td>
@@ -260,32 +261,47 @@ body,td,th {
         </td>
         <td colspan="3" >&nbsp;</td>
       </tr>
-	  </form>
+	  <!-- </form> -->
       <tr>
         <td height="28" colspan="8" valign="bottom" style="border-bottom:solid #000">&nbsp;</td>
       </tr>
-      <form id="doFilter" name="doFilter" method="post" action="doFilter.php">
+      <!-- <form id="doFilter" name="doFilter" method="post" action="doFilter.php"> -->
         <tr>
           <td valign="top">Mandor</td>
           <td valign="top">:</td>
           <td  valign="top"><?php
         //Mandor
-        $sql_MD = "select NIK_Mandor, f_get_empname(NIK_Mandor) Nama_Mandor from t_header_rencana_panen thrp 
+        $sql_MD = "select ta.ID_AFD, NIK_Mandor, f_get_empname(NIK_Mandor) Nama_Mandor,NIK_KERANI_BUAH, f_get_empname(NIK_KERANI_BUAH) Nama_Krani from t_header_rencana_panen thrp 
         inner join t_detail_rencana_panen tdrp on thrp.id_rencana = tdrp.id_rencana 
         inner join t_blok tb on tdrp.id_ba_afd_blok = tb.id_ba_afd_blok 
         inner join t_afdeling ta on tb.id_ba_afd = ta.id_ba_afd 
         WHERE ta.ID_BA = '$subID_BA_Afd' 
         and ta.id_afd = nvl (decode ('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta.id_afd) 
         and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
-        group by NIK_Mandor 
-        order by Nama_Mandor";
+        group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH
+        order by ta.ID_AFD,Nama_Mandor";
         
         //echo $sql_MD;
+        $data_select_mandor = [];
+        $data_table_mandor = [];
         $result_MD = oci_parse($con, $sql_MD);
         oci_execute($result_MD, OCI_DEFAULT);
         while (oci_fetch($result_MD)) {	
-            $NIK_Mandor[] 		= oci_result($result_MD, "NIK_MANDOR");
-            $Emp_NameMandor[] 	= oci_result($result_MD, "NAMA_MANDOR");
+            $data_select_mandor[oci_result($result_MD, "NAMA_MANDOR")] = oci_result($result_MD, "NIK_MANDOR");
+            if(!ISSET($data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]))
+            {
+	            $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")] = [
+	            						'id'	=>	oci_result($result_MD, "ID_AFD"),
+	            						'nik'	=>	oci_result($result_MD, "NIK_MANDOR"),
+	            						'name'	=>	oci_result($result_MD, "NAMA_MANDOR"),
+	            					   ];
+            }
+           	if(!ISSET($data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani']))
+           	{
+           		$data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'] = [];
+           	}
+            $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'][] = ['nik' 	=>	oci_result($result_MD, "NIK_KERANI_BUAH"),
+            																										'name' 	=>	oci_result($result_MD, "NAMA_KRANI")];
         }
         $jumlahMD = oci_num_rows($result_MD);
         
@@ -294,11 +310,13 @@ body,td,th {
         //echo "here".$sql_MD .$jumlahMD;
         if($jumlahMD >0 ){
         //$jumlahRecord = $_SESSION['jumlahMD'];
+        $NIKMandor = $_POST['NIKMandor'];
         $selectoMD = "<select name=\"NIKMandor\" id=\"NIKMandor\" style=\"visibility:visible; font-size: 15px;  height: 25px\">";
         $optiondefMD = "<option value=\"ALL\"> ALL </option>";
         echo $selectoMD.$optiondefMD;
-        for($xMD = 0; $xMD < $jumlahMD; $xMD++){
-         echo "<option value=\"$NIK_Mandor[$xMD]\">$NIK_Mandor[$xMD] - $Emp_NameMandor[$xMD]</option>"; 
+        ksort($data_select_mandor);
+        foreach($data_select_mandor as $key => $val){
+         echo "<option ".($NIKMandor==$val?'selected':'')." value=\"$val\">$val - $key</option>"; 
         }
         $selectcMD = "</select>";
         echo $selectcMD;
@@ -320,7 +338,67 @@ body,td,th {
         <td>&nbsp;</td>
         <td colspan="3">&nbsp;</td>
         </tr>
-    </table></th>
+    </table>
+    <?php 
+    if($jumlahMD >0 ){ ?>
+    <table border="1" width="100%">
+      <tr>
+      	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>AFDELING</small></b></td>
+      	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>MANDOR</small></b></td>
+      	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>KRANI BUAH</small></b></td>
+      	<td style="background-color: #CCC;" colspan="2" align="center"><b><small>VALIDASI</small></b></td>
+      	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>CETAK LHM</small></b></td>
+  	  </tr>
+      <tr>
+      	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;ASLAP&nbsp;</small></b></td>
+      	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;KEBUN&nbsp;</small></b></td>
+  	  </tr>
+  	  <?php
+        foreach($data_table_mandor as $key => $val){
+         $id = $val['id'];
+         $nik = $val['nik'];
+         $name = $val['name'];
+         $count = COUNT($val['krani']);
+         if($NIKMandor=='ALL')
+         {
+	         echo "<tr>"; 
+	         echo "<td rowspan='$count' align='center'><small>$id</small></td>"; 
+	         echo "<td rowspan='$count'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+	         $nik = $val['krani'][0]['nik'];
+	         $name = $val['krani'][0]['name'];
+	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+	         echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
+	         echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
+	         echo "<td rowspan='$count' align='center'><small><input type='submit' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(0)'/></small></td>"; 
+	         echo "</tr>"; 
+	         foreach ($val['krani'] as $key => $val) 
+	         {
+	         	if($key!=0)
+	         	{
+			         echo "<tr>"; 
+			         $nik = $val['nik'];
+			         $name = $val['name'];
+	         		 echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+			         echo "</tr>"; 
+	         	}
+	         }
+         }
+         elseif($NIKMandor==$nik)
+         {
+	         echo "<tr>"; 
+	         echo "<td align='center'><small>$id</small></td>"; 
+	         echo "<td><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+	         echo "<td><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+	         echo "<td align='center'><i style='color:green'>&#10004;</i></td>"; 
+	         echo "<td align='center'><i style='color:red'>&#10006;</i></td>"; 
+	         echo "<td align='center'><small><input type='submit' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(0)'/></small></td>"; 
+	         echo "</tr>"; 
+         }
+        } 
+  	  ?>
+    </table>
+	<?php }?>
+	</th>
   </tr>
   <tr>
     <th align="center"><?php
