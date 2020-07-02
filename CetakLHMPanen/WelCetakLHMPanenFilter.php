@@ -282,26 +282,26 @@ body,td,th {
         order by ta.ID_AFD,Nama_Mandor";
         
         //echo $sql_MD;
-        $data_select_mandor = [];
-        $data_table_mandor = [];
+        $data_select_mandor = array();
+        $data_table_mandor = array();
         $result_MD = oci_parse($con, $sql_MD);
         oci_execute($result_MD, OCI_DEFAULT);
         while (oci_fetch($result_MD)) {	
             $data_select_mandor[oci_result($result_MD, "NAMA_MANDOR")] = oci_result($result_MD, "NIK_MANDOR");
             if(!ISSET($data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]))
             {
-	            $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")] = [
+	            $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")] = array(
 	            						'id'	=>	oci_result($result_MD, "ID_AFD"),
 	            						'nik'	=>	oci_result($result_MD, "NIK_MANDOR"),
 	            						'name'	=>	oci_result($result_MD, "NAMA_MANDOR"),
-	            					   ];
+	            					   );
             }
            	if(!ISSET($data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani']))
            	{
-           		$data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'] = [];
+           		$data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'] = array();
            	}
-            $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'][] = ['nik' 	=>	oci_result($result_MD, "NIK_KERANI_BUAH"),
-            																										'name' 	=>	oci_result($result_MD, "NAMA_KRANI")];
+            $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'][] = array('nik' 	=>	oci_result($result_MD, "NIK_KERANI_BUAH"),
+            																											 'name' 	=>	oci_result($result_MD, "NAMA_KRANI"));
         }
         $jumlahMD = oci_num_rows($result_MD);
         
