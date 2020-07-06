@@ -273,17 +273,43 @@ body,td,th {
           <td valign="top">:</td>
           <td  valign="top"><?php
         //Mandor
-        $sql_MD = "select ta.ID_AFD, NIK_Mandor, f_get_empname(NIK_Mandor) Nama_Mandor,NIK_KERANI_BUAH, f_get_empname(NIK_KERANI_BUAH) Nama_Krani from t_header_rencana_panen thrp 
-        inner join t_detail_rencana_panen tdrp on thrp.id_rencana = tdrp.id_rencana 
-        inner join t_blok tb on tdrp.id_ba_afd_blok = tb.id_ba_afd_blok 
-        inner join t_afdeling ta on tb.id_ba_afd = ta.id_ba_afd 
-        WHERE ta.ID_BA = '$subID_BA_Afd' 
-        and ta.id_afd = nvl (decode ('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta.id_afd) 
-        and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
-        group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH
-        order by ta.ID_AFD,Nama_Mandor";
-        
-        //echo $sql_MD;
+		$sql_MD = "SELECT  ID_AFD,
+							data_list.NIK_MANDOR,
+							data_list.Nama_Mandor, 
+							data_list.NIK_KERANI_BUAH, 
+							data_list.Nama_Krani,
+							count(val.NO_BCC) Aslap, 
+							count(val2.NO_BCC) Kabun
+					FROM 	( select 
+								ta.ID_AFD, 
+								thrp.NIK_Mandor, 
+								f_get_empname(thrp.NIK_Mandor) Nama_Mandor,
+								thrp.NIK_KERANI_BUAH, 
+								f_get_empname(thrp.NIK_KERANI_BUAH) Nama_Krani,
+								thrp.tanggal_rencana
+							from 
+								t_header_rencana_panen thrp inner join t_detail_rencana_panen tdrp on thrp.id_rencana = tdrp.id_rencana 
+							inner join 
+								t_blok tb on tdrp.id_ba_afd_blok = tb.id_ba_afd_blok 
+							inner join 
+								t_afdeling ta on tb.id_ba_afd = ta.id_ba_afd 	
+							WHERE 
+								ta.ID_BA = '$subID_BA_Afd' 
+							and ta.id_afd = nvl (decode ('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta.id_afd) 
+							and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
+							group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
+						left JOIN
+							t_validasi val ON val.tanggal_ebcc = data_list.tanggal_rencana AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH AND val.roles <> 'KEPALA_KEBUN'
+						left JOIN
+							t_validasi val2 ON val2.tanggal_ebcc = data_list.tanggal_rencana AND val2.nik_mandor = data_list.nik_mandor AND val2.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH AND val2.roles = 'KEPALA_KEBUN'
+						GROUP BY 
+							ID_AFD,
+							data_list.NIK_MANDOR,
+							data_list.Nama_Mandor, 
+							data_list.NIK_KERANI_BUAH, 
+							data_list.Nama_Krani
+						order by ID_AFD,Nama_Mandor";
+        // echo $sql_MD;
         $data_select_mandor = array();
         $data_table_mandor = array();
         $result_MD = oci_parse($con, $sql_MD);
@@ -303,7 +329,10 @@ body,td,th {
            		$data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'] = array();
            	}
             $data_table_mandor[oci_result($result_MD, "ID_AFD").oci_result($result_MD, "NIK_MANDOR")]['krani'][] = array('nik' 	=>	oci_result($result_MD, "NIK_KERANI_BUAH"),
-            																											 'name' 	=>	oci_result($result_MD, "NAMA_KRANI"));
+																														 'name' =>	oci_result($result_MD, "NAMA_KRANI"),
+																														 'aslap' =>	oci_result($result_MD, "ASLAP"),
+																														 'kabun' =>	oci_result($result_MD, "KABUN"),
+																														);
         }
         $jumlahMD = oci_num_rows($result_MD);
         
@@ -353,7 +382,7 @@ body,td,th {
   	  </tr>
       <tr>
       	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;ASLAP&nbsp;</small></b></td>
-      	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;KEBUN&nbsp;</small></b></td>
+      	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;KABUN&nbsp;</small></b></td>
   	  </tr>
   	  <?php
         foreach($data_table_mandor as $key => $val){
@@ -368,10 +397,29 @@ body,td,th {
 	         echo "<td rowspan='$count'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
 	         $nik = $val['krani'][0]['nik'];
 	         $name = $val['krani'][0]['name'];
+	         $aslap = $val['krani'][0]['aslap'];
+			 $kabun = $val['krani'][0]['kabun'];
+			 $cetak_status = 0;
+	         foreach ($val['krani'] as $key => $check) 
+	         {
+				 if($check['kabun']!=2)
+				 {
+					$cetak_status++;
+				 }
+			 }
 	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
-	         echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
-	         echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1)'/></small></td>"; 
+	         echo "<td align='center'>$aslap</td>"; 
+	         echo "<td align='center'>$kabun</td>"; 
+	        //  echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
+	        //  echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
+			 if($cetak_status==0)
+			 {
+				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1)'/></small></td>"; 
+			 }
+			 else 
+			 {
+				echo "<td rowspan='$count' align='center'><small style='color:red;'>Belum Bisa Dilakukan</small></td>"; 
+			 }
 	         echo "</tr>"; 
 	         foreach ($val['krani'] as $key => $val) 
 	         {
@@ -380,7 +428,11 @@ body,td,th {
 			         echo "<tr>"; 
 			         $nik = $val['nik'];
 			         $name = $val['name'];
+					 $aslap = $val['aslap'];
+					 $kabun = $val['kabun'];
 	         		 echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+					 echo "<td align='center'>$aslap</td>"; 
+					 echo "<td align='center'>$kabun</td>"; 
 			         echo "</tr>"; 
 	         	}
 	         }

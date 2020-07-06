@@ -113,7 +113,6 @@ if($username == "") {
 	while(oci_fetch($result_check_koreksi)) {
 		$count++;
 	}
-	$count++;
 	$disabled = $count==0?'':'disabled';
 	$disabled_colour = $count==0?'':'background-color: #CCC;';
 		
