@@ -2,8 +2,8 @@
 session_start();
 
 if(isset($_POST["valueAfd"]) || isset($_POST["NIKMandor"]) || isset($_POST["sdate1"]) || isset($_POST["sdate2"])){
-	$valueAfdeling 		= $_POST["valueAfd"];
 	
+	$valueAfdeling 		= $_POST["valueAfd"];
 	$NIK_Mandor 		= $_POST["NIKMandor"];
 	$date1 	= $_POST["sdate1"];
 	$date2 	= $_POST["sdate2"];
@@ -178,8 +178,8 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
 			header("Location:PDF_LHMPanen.php");
 	}
 }
-else{
-$_SESSION[err] = "Please choose the options";
-header("Location:WelCetakLHMPanenFilter.php");
-}
+// else{
+// $_SESSION[err] = "Please choose the options";
+// header("Location:WelCetakLHMPanenFilter.php");
+// }
 ?>

@@ -170,10 +170,12 @@ function coba(x)
 function formSubmit(x)
 {
 	if(x == 1){
-	document.getElementById("doFilter").submit();
+	// document.getElementById("doFilter").submit();
+	alert(1);
 	}
 	if(x ==0)
-	{
+	{WelCetakLHMPanenFilter.php
+		document.getElementById("submittanggal1").submit();
 		document.getElementById("submittanggal1").submit();
 	}
 }
@@ -206,6 +208,7 @@ body,td,th {
 	font-weight:normal;
 }
 </style>
+<form id="submittanggal1" name="submittanggal1" method="post" action="WelCetakLHMPanenFilter.php">
 <table width="978" height="390" border="0" align="center">
   <tr>
     <th height="197" scope="row" align="center">
@@ -218,7 +221,6 @@ body,td,th {
         <td height="9" colspan="3" valign="bottom" style="font-size:14px ; border-bottom:solid #000">LOKASI</td>
         <td height="9" colspan="3" valign="bottom" style="font-size:14px ; border-bottom:solid #000">PERIODE</td>
       </tr>
-      <form id="submittanggal1" name="submittanggal1" method="post" action="WelCetakLHMPanenFilter.php">
       <tr>
         <td width="169">Company Name</td>
         <td width="11">:</td>
@@ -367,9 +369,9 @@ body,td,th {
 	         $nik = $val['krani'][0]['nik'];
 	         $name = $val['krani'][0]['name'];
 	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
 	         echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
-	         echo "<td rowspan='$count' align='center'><small><input type='submit' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(0)'/></small></td>"; 
+	         echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
+	         echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1)'/></small></td>"; 
 	         echo "</tr>"; 
 	         foreach ($val['krani'] as $key => $val) 
 	         {
@@ -389,9 +391,9 @@ body,td,th {
 	         echo "<td align='center'><small>$id</small></td>"; 
 	         echo "<td><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
 	         echo "<td><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         echo "<td align='center'><i style='color:green'>&#10004;</i></td>"; 
 	         echo "<td align='center'><i style='color:red'>&#10006;</i></td>"; 
-	         echo "<td align='center'><small><input type='submit' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(0)'/></small></td>"; 
+	         echo "<td align='center'><i style='color:green'>&#10004;</i></td>"; 
+	         echo "<td align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1)'/></small></td>"; 
 	         echo "</tr>"; 
          }
         } 
@@ -416,3 +418,4 @@ body,td,th {
     <th align="center"><?php include("../include/Footer.php") ?></th>
   </tr>
 </table>
+	</form>

@@ -105,6 +105,17 @@ if($username == "") {
 		$LAT_M_TPH = oci_result($result_m_LatLong, "LATITUDE");
 		$LONG_M_TPH = oci_result($result_m_LatLong, "LONGITUDE");
 	}
+
+	$sql_check_koreksi = "SELECT NO_BCC FROM T_VALIDASI WHERE NO_BCC = '$NO_BCC'";
+	$result_check_koreksi = oci_parse($con, $sql_check_koreksi);
+	oci_execute($result_check_koreksi, OCI_DEFAULT);
+	$count = 0;
+	while(oci_fetch($result_check_koreksi)) {
+		$count++;
+	}
+	$count++;
+	$disabled = $count==0?'':'disabled';
+	$disabled_colour = $count==0?'':'background-color: #CCC;';
 		
 	$sql_t_BCC_table = "
 		SELECT ID_BCC_KUALITAS,
@@ -590,6 +601,16 @@ body,td,th {
       <tr>
 		<td colspan="3" align="left" valign="baseline"><span style="font:bold; font-size:20px; font-weight: bold;"><strong>KOREKSI DATA BCC</strong></span></td>
       </tr>
+      <?php 
+		if($count>0){
+			echo '
+			<tr>
+				<td colspan="3">
+					<div style="background-color: #ffe33c;color: #222222;padding: 16px;font-weight: bold;font-size: 17px;text-align: center;margin: 25px 46px 10px 46px;">Tidak Bisa Koreksi EBCC karena Sudah Dilakukan Validasi oleh Aslap / Kabun</div>
+				</td>
+			</tr>';
+		}
+      ?>
   
   <tr>
     <th height="197" scope="row" align="center"><table border="0" style="border:solid #556A29">
@@ -598,29 +619,29 @@ body,td,th {
           <tr>
             <td width="130" height="29" valign="top">Company Name</td>
             <td width="7" height="29" valign="top">:</td>
-            <td width="355" align="left" valign="top"><input type="hidden" name="LUASAN_PANEN" value="<?=$LUASAN_PANEN?>"><input name="Comp_Name" type="text" id="Comp_Name" value="<?=$COMP_NAME?>" style="background-color:#CCC; width: 300px; height:25px; font-size:15px" onmousedown="return false"/></td>
+            <td width="355" align="left" valign="top"><input <?= $disabled; ?> type="hidden" name="LUASAN_PANEN" value="<?=$LUASAN_PANEN?>"><input name="Comp_Name" type="text" id="Comp_Name" value="<?=$COMP_NAME?>" style="background-color:#CCC; width: 300px; height:25px; font-size:15px" onmousedown="return false"/></td>
             <td width="130" height="29" valign="top">Tanggal Panen</td>
             <td width="7" height="29" valign="top">:</td>
             <td width="355" align="left" valign="top">
-				<input type="text" name="datepicker" id="datepicker1" value="<?=$TANGGAL_RENCANA?>" style="width:300px; height:25px; font-size:15px" readOnly="readOnly" >
+				<input <?= $disabled; ?> type="text" name="datepicker" id="datepicker1" value="<?=$TANGGAL_RENCANA?>" style="<?=$disabled_colour?>width:300px; height:25px; font-size:15px" readOnly="readOnly" >
 				
 				</td>
             </tr>
           <tr>
             <td width="130" height="29" valign="top">Business Area</td>
             <td width="7" height="29" valign="top">:</td>
-            <td width="355" align="left" valign="top" ><input name="ID_BAlabel" type="text" id="ID_BAlabel" value="<?=$BA?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/></td>
+            <td width="355" align="left" valign="top" ><input <?= $disabled; ?> name="ID_BAlabel" type="text" id="ID_BAlabel" value="<?=$BA?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/></td>
             <td width="130" height="29" valign="top" >Nama Mandor</td>
             <td width="7" height="29" valign="top" >:</td>
-            <td width="355" align="left" valign="top" ><input name="Nama_Mandorlabel" type="text" id="Nama_Mandorlabel" value="<?=$NAMA_MANDOR?>" style="width: 300px; height:25px; font-size:15px" onClick='javascript:showListMandor();'  readOnly="readOnly"/>
-				<input name="NIK_Mandor" type="text" id="NIK_Mandor" value="<?=$NIK_MANDOR?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px; display:none">
+            <td width="355" align="left" valign="top" ><input <?= $disabled; ?> name="Nama_Mandorlabel" type="text" id="Nama_Mandorlabel" value="<?=$NAMA_MANDOR?>" style="<?=$disabled_colour?>width: 300px; height:25px; font-size:15px" onClick='javascript:showListMandor();'  readOnly="readOnly"/>
+				<input <?= $disabled; ?> name="NIK_Mandor" type="text" id="NIK_Mandor" value="<?=$NIK_MANDOR?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px; display:none">
 				
 			</td>
             </tr>
           <tr>
             <td width="130" height="29" valign="top" >No BCC</td>
             <td width="7" height="29" valign="top" >:</td>
-            <td width="355" align="left" valign="top" ><input name="No_BCClabel" type="text" id="No_BCClabel" value="<?=separator($aNO_BCC)?>" style="background-color:#CCC; width: 300px; height:25px; font-size:15px" onmousedown="return false"/><input name="NO_Rekap" type="text" id="NO_Rekap" value="<?=$NO_REKAP?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px; display:none"></td>
+            <td width="355" align="left" valign="top" ><input <?= $disabled; ?> name="No_BCClabel" type="text" id="No_BCClabel" value="<?=separator($aNO_BCC)?>" style="background-color:#CCC; width: 300px; height:25px; font-size:15px" onmousedown="return false"/><input <?= $disabled; ?> name="NO_Rekap" type="text" id="NO_Rekap" value="<?=$NO_REKAP?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px; display:none"></td>
             </tr>
         </table></td>
         					<td></td><td></td>
@@ -641,7 +662,7 @@ body,td,th {
 							$result_afd_by_ba = oci_parse($con, $afd_by_ba);
 							oci_execute($result_afd_by_ba, OCI_DEFAULT);
 						?>
-						<select name="AFDlabel" id="AFDlabel" style="width:200px; height:25px; font-size:15px">
+						<select <?= $disabled; ?> name="AFDlabel" id="AFDlabel" style="<?=$disabled_colour?>width:200px; height:25px; font-size:15px">
 							<?php
 								while (oci_fetch($result_afd_by_ba)) {
 									if (oci_result($result_afd_by_ba, "ID_AFD") == $AFD) {
@@ -656,7 +677,7 @@ body,td,th {
 								}
 							?>
 						</select>
-						<input type="hidden" id="AFDlabelAwal" name="afd_awal" value="">
+						<input <?= $disabled; ?> type="hidden" id="AFDlabelAwal" name="afd_awal" value="" style="<?=$disabled_colour?>">
 					</td>
 					<td align="center">
 						<?php 
@@ -666,7 +687,7 @@ body,td,th {
 							</script>
 						";
 						if ($STATUS_LOKASI != '1' && $STATUS_TPH == 'MANUAL' && ((int)str_replace('.', '', (!is_numeric($jarak) ? 1000000:$jarak)) > $TOLERANSI_JARAK)) {?>
-						<input type="button" id="lokasisubmit" name="lokasisubmit" value="Lokasi Sudah Sesuai" style="color:white; background-color:#19521D; padding-left:20px; padding-right:20px; padding-top:5px; padding-bottom:5px; font-size:14px; text-align:center;">
+						<input <?= $disabled; ?> type="button" id="lokasisubmit" name="lokasisubmit" value="Lokasi Sudah Sesuai" style="<?=$disabled_colour?>color:white; background-color:#19521D; padding-left:20px; padding-right:20px; padding-top:5px; padding-bottom:5px; font-size:14px; text-align:center;">
 						<?php } ?>
 						
 						<?php 
@@ -685,7 +706,7 @@ body,td,th {
 					<td width="130" height="29" valign="top" style="padding-left:20px;">Blok</td>
 					<td width="7" height="29" valign="top" align="right">:</td>
 					<td width="355" align="left" valign="top">
-						<select name="selectblok" id="selectblok" style="width:200px; height:25px; font-size:15px">
+						<select <?= $disabled; ?> name="selectblok" id="selectblok" style="<?=$disabled_colour?>width:200px; height:25px; font-size:15px">
 							<?php
 								$query_blok  = "SELECT * FROM T_BLOK WHERE ID_BA_AFD = '$BA$AFD' AND (INACTIVE_DATE IS NULL or INACTIVE_DATE >= '$TANGGAL_RENCANA') order by ID_BLOK"; //Adding Inactive_Date Filter by Ardo, 18-01-2016
 								$result_blok = oci_parse($con, $query_blok);
@@ -701,7 +722,7 @@ body,td,th {
 								}
 							?>
 						</select>
-						<input type="hidden" id="selectblokawal" name="blok_awal" value="">
+						<input <?= $disabled; ?> type="hidden" id="selectblokawal" name="blok_awal" value="" style="<?=$disabled_colour?>">
 					</td>
 					<td></td>
 				</tr>
@@ -709,11 +730,11 @@ body,td,th {
 					<td width="130" height="29" valign="top" style="padding-left:20px;">TPH</td>
 					<td width="7" height="29" valign="top" >:</td>
 					<td width="355" align="left" valign="top">
-						<input type="hidden" id="exist_tph" value="<?=$BLOK_TPH?>">
-						<select name="selecttph" id="selecttph" style="width:200px; height:25px; font-size:15px">
+						<input <?= $disabled; ?> type="hidden" id="exist_tph" value="<?=$BLOK_TPH?>" style="<?=$disabled_colour?>">
+						<select <?= $disabled; ?> name="selecttph" id="selecttph" style="<?=$disabled_colour?>width:200px; height:25px; font-size:15px">
 							<option>--select--</option>
 						</select>
-						<input type="hidden" id="selecttphawal" name="tph_awal" value="">
+						<input <?= $disabled; ?> type="hidden" id="selecttphawal" name="tph_awal" value="" style="<?=$disabled_colour?>">
 					</td>
 					<td></td>
 				</tr>
@@ -721,7 +742,7 @@ body,td,th {
 					<td width="130" height="29" valign="top" style="padding-left:20px;">TPH</td>
 					<td width="7" height="29" valign="top" >:</td>
 					<td width="355" align="left" valign="top">
-						<input type="text" name="tph_awal" value="<?=$BLOK_TPH?>" readonly="readonly" style="background-color:#CCC; width: 195px; height:25px; font-size:15px">
+						<input <?= $disabled; ?> type="text" name="tph_awal" value="<?=$BLOK_TPH?>" readonly="readonly" style="background-color:#CCC; width: 195px; height:25px; font-size:15px">
 					</td>
 					<td></td>
 				</tr>
@@ -729,12 +750,12 @@ body,td,th {
 					<td width="250" height="29" valign="top" style="padding-left:20px;">Jarak Geo Tagging & TPH Inputan</td>
 					<td width="7" height="29" valign="top" >:</td>
 					<td width="355" align="left" valign="top" >
-						<input name="jarakGEO" type="text" id="jarakGEO" value="<?=$jarak?>" style="width:195px; height:25px; font-size:15px" readOnly="readOnly"/> meter
-						<input type="hidden" id="jarakGEOAwal" name="jarakGEOAwal" value="">
-						<input type="hidden" name="lat_bcc" value="<?php echo $LAT_TPH; ?>">
-						<input type="hidden" name="long_bcc" value="<?php echo $LONG_TPH; ?>">
-						<input type="hidden" name="lat_tph" value="<?php echo $LAT_M_TPH; ?>">
-						<input type="hidden" name="long_tph" value="<?php echo $LONG_M_TPH; ?>">
+						<input <?= $disabled; ?> name="jarakGEO" type="text" id="jarakGEO" value="<?=$jarak?>" style="<?=$disabled_colour?>width:195px; height:25px; font-size:15px" readOnly="readOnly"/> meter
+						<input <?= $disabled; ?> type="hidden" id="jarakGEOAwal" name="jarakGEOAwal" value="" style="<?=$disabled_colour?>">
+						<input <?= $disabled; ?> type="hidden" name="lat_bcc" value="<?php echo $LAT_TPH; ?>" style="<?=$disabled_colour?>">
+						<input <?= $disabled; ?> type="hidden" name="long_bcc" value="<?php echo $LONG_TPH; ?>" style="<?=$disabled_colour?>">
+						<input <?= $disabled; ?> type="hidden" name="lat_tph" value="<?php echo $LAT_M_TPH; ?>" style="<?=$disabled_colour?>">
+						<input <?= $disabled; ?> type="hidden" name="long_tph" value="<?php echo $LONG_M_TPH; ?>" style="<?=$disabled_colour?>">
 					</td>
 					<td></td>
 				</tr>
@@ -824,25 +845,25 @@ body,td,th {
             <tr>
               <td width="130" height="29" valign="top" >Business Area</td>
               <td width="7" height="29" valign="top" >:</td>
-              <td width="355" align="left" valign="top" ><input name="ID_BAlabel" type="text" id="ID_BAlabel" value="<?=$BA?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/></td>
+              <td width="355" align="left" valign="top" ><input <?= $disabled; ?> name="ID_BAlabel" type="text" id="ID_BAlabel" value="<?=$BA?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/></td>
               
               <td width="130" height="29" valign="top" >Nama Pemanen</td>
               <td width="7" height="29" valign="top" >:</td>
               <td width="355" align="left" valign="top" >
-                <input name="Nama_Pemanen" type="text" id="Nama_Pemanen" value="<?=$Nama_Pemanen?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/>
+                <input <?= $disabled; ?> name="Nama_Pemanen" type="text" id="Nama_Pemanen" value="<?=$Nama_Pemanen?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/>
                 </td>
               </tr>
             <tr>
               <td width="130" height="29" valign="top" >Afdeling</td>
               <td width="7" height="29" valign="top" >:</td>
               <td width="355" align="left" valign="top">
-                <input name="Afd_Pemanen" type="text" id="Afd_Pemanen" value="<?=$Afd_Pemanen?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/>
+                <input <?= $disabled; ?> name="Afd_Pemanen" type="text" id="Afd_Pemanen" value="<?=$Afd_Pemanen?>" style="background-color:#CCC; width:300px; height:25px; font-size:15px" onmousedown="return false"/>
                 </td>
               
               <td width="130" height="29" valign="top" >NIK Pemanen</td>
               <td width="7" height="29" valign="top" >:</td>
               <td width="355" align="left" valign="top" >
-                <input name="NIK_Pemanen" type="text" id="NIK_Pemanen" value="<?=$NIK_Pemanen?>" style="width:300px; height:25px; font-size:15px" onClick='javascript:showListPemanen();' readOnly="readOnly"/></td>
+                <input <?= $disabled; ?> name="NIK_Pemanen" type="text" id="NIK_Pemanen" value="<?=$NIK_Pemanen?>" style="<?=$disabled_colour?>width:300px; height:25px; font-size:15px" onClick='javascript:showListPemanen();' readOnly="readOnly"/></td>
 				
 			  </tr>
           </table>        </td><td></td><td></td>
@@ -863,7 +884,6 @@ oci_execute($get_kualitas_penalty, OCI_DEFAULT);
 while ($p=oci_fetch($get_kualitas_penalty)){
 	$daftar_kualitas_penalty[oci_result($get_kualitas_penalty, "ID_KUALITAS")] = oci_result($get_kualitas_penalty, "ID_KUALITAS");
 }
-
 for($xJAN = 0; $xJAN <  $roweffec_BCC ; $xJAN++){
 	$no = $xJAN +1;
 	
@@ -885,7 +905,7 @@ for($xJAN = 0; $xJAN <  $roweffec_BCC ; $xJAN++){
 			<input type=\"hidden\" name=\"PARAM\" id=\"PARAM$xJAN\" value=\"$PARAM[$xJAN]\" style=\"\">
 			<input type=\"hidden\" name=\"ID_RENCANA\" value=\"$ID_RENCANA\" style=\"\"></td>
             <td align=\"center\">
-			<input name=\"NewQty$xJAN\" type=\"text\" class='qtyval' id=\"NewQty$xJAN\" value=\"$QTY[$xJAN]\" style=\"width: 50px; height:25px; font-size:15px\" onchange=\"cekvalid($xJAN)\"  /></td>
+			<input $disabled name=\"NewQty$xJAN\" type=\"text\" class='qtyval' id=\"NewQty$xJAN\" value=\"$QTY[$xJAN]\" style=\"$disabled_colour width: 50px; height:25px; font-size:15px\" onchange=\"cekvalid($xJAN)\"  /></td>
 			";
 	
 	unset($daftar_kualitas_penalty[$ID_Kualitas[$xJAN]]);
@@ -916,7 +936,7 @@ foreach($daftar_kualitas_penalty as $row_penalty){
 			<input type=\"hidden\" name=\"PARAM\" id=\"PARAM$xJAN2\" value=\"".oci_result($get_kualitas_penalty, "PARAM")."\" style=\"\">
 			<input type=\"hidden\" name=\"ID_RENCANA\" value=\"$ID_RENCANA\" style=\"\"></td>
 			<td align=\"center\">
-			<input name=\"NewQty$xJAN2\" type=\"text\" class='qtyval' id=\"NewQty$xJAN2\" value=\"0\" style=\"width: 50px; height:25px; font-size:15px\" onchange=\"cekvalid($xJAN2)\"  /></td>
+			<input $disabled name=\"NewQty$xJAN2\" type=\"text\" class='qtyval' id=\"NewQty$xJAN2\" value=\"0\" style=\"$disabled_colour width: 50px; height:25px; font-size:15px\" onchange=\"cekvalid($xJAN2)\"  /></td>
 			";
 	}
 	$xJAN2++;
@@ -932,17 +952,21 @@ echo "</tr>";
       <tr>
 		
         <td align="center" colspan="3">
-			<input type="hidden" name="id_bafd_old" value="<?=$BA.''.$AFD.''.$ID_BLOK?>">
-			<input type="submit" name="button" id="button" value="SIMPAN" style="width:120px; height: 30px"/>
-			&nbsp;
-			<?php
-			//Edited by Ardo, 11-11-2016 : Hapus BCC untuk ALL PT
-			//if($_SESSION['subID_CC']=='43' or $Job_Code=='ADMINISTRATOR' or $Job_Code=='ADM'){
-			?>
-			<input type="button" name="button" id="btn_hapus_bcc" value="HAPUS" style="width:120px; height: 30px"/>
-			&nbsp;
-			<?php //} ?>
-			<input type="button" name="button" id="button" value="KEMBALI" style="width:120px; height: 30px" onClick="window.history.go(-1)"/>
+	      	<?php if($count==0){ ?>
+				<input type="hidden" name="id_bafd_old" value="<?=$BA.''.$AFD.''.$ID_BLOK?>">
+				<input type="submit" name="button" id="button" value="SIMPAN" style="width:120px; height: 30px"/>
+				&nbsp;
+				<?php
+				//Edited by Ardo, 11-11-2016 : Hapus BCC untuk ALL PT
+				//if($_SESSION['subID_CC']=='43' or $Job_Code=='ADMINISTRATOR' or $Job_Code=='ADM'){
+				?>
+				<input type="button" name="button" id="btn_hapus_bcc" value="HAPUS" style="width:120px; height: 30px"/>
+				&nbsp;
+				<?php //} ?>
+				<input type="button" name="button" id="button" value="KEMBALI" style="width:120px; height: 30px" onClick="window.history.go(-1)"/>
+	      	<?php }else{ ?>
+				<input type="button" name="button" id="button" value="KEMBALI" style="width:120px; height: 30px" onClick="window.history.go(-1)"/>
+	      	<?php } ?>
 		</td>
 		
       </tr>
