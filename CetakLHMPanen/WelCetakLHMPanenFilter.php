@@ -84,8 +84,8 @@ $Date = $_SESSION['Date'];
 				$sdate2 = "";
 			}
 	
-			if(isset($_POST["date2"])){
-				$_SESSION['date2'] = date("Y-m-d", strtotime($_POST["date2"]));
+			if(isset($_POST["date1"])){
+				$_SESSION['date2'] = date("Y-m-d", strtotime($_POST["date1"]));
 				if($_SESSION['date2'] == "1970-01-01")
 				{
 					$_SESSION['date2'] = "";
@@ -96,8 +96,8 @@ $Date = $_SESSION['Date'];
 				$sdate1 = $_SESSION['date1'];
 			}
 			
-			if(isset($_SESSION['date2'])){
-				$sdate2 = $_SESSION['date2'];
+			if(isset($_SESSION['date1'])){
+				$sdate2 = $_SESSION['date1'];
 			}
 		}
 		else{
@@ -222,12 +222,12 @@ body,td,th {
         <td height="9" colspan="3" valign="bottom" style="font-size:14px ; border-bottom:solid #000">PERIODE</td>
       </tr>
       <tr>
-        <td width="169">Company Name</td>
-        <td width="11">:</td>
-        <td width="349"><input name="Comp_Name" type="text" id="Comp_Name" value="<?=$Comp_Name?>" style="background-color:#CCC; width: 300px; height:25px; font-size:15px" onmousedown="return false"/></td>
-        <td width="75"><p><span>Start Date</span></p></td>
-        <td width="6">:</td>
-        <td width="301">
+        <td width="169" style="padding-top: 10px;">Company Name</td>
+        <td width="11" style="padding-top: 10px;">:</td>
+        <td width="349" style="padding-top: 10px;"><input name="Comp_Name" type="text" id="Comp_Name" value="<?=$Comp_Name?>" style="background-color:#CCC; width: 300px; height:25px; font-size:15px" onmousedown="return false"/></td>
+        <td width="75" style="white-space: nowrap;padding-top: 10px;"><p><span>Harvesting Date</span></p></td>
+        <td width="6" style="padding-top: 10px;">:</td>
+        <td width="301" style="padding-top: 10px;">
         <input type="text" name="date1" id="datepicker1" class="box_field" value="<?=$sdate1?>" <?php if(isset($_POST["date1"])){ echo "value='$_POST[date1]'"; }?>>
         </td>
       </tr>
@@ -235,9 +235,9 @@ body,td,th {
         <td>Business Area</td>
         <td>:</td>
         <td><input name="ID_BA2" type="text" id="ID_BA2" value="<?=$subID_BA_Afd?>" style="background-color:#CCC; width:70px; height:25px; font-size:15px" onmousedown="return false"/></td>
-        <td ><span>End Date</span></td>
-        <td >:</td>
-        <td ><input type="text" name="date2" id="datepicker2" class="box_field" value="<?=$sdate2?>" <?php if(isset($_POST["date2"])){ echo "value='$_POST[date2]'"; }?>>
+        <td ></td>
+        <td ></td>
+        <td >
         
         </td>
       </tr>
