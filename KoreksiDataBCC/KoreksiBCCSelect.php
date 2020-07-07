@@ -113,8 +113,10 @@ if($username == "") {
 	while(oci_fetch($result_check_koreksi)) {
 		$count++;
 	}
+	$count++;
 	$disabled = $count==0?'':'disabled';
 	$disabled_colour = $count==0?'':'background-color: #CCC;';
+	$disabled_select = $count==0?'':'border: 2px solid;';
 		
 	$sql_t_BCC_table = "
 		SELECT ID_BCC_KUALITAS,
@@ -661,7 +663,7 @@ body,td,th {
 							$result_afd_by_ba = oci_parse($con, $afd_by_ba);
 							oci_execute($result_afd_by_ba, OCI_DEFAULT);
 						?>
-						<select <?= $disabled; ?> name="AFDlabel" id="AFDlabel" style="<?=$disabled_colour?>width:200px; height:25px; font-size:15px">
+						<select <?= $disabled; ?> name="AFDlabel" id="AFDlabel" style="<?=$disabled_colour.$disabled_select?>width:200px; height:25px; font-size:15px">
 							<?php
 								while (oci_fetch($result_afd_by_ba)) {
 									if (oci_result($result_afd_by_ba, "ID_AFD") == $AFD) {
@@ -705,7 +707,7 @@ body,td,th {
 					<td width="130" height="29" valign="top" style="padding-left:20px;">Blok</td>
 					<td width="7" height="29" valign="top" align="right">:</td>
 					<td width="355" align="left" valign="top">
-						<select <?= $disabled; ?> name="selectblok" id="selectblok" style="<?=$disabled_colour?>width:200px; height:25px; font-size:15px">
+						<select <?= $disabled; ?> name="selectblok" id="selectblok" style="<?=$disabled_colour.$disabled_select?>width:200px; height:25px; font-size:15px">
 							<?php
 								$query_blok  = "SELECT * FROM T_BLOK WHERE ID_BA_AFD = '$BA$AFD' AND (INACTIVE_DATE IS NULL or INACTIVE_DATE >= '$TANGGAL_RENCANA') order by ID_BLOK"; //Adding Inactive_Date Filter by Ardo, 18-01-2016
 								$result_blok = oci_parse($con, $query_blok);
@@ -730,7 +732,7 @@ body,td,th {
 					<td width="7" height="29" valign="top" >:</td>
 					<td width="355" align="left" valign="top">
 						<input <?= $disabled; ?> type="hidden" id="exist_tph" value="<?=$BLOK_TPH?>" style="<?=$disabled_colour?>">
-						<select <?= $disabled; ?> name="selecttph" id="selecttph" style="<?=$disabled_colour?>width:200px; height:25px; font-size:15px">
+						<select <?= $disabled; ?> name="selecttph" id="selecttph" style="<?=$disabled_colour.$disabled_select?>width:200px; height:25px; font-size:15px">
 							<option>--select--</option>
 						</select>
 						<input <?= $disabled; ?> type="hidden" id="selecttphawal" name="tph_awal" value="" style="<?=$disabled_colour?>">
