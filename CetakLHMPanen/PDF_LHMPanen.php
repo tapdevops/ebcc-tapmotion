@@ -692,9 +692,9 @@
 			$pdf->Cell(1.1,0.5,'HA',1,0,'C');
 			$pdf->Cell(1,0.5,'Jam',1,0,'C');
 			$pdf->Cell(2,0.5,'Hasil Panen',1,0,'C');
-			$pdf->Cell(8.4,0.5,'Pinalty',1,0,'C');
+			$pdf->Cell(7,0.5,'Pinalty',1,0,'C');
 			$pdf->Cell(2.2,0.5,'Telah Diperiksa',1,0,'C');
-			$pdf->Cell(1.3,0.5,'Cust',1,0,'C');
+			$pdf->Cell(2.7,0.5,'Cust',1,0,'C');
 			
 			$pdf->Ln();
 			$pdf->Cell(3,0.5,'',1,0,'C',true);//
@@ -707,11 +707,9 @@
 			$pdf->Cell(1,0.5,'TBS',1,0,'C');
 			$pdf->Cell(1,0.5,'BRD',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BM',1,0,'C');
-			$pdf->Cell(0.7,0.5,'BK',1,0,'C');
 			$pdf->Cell(0.7,0.5,'TP',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BB',1,0,'C');
 			$pdf->Cell(0.7,0.5,'JK',1,0,'C');
-			$pdf->Cell(0.7,0.5,'BA',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BT',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BL',1,0,'C');
 			$pdf->Cell(0.7,0.5,'PB',1,0,'C');
@@ -719,7 +717,7 @@
 			$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 			$pdf->Cell(2.5,0.5,'',1,0,'C',true);
-			$pdf->Cell(1,0.5,'',1,0,'C',true);
+			$pdf->Cell(2.4,0.5,'',1,0,'C',true);
 			$pdf->Ln();
 			
 			$nik = "";
@@ -811,9 +809,9 @@
 					$pdf->Cell(1.1,0.5,'HA',1,0,'C');
 					$pdf->Cell(1,0.5,'Jam',1,0,'C');
 					$pdf->Cell(2,0.5,'Hasil Panen',1,0,'C');
-					$pdf->Cell(8.4,0.5,'Pinalty',1,0,'C');
+					$pdf->Cell(7,0.5,'Pinalty',1,0,'C');
 					$pdf->Cell(2.2,0.5,'Telah Diperiksa',1,0,'C');
-					$pdf->Cell(1.3,0.5,'Cust',1,0,'C');
+					$pdf->Cell(2.7,0.5,'Cust',1,0,'C');
 					
 					$pdf->Ln();
 					$pdf->Cell(3,0.5,'',1,0,'C',true);//
@@ -826,11 +824,9 @@
 					$pdf->Cell(1,0.5,'TBS',1,0,'C');
 					$pdf->Cell(1,0.5,'BRD',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BM',1,0,'C');
-					$pdf->Cell(0.7,0.5,'BK',1,0,'C');
 					$pdf->Cell(0.7,0.5,'TP',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BB',1,0,'C');
 					$pdf->Cell(0.7,0.5,'JK',1,0,'C');
-					$pdf->Cell(0.7,0.5,'BA',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BT',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BL',1,0,'C');
 					$pdf->Cell(0.7,0.5,'PB',1,0,'C');
@@ -838,7 +834,7 @@
 					$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 					$pdf->Cell(2.5,0.5,'',1,0,'C',true);
-					$pdf->Cell(1,0.5,'',1,0,'C',true);
+					$pdf->Cell(2.4,0.5,'',1,0,'C',true);
 					$pdf->Ln();
 					
 				}
@@ -853,11 +849,9 @@
 				$pdf->Cell(1,0.5,$laporan_result[$clap]["TBS"],1,0,'C');
 				$pdf->Cell(1,0.5,$laporan_result[$clap]["BRD"],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BM'],1,0,'C');
-				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BK'],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['TP'],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BB'],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['JK'],1,0,'C');
-				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BA'],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BT'],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BL'],1,0,'C');
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['PB'],1,0,'C');
@@ -866,7 +860,7 @@
 				$pdf->Cell(0.7,0.5,$laporan_result[$clap]['BS'],1,0,'C');
 				$pdf->Cell(1.1,0.5,'','BR',0,'L');
 				$pdf->Cell(1.1,0.5,'','BR',0,'L');
-				$pdf->Cell(1.3,0.5,$laporan_result[$clap]['CUSTOMER'],1,0,'C');
+				$pdf->Cell(2.7,0.5,$laporan_result[$clap]['CUSTOMER'],1,0,'C');
 				$pdf->Ln();
 				
 				$total_HA += $laporan_result[$clap]["LUASAN_PANEN"];
@@ -895,11 +889,11 @@
 			$pdf->Cell(1,0.5,$total_BRD,1,0,'C');
 			
 			$pdf->Cell(0.7,0.5,$total_BM,1,0,'C');
-			$pdf->Cell(0.7,0.5,$total_BK,1,0,'C');
+			// $pdf->Cell(0.7,0.5,$total_BK,1,0,'C');
 			$pdf->Cell(0.7,0.5,$total_TP,1,0,'C');
 			$pdf->Cell(0.7,0.5,$total_BB,1,0,'C');
 			$pdf->Cell(0.7,0.5,$total_JK,1,0,'C');
-			$pdf->Cell(0.7,0.5,$total_BA,1,0,'C');
+			// $pdf->Cell(0.7,0.5,$total_BA,1,0,'C');
 			$pdf->Cell(0.7,0.5,$total_BT,1,0,'C');
 			$pdf->Cell(0.7,0.5,$total_BL,1,0,'C');
 			$pdf->Cell(0.7,0.5,$total_PB,1,0,'C');
@@ -909,7 +903,7 @@
 			
 			$pdf->Cell(1.1,0.5,'','BR',0,'L');
 			$pdf->Cell(1.1,0.5,'','BR',0,'L');
-			$pdf->Cell(1.3,0.5,'','BR',0,'L');
+			$pdf->Cell(2.7,0.5,'','BR',0,'L');
 			$pdf->Ln();
 			//End Total
 
@@ -923,11 +917,11 @@
 			$pdf->Cell(2, 0.5, '', 1, 0, 'C', true);
 
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
+			// $pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
-			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
-			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
+			// $pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
@@ -937,7 +931,7 @@
 			
 			$pdf->Cell(1.1,0.5,'','BR',0,'L');
 			$pdf->Cell(1.1,0.5,'','BR',0,'L');
-			$pdf->Cell(1.3,0.5,'','BR',0,'L', true);
+			$pdf->Cell(2.7,0.5,'','BR',0,'L', true);
 			$pdf->Ln();
 			// End - Total EBCC - Input Manual
 
@@ -951,11 +945,11 @@
 			$pdf->Cell(2, 0.5, '', 1, 0, 'C', true);
 
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
+			// $pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
-			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
-			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
+			// $pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
 			$pdf->Cell(0.7, 0.5, '', 1, 0, 'C', true);
@@ -965,7 +959,7 @@
 			
 			$pdf->Cell(1.1,0.5,'','BR',0,'L');
 			$pdf->Cell(1.1,0.5,'','BR',0,'L');
-			$pdf->Cell(1.3,0.5,'','BR',0,'L', true);
+			$pdf->Cell(2.7	,0.5,'','BR',0,'L', true);
 			$pdf->Ln();
 			// End - Total EBCC - Lokasi Salah
 
@@ -989,36 +983,36 @@
 			$pdf->Cell(3.6,0.5,'','LR',0,'L');
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(0.8,0.5,'','L',0,'L');
-			$pdf->Cell(4.5,0.3,'BK : Buah Mengkal',0,0,'L');
+			$pdf->Cell(4.5,0.3,'TP : Tangkai Panjang',0,0,'L');
 			$pdf->Cell(5.6,0.3,'PB : Pinalti Brondolan (Piringan)','R',0,'L');$pdf->Ln();
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(7.5,0.5,'','LR',0,'L');
 			$pdf->Cell(3.6,0.5,'','LR',0,'L');
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(0.8,0.5,'','L',0,'L');
-			$pdf->Cell(4.5,0.3,'TP : Tangkai Panjang',0,0,'L');
+			$pdf->Cell(4.5,0.3,'BB : Buah Busuk',0,0,'L');
 			$pdf->Cell(5.6,0.3,'AB : Tidak ada Alas Brondolan (Per TPH)','R',0,'L');$pdf->Ln();
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(7.5,0.5,'','LR',0,'L');
 			$pdf->Cell(3.6,0.5,'','LR',0,'L');
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(0.8,0.5,'','L',0,'L');
-			$pdf->Cell(4.5,0.3,'BB : Buah Busuk',0,0,'L');
+			$pdf->Cell(4.5,0.3,'JK : Janjang Kosong',0,0,'L');
 			$pdf->Cell(5.6,0.3,'SF : Buah Matahari','R',0,'L');$pdf->Ln();
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(7.5,0.5,'','LR',0,'L');
 			$pdf->Cell(3.6,0.5,'','LR',0,'L');
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(0.8,0.5,'','L',0,'L');
-			$pdf->Cell(4.5,0.3,'JK : Janjang Kosong',0,0,'L');
+			$pdf->Cell(4.5,0.3,'BT : Buah Tinggal di Pokok',0,0,'L');
 			$pdf->Cell(5.6,0.3,'BS : Buah Sakit','R',0,'L');$pdf->Ln();
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(7.5,0.5,'','LR',0,'L');
 			$pdf->Cell(3.6,0.5,'','LR',0,'L');
 			$pdf->Cell(3,0.5,'','LR',0,'L');
 			$pdf->Cell(0.8,0.5,'','L',0,'L');
-			$pdf->Cell(4.5,0.3,'BT : Buah Tinggal di Pokok',0,0,'L');
-			$pdf->Cell(5.6,0.3,'BA : Buah Aborsi','R',0,'L');
+			$pdf->Cell(4.5,0.3,'',0,0,'L');
+			$pdf->Cell(5.6,0.3,'','R',0,'L');
 			
 			$pdf->Ln();
 			$pdf->Cell(3,0.5,'Mandor Panen',1,0,'C');
@@ -1089,9 +1083,9 @@
 			$pdf->Cell(1,0.5,'Manual',1,0,'C');
 			$pdf->Cell(1.5,0.5,'Lokasi',1,0,'C');
 			$pdf->Cell(2,0.5,'Hasil Panen',1,0,'C');
-			$pdf->Cell(8.4,0.5,'Pinalty',1,0,'C');
+			$pdf->Cell(7,0.5,'Pinalty',1,0,'C');
 			//$pdf->Cell(1,0.5,'Kode',1,0,'C');
-			$pdf->Cell(1.1,0.5,'Cust',1,0,'C');
+			$pdf->Cell(2.5,0.5,'Cust',1,0,'C');
 			$pdf->Ln();
 			$pdf->Cell(0.6,0.5,'',1,0,'C',true);
 			$pdf->Cell(1,0.5,'KARY',1,0,'C');
@@ -1108,11 +1102,9 @@
 			$pdf->Cell(1,0.5,'TBS',1,0,'C');
 			$pdf->Cell(1,0.5,'BRD',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BM',1,0,'C');
-			$pdf->Cell(0.7,0.5,'BK',1,0,'C');
 			$pdf->Cell(0.7,0.5,'TP',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BB',1,0,'C');
 			$pdf->Cell(0.7,0.5,'JK',1,0,'C');
-			$pdf->Cell(0.7,0.5,'BA',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BT',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BL',1,0,'C');
 			$pdf->Cell(0.7,0.5,'PB',1,0,'C');
@@ -1120,10 +1112,10 @@
 			$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 			//$pdf->Cell(1,0.5,'Absen',1,0,'C');
-			$pdf->Cell(1.1,0.5,'',1,0,'C',true);
+			$pdf->Cell(2.5,0.5,'',1,0,'C',true);
 			$pdf->Ln();
-			$pdf->Cell(28,0.1,'',1,0,'C');
-			$pdf->Ln();
+			// $pdf->Cell(28,0.1,'',1,0,'C');
+			// $pdf->Ln();
 			
 			$nomor = 0;
 			$ctr = 0;
@@ -1190,9 +1182,9 @@
 					$pdf->Cell(1,0.5,'Manual',1,0,'C');
 					$pdf->Cell(1.5,0.5,'Lokasi',1,0,'C');
 					$pdf->Cell(2,0.5,'Hasil Panen',1,0,'C');
-					$pdf->Cell(8.4,0.5,'Pinalty',1,0,'C');
+					$pdf->Cell(7,0.5,'Pinalty',1,0,'C');
 					//$pdf->Cell(1,0.5,'Kode',1,0,'C');
-					$pdf->Cell(1.1,0.5,'Cust',1,0,'C');
+					$pdf->Cell(2.5,0.5,'Cust',1,0,'C');
 					$pdf->Ln();
 					$pdf->Cell(0.6,0.5,'',1,0,'C',true);
 					$pdf->Cell(1,0.5,'KARY',1,0,'C');
@@ -1209,11 +1201,9 @@
 					$pdf->Cell(1,0.5,'TBS',1,0,'C');
 					$pdf->Cell(1,0.5,'BRD',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BM',1,0,'C');
-					$pdf->Cell(0.7,0.5,'BK',1,0,'C');
 					$pdf->Cell(0.7,0.5,'TP',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BB',1,0,'C');
 					$pdf->Cell(0.7,0.5,'JK',1,0,'C');
-					$pdf->Cell(0.7,0.5,'BA',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BT',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BL',1,0,'C');
 					$pdf->Cell(0.7,0.5,'PB',1,0,'C');
@@ -1221,10 +1211,10 @@
 					$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 					//$pdf->Cell(1,0.5,'Absen',1,0,'C');
-					$pdf->Cell(1.1,0.5,'',1,0,'C',true);
+					$pdf->Cell(2.5,0.5,'',1,0,'C',true);
 					$pdf->Ln();
-					$pdf->Cell(28,0.1,'',1,0,'C');
-					$pdf->Ln();
+					// $pdf->Cell(28,0.1,'',1,0,'C');
+					// $pdf->Ln();
 					
 					$ctr=0;
 				}
@@ -1320,20 +1310,18 @@
 				$pdf->Cell(1,0.5,$cell[$x][9],1,0,'C',$fill_set);
 				$pdf->Cell(1,0.5,$cell[$x][10],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][11],1,0,'C',$fill_set);
-				$pdf->Cell(0.7,0.5,$cell[$x][12],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][13],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][14],1,0,'C',$fill_set);
 				//$pdf->Cell(0.7,0.5,$cell[$x][23],1,0,'C',$fill_set);
 				//$pdf->Cell(0.7,0.5,$cell[$x][15],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][15],1,0,'C',$fill_set);
-				$pdf->Cell(0.7,0.5,$cell[$x][24],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][16],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][17],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][18],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][19],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][20],1,0,'C',$fill_set);
 				$pdf->Cell(0.7,0.5,$cell[$x][21],1,0,'C',$fill_set);
-				$pdf->Cell(1.1,0.5,$cell[$x][26],1,0,'C',$fill_set);
+				$pdf->Cell(2.5,0.5,$cell[$x][26],1,0,'C',$fill_set);
 				$pdf->Ln();
 			}
 			
@@ -1397,9 +1385,9 @@
 				$pdf->Cell(1,0.5,'Manual',1,0,'C');
 				$pdf->Cell(1.5,0.5,'Lokasi',1,0,'C');
 				$pdf->Cell(2,0.5,'Hasil Panen',1,0,'C');
-				$pdf->Cell(8.4,0.5,'Pinalty',1,0,'C');
+				$pdf->Cell(7,0.5,'Pinalty',1,0,'C');
 				//$pdf->Cell(1,0.5,'Kode',1,0,'C');
-				$pdf->Cell(1.1,0.5,'Cust',1,0,'C');
+				$pdf->Cell(2.5,0.5,'Cust',1,0,'C');
 				$pdf->Ln();
 				$pdf->Cell(0.6,0.5,'',1,0,'C',true);
 				$pdf->Cell(1,0.5,'KARY',1,0,'C');
@@ -1416,11 +1404,9 @@
 				$pdf->Cell(1,0.5,'TBS',1,0,'C');
 				$pdf->Cell(1,0.5,'BRD',1,0,'C');
 				$pdf->Cell(0.7,0.5,'BM',1,0,'C');
-				$pdf->Cell(0.7,0.5,'BK',1,0,'C');
 				$pdf->Cell(0.7,0.5,'TP',1,0,'C');
 				$pdf->Cell(0.7,0.5,'BB',1,0,'C');
 				$pdf->Cell(0.7,0.5,'JK',1,0,'C');
-				$pdf->Cell(0.7,0.5,'BA',1,0,'C');
 				$pdf->Cell(0.7,0.5,'BT',1,0,'C');
 				$pdf->Cell(0.7,0.5,'BL',1,0,'C');
 				$pdf->Cell(0.7,0.5,'PB',1,0,'C');
@@ -1428,14 +1414,14 @@
 				$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 				$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 				//$pdf->Cell(1,0.5,'Absen',1,0,'C');
-				$pdf->Cell(1.1,0.5,'',1,0,'C',true);
+				$pdf->Cell(2.5,0.5,'',1,0,'C',true);
 				$pdf->Ln();
-				$pdf->Cell(28,0.1,'',1,0,'C');
-				$pdf->Ln();
+				// $pdf->Cell(28,0.1,'',1,0,'C');
+				// $pdf->Ln();
 			}
 			
-			$pdf->Cell(28,0.1,'',1,0,'C');
-			$pdf->Ln();
+			// $pdf->Cell(28,0.1,'',1,0,'C');
+			// $pdf->Ln();
 			
 			$lampiran_total_manual = 0;
 			$lampiran_total_koreksi = 0;

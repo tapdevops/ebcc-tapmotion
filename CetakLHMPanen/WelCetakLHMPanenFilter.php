@@ -171,13 +171,14 @@ function coba(x)
 	}
 }
 
-function formSubmit(x)
+function formSubmit(x,nik,afd)
 {
 	if(x == 1){
-	// document.getElementById("doFilter").submit();
+		document.getElementById("valueAfd_select").value = afd;
+		document.getElementById("NIKMandor_select").value = nik;
 		document.getElementById("submittanggal1").action = 'doFilter.php';
 		document.getElementById("submittanggal1").submit();
-		// console.log($('form').serializeArray());
+		// console.log($('form').serializeArray(),nik,afd);
 	}
 	if(x ==0)
 	{
@@ -362,6 +363,8 @@ body,td,th {
           <td colspan="3"  valign="top">&nbsp;</td>
           </tr>
         <input name="valueAfd" type="text" id="valueAfd" value="<?=$_SESSION["Afdeling"]?>" onmousedown="return false" style="display:none"/>
+        <input name="valueAfd_select" type="text" id="valueAfd_select" value="" style="display:none"/>
+        <input name="NIKMandor_select" type="text" id="NIKMandor_select" value="" style="display:none"/>
         <input name="sdate1" type="text" id="sdate1" value="<?=$sdate1?>" onmousedown="return false" style="display:none"/>
         <input name="sdate2" type="text" id="sdate2" value="<?=$sdate2?>" onmousedown="return false" style="display:none"/>
       </form>
@@ -393,14 +396,14 @@ body,td,th {
   	  <?php
         foreach($data_table_mandor as $key => $val){
          $id = $val['id'];
-         $nik = $val['nik'];
-         $name = $val['name'];
+         $nik_mandor = $val['nik'];
+         $name_mandor = $val['name'];
          $count = COUNT($val['krani']);
-         if($NIKMandor=='ALL')
+         if($NIKMandor=='ALL' || $NIKMandor==$nik_mandor)
          {
 	         echo "<tr>"; 
 	         echo "<td rowspan='$count' align='center'><small>$id</small></td>"; 
-	         echo "<td rowspan='$count'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+	         echo "<td rowspan='$count'><small>&nbsp;$name_mandor - $nik_mandor&nbsp;</small></td>"; 
 	         $nik = $val['krani'][0]['nik'];
 	         $name = $val['krani'][0]['name'];
 	         $aslap = $val['krani'][0]['aslap'];
@@ -420,7 +423,7 @@ body,td,th {
 	        //  echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
 			 if($cetak_status==0)
 			 {
-				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1)'/></small></td>"; 
+				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
 			 }
 			 else 
 			 {
@@ -442,17 +445,6 @@ body,td,th {
 			         echo "</tr>"; 
 	         	}
 	         }
-         }
-         elseif($NIKMandor==$nik)
-         {
-	         echo "<tr>"; 
-	         echo "<td align='center'><small>$id</small></td>"; 
-	         echo "<td><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         echo "<td><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         echo "<td align='center'><i style='color:red'>&#10006;</i></td>"; 
-	         echo "<td align='center'><i style='color:green'>&#10004;</i></td>"; 
-	         echo "<td align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1)'/></small></td>"; 
-	         echo "</tr>"; 
          }
         } 
   	  ?>

@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-if(isset($_POST["valueAfd"]) || isset($_POST["NIKMandor"]) || isset($_POST["sdate1"]) || isset($_POST["sdate2"])){
+if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isset($_POST["sdate1"]) || isset($_POST["sdate2"])){
 	
-	$valueAfdeling 		= $_POST["valueAfd"];
-	$NIK_Mandor 		= $_POST["NIKMandor"];
+	$valueAfdeling 		= $_POST["valueAfd_select"];
+	$NIK_Mandor 		= $_POST["NIKMandor_select"];
 	$date1 	= $_POST["sdate1"];
 	$date2 	= $_POST["sdate2"];
 	$ID_BA 		= $_SESSION['subID_BA_Afd'];
