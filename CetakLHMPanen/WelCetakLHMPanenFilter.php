@@ -1,5 +1,9 @@
 <?php
 session_start();
+// echo '<pre>';
+// print_r($_SESSION);
+// echo '</pre>';
+// exit;
 include("../include/Header.php");
 if(isset($_SESSION['Job_Code']) && isset($_SESSION['NIK']) && isset($_SESSION['Name']) && isset($_SESSION['subID_BA_Afd']) && isset($_SESSION['Date']) && isset($_SESSION['Comp_Name'])){	
 $Job_Code = $_SESSION['Job_Code'];
@@ -171,11 +175,13 @@ function formSubmit(x)
 {
 	if(x == 1){
 	// document.getElementById("doFilter").submit();
-	alert(1);
+		document.getElementById("submittanggal1").action = 'doFilter.php';
+		document.getElementById("submittanggal1").submit();
+		// console.log($('form').serializeArray());
 	}
 	if(x ==0)
-	{WelCetakLHMPanenFilter.php
-		document.getElementById("submittanggal1").submit();
+	{
+		document.getElementById("submittanggal1").action = 'WelCetakLHMPanenFilter.php';
 		document.getElementById("submittanggal1").submit();
 	}
 }
@@ -402,7 +408,7 @@ body,td,th {
 			 $cetak_status = 0;
 	         foreach ($val['krani'] as $key => $check) 
 	         {
-				 if($check['kabun']!=2)
+				 if($check['kabun']!=3)
 				 {
 					$cetak_status++;
 				 }
