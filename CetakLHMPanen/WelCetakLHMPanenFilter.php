@@ -285,8 +285,8 @@ body,td,th {
 							data_list.Nama_Mandor, 
 							data_list.NIK_KERANI_BUAH, 
 							data_list.Nama_Krani,
-							count(val.NO_BCC) Aslap, 
-							count(val2.NO_BCC) Kabun
+							SUM(CASE WHEN val.roles<>'KEPALA_KEBUN' THEN 1 ELSE 0 end) Aslap, 
+							SUM(CASE WHEN val.roles='KEPALA_KEBUN' THEN 1 ELSE 0 end) Kabun
 					FROM 	( select 
 								ta.ID_AFD, 
 								thrp.NIK_Mandor, 
@@ -305,18 +305,17 @@ body,td,th {
 							and ta.id_afd = nvl (decode ('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta.id_afd) 
 							and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
 							group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
-						left JOIN
-							t_validasi val ON val.tanggal_ebcc = data_list.tanggal_rencana AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH AND val.roles <> 'KEPALA_KEBUN'
-						left JOIN
-							t_validasi val2 ON val2.tanggal_ebcc = data_list.tanggal_rencana AND val2.nik_mandor = data_list.nik_mandor AND val2.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH AND val2.roles = 'KEPALA_KEBUN'
-						GROUP BY 
-							ID_AFD,
-							data_list.NIK_MANDOR,
-							data_list.Nama_Mandor, 
-							data_list.NIK_KERANI_BUAH, 
-							data_list.Nama_Krani
-						order by ID_AFD,Nama_Mandor";
-        // echo $sql_MD;
+					LEFT JOIN
+						t_validasi val ON val.tanggal_ebcc = data_list.tanggal_rencana AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH 
+					GROUP BY 
+						ID_AFD,
+						data_list.NIK_MANDOR,
+						data_list.Nama_Mandor, 
+						data_list.NIK_KERANI_BUAH, 
+						data_list.Nama_Krani
+					ORDER BY 
+						ID_AFD,Nama_Mandor";
+        // echo 'pre>'.$sql_MD;die;
         $data_select_mandor = array();
         $data_table_mandor = array();
         $result_MD = oci_parse($con, $sql_MD);
