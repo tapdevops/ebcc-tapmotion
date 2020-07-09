@@ -79,7 +79,7 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
 			//Edited by Ardo, 06-08-2016 : Synchronize BCC
 			$sql_cetak_LHM_panen = "
 				 select 
-				 ( SELECT count(val.no_bcc) FROM t_validasi val where val.no_bcc = thp.no_bcc AND val.roles <> 'KEPALA_KEBUN'  ) as VALIDASI,
+				 ( SELECT count(val.no_bcc) FROM t_validasi val where val.no_bcc = thp.no_bcc ) as VALIDASI,
 				 tc.id_cc,
 				 tc.comp_name comp_name,
 				 tba.id_ba,

@@ -1114,7 +1114,7 @@
 			$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 			$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 			//$pdf->Cell(1,0.5,'Absen',1,0,'C');
-			$pdf->Cell(1.7,0.5,'Aslap/Askep',0,0,'C');
+			$pdf->Cell(1.7,0.5,'Aslap/Kabun',0,0,'C');
 			$pdf->Cell(1.1,0.5,'',1,0,'C',true);
 			$pdf->Ln();
 			// $pdf->Cell(28,0.1,'',1,0,'C');
@@ -1215,7 +1215,7 @@
 					$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 					$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 					//$pdf->Cell(1,0.5,'Absen',1,0,'C');
-					$pdf->Cell(1.7,0.5,'Aslap/Askep',0,0,'C');
+					$pdf->Cell(1.7,0.5,'Aslap/Kabun',0,0,'C');
 					$pdf->Cell(1.1,0.5,'',1,0,'C',true);
 					$pdf->Ln();
 					// $pdf->Cell(28,0.1,'',1,0,'C');
@@ -1423,7 +1423,7 @@
 				$pdf->Cell(0.7,0.5,'SF',1,0,'C');
 				$pdf->Cell(0.7,0.5,'BS',1,0,'C');
 				//$pdf->Cell(1,0.5,'Absen',1,0,'C');
-				$pdf->Cell(1.7,0.5,'Aslap/Askep',0,0,'C');
+				$pdf->Cell(1.7,0.5,'Aslap/Kabun',0,0,'C');
 				$pdf->Cell(1.1,0.5,'',1,0,'C',true);
 				$pdf->Ln();
 				// $pdf->Cell(28,0.1,'',1,0,'C');
