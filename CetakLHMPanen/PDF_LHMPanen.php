@@ -28,7 +28,7 @@
     tmt.longitude m_longitude,
     thp.latitude, thp.longitude,", "INNER JOIN t_companycode tc ON tba.id_cc = tc.id_cc
     LEFT JOIN tap_dw.tm_tph@devdw_link tmt ON tb.id_ba_afd_blok = tmt.werks || tmt.afd_code || tmt.block_code AND thp.no_tph = tmt.no_tph"), $sql_value);
-    //echo $sql_value; die;
+    // echo '<pre>'.$sql_value; die;
 	$print_date = $_SESSION["printdate"];
 	$tgl1 = $_SESSION["tgl1"];
 	$tgl2 = $_SESSION["tgl2"];
@@ -57,6 +57,7 @@
 	$stid = oci_parse($con, $sql_value);
 	oci_execute($stid);
 	//echo date('m-d-Y H:i:s'); exit;
+    // echo '<pre>'.$sql_value; die;
 	
 	while (($data = oci_fetch_array($stid, OCI_ASSOC))) 
 	{
@@ -170,6 +171,7 @@
 	}
 	
 	
+    // echo '<pre>'.$cell; die;
 	
 	oci_free_statement($stid);
 	oci_close($con);

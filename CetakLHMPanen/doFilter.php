@@ -166,7 +166,7 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
          SF,
          BS";
 			
-			//echo $sql_cetak_LHM_panen; die();
+			// echo '<pre>'.$sql_cetak_LHM_panen; die();
 			//order by tdrp.no_rekap_bcc, thrp.id_rencana, thrp.nik_mandor, tgl_panen, nama_pemanen, thp.no_bcc
 			$_SESSION["sql_cetak_LHM_panen"] = $sql_cetak_LHM_panen;
 			$_SESSION["printdate"] = $printdate;			

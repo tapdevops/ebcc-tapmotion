@@ -306,7 +306,7 @@ body,td,th {
 							and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
 							group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
 					LEFT JOIN
-						t_validasi val ON val.tanggal_ebcc = data_list.tanggal_rencana AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH 
+						t_validasi val ON TRUNC(val.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH 
 					GROUP BY 
 						ID_AFD,
 						data_list.NIK_MANDOR,
@@ -347,9 +347,9 @@ body,td,th {
         //echo "here".$sql_MD .$jumlahMD;
         if($jumlahMD >0 ){
         //$jumlahRecord = $_SESSION['jumlahMD'];
-        $NIKMandor = $_POST['NIKMandor'];
+        $NIKMandor = ISSET($_POST['NIKMandor'])?$_POST['NIKMandor']:'ALL';
         $selectoMD = "<select name=\"NIKMandor\" id=\"NIKMandor\" style=\"visibility:visible; font-size: 15px;  height: 25px\">";
-        $optiondefMD = "<option value=\"ALL\"> ALL </option>";
+        $optiondefMD = "<option value=\"ALL\" ".($NIKMandor=='ALL'?'selected':'')."> ALL </option>";
         echo $selectoMD.$optiondefMD;
         ksort($data_select_mandor);
         foreach($data_select_mandor as $key => $val){
