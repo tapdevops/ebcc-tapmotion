@@ -456,7 +456,7 @@ body,td,th {
   <tr>
     <th align="center"><?php
 
-    	if($status_cetak_list==0)
+    	if($status_cetak_list==0 && count($data_table_mandor)>0)
     	{
     		echo '<h3 style="color:red;margin-top:10px;">Tidak bisa melakukan cetak LHM karena belum dilakukan validasi oleh Aslap / Kabun.</h3>';
     	}
