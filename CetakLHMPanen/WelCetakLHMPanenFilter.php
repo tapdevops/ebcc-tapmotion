@@ -379,6 +379,7 @@ body,td,th {
         </tr>
     </table>
     <?php 
+ 	$status_cetak_list = 0;
     if($jumlahMD >0 ){ ?>
     <table border="1" width="100%">
       <tr>
@@ -393,7 +394,6 @@ body,td,th {
       	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;KABUN&nbsp;</small></b></td>
   	  </tr>
   	  <?php
-  	  	$status_cetak_list = 0;
         foreach($data_table_mandor as $key => $val){
          $id = $val['id'];
          $nik_mandor = $val['nik'];
@@ -424,10 +424,10 @@ body,td,th {
 			 if($cetak_status==0)
 			 {
 				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
-				++$status_cetak_list;
 			 }
 			 else 
 			 {
+				++$status_cetak_list;
 				echo "<td rowspan='$count' align='center'><small style='color:red;'>Belum Bisa Dilakukan</small></td>"; 
 			 }
 	         echo "</tr>"; 
@@ -456,7 +456,7 @@ body,td,th {
   <tr>
     <th align="center"><?php
 
-    	if($status_cetak_list==0 && count($data_table_mandor)>0)
+    	if($status_cetak_list>0 && count($data_table_mandor)>0)
     	{
     		echo '<h3 style="color:red;margin-top:10px;">Tidak bisa melakukan cetak LHM karena belum dilakukan validasi oleh Aslap / Kabun.</h3>';
     	}
