@@ -393,6 +393,7 @@ body,td,th {
       	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;KABUN&nbsp;</small></b></td>
   	  </tr>
   	  <?php
+  	  	$status_cetak_list = 0;
         foreach($data_table_mandor as $key => $val){
          $id = $val['id'];
          $nik_mandor = $val['nik'];
@@ -423,6 +424,7 @@ body,td,th {
 			 if($cetak_status==0)
 			 {
 				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
+				++$status_cetak_list;
 			 }
 			 else 
 			 {
@@ -453,6 +455,12 @@ body,td,th {
   </tr>
   <tr>
     <th align="center"><?php
+
+    	if($status_cetak_list==0)
+    	{
+    		echo '<h3 style="color:red;margin-top:10px;">Tidak bisa melakukan cetak LHM karena belum dilakukan validasi oleh Aslap / Kabun.</h3>';
+    	}
+
 		if(isset($_SESSION['err'])){
 			$err = $_SESSION['err'];
 			if($err!=null)
