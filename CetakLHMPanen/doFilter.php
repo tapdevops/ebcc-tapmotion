@@ -79,8 +79,8 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
 			//Edited by Ardo, 06-08-2016 : Synchronize BCC
 			$sql_cetak_LHM_panen = "
 				 select 
+				 distinct tc.id_cc, 
 				 ( SELECT count(val.no_bcc) FROM t_validasi val where val.no_bcc = thp.no_bcc ) as VALIDASI,
-				 tc.id_cc,
 				 tc.comp_name comp_name,
 				 tba.id_ba,
 				 tba.nama_ba nama_ba,
@@ -138,8 +138,7 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
 					ON tb.id_ba_afd = ta.id_ba_afd
 				 INNER JOIN t_bussinessarea tba
 					ON tba.id_ba = ta.id_ba
-				 INNER JOIN t_companycode tc
-					ON tba.id_cc = tc.id_cc
+				 INNER JOIN t_companycode tc ON tba.id_cc = tc.id_cc
 		   where     tc.id_cc = '$ID_CC'
 				 and tba.id_ba = '$ID_BA'
 				 and ta.id_afd = nvl(decode('$valueAfdeling', 'ALL', null, '$valueAfdeling'), ta.id_afd)
@@ -166,7 +165,7 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
          SF,
          BS";
 			
-			// echo '<pre>'.$sql_cetak_LHM_panen; die();
+			//echo $sql_cetak_LHM_panen; die();
 			//order by tdrp.no_rekap_bcc, thrp.id_rencana, thrp.nik_mandor, tgl_panen, nama_pemanen, thp.no_bcc
 			$_SESSION["sql_cetak_LHM_panen"] = $sql_cetak_LHM_panen;
 			$_SESSION["printdate"] = $printdate;			
@@ -180,8 +179,8 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
 			header("Location:PDF_LHMPanen.php");
 	}
 }
-// else{
-// $_SESSION[err] = "Please choose the options";
-// header("Location:WelCetakLHMPanenFilter.php");
-// }
+else{
+$_SESSION[err] = "Please choose the options";
+header("Location:WelCetakLHMPanenFilter.php");
+}
 ?>
