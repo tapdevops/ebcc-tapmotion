@@ -285,8 +285,8 @@ body,td,th {
 							data_list.Nama_Mandor, 
 							data_list.NIK_KERANI_BUAH, 
 							data_list.Nama_Krani,
-							SUM(CASE WHEN val.roles<>'KEPALA_KEBUN' THEN 1 ELSE 0 end) Aslap, 
-							SUM(CASE WHEN val.roles='KEPALA_KEBUN' THEN 1 ELSE 0 end) Kabun
+							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
+							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun 
 					FROM 	( select 
 								ta.ID_AFD, 
 								thrp.NIK_Mandor, 
