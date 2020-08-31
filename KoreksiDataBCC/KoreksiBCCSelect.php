@@ -106,14 +106,23 @@ if($username == "") {
 		$LONG_M_TPH = oci_result($result_m_LatLong, "LONGITUDE");
 	}
 
+	//CHECK VALIDASI
+	$count = 0;
 	$sql_check_koreksi = "SELECT NO_BCC FROM T_VALIDASI WHERE NO_BCC = '$NO_BCC'";
 	$result_check_koreksi = oci_parse($con, $sql_check_koreksi);
 	oci_execute($result_check_koreksi, OCI_DEFAULT);
-	$count = 0;
-	while(oci_fetch($result_check_koreksi)) {
-		$count++;
+	while(oci_fetch($result_check_koreksi)) { $count++; }
+	//CHECK TPH NON ACTIVE
+	$sql_check_koreksi2 = "SELECT * FROM T_TPH_STATUS WHERE WERKS = '$BA' AND AFD = '$AFD' AND BLOCK_CODE = '$BLOK_NAME' AND TPH = '$BLOK_TPH' AND TPH = '$BLOK_TPH'";
+	$result_check_koreksi2 = oci_parse($con, $sql_check_koreksi2);
+	oci_execute($result_check_koreksi2, OCI_DEFAULT);
+	while(oci_fetch($result_check_koreksi2)) {
+		$status = oci_result($result_check_koreksi2, "STATUS");
+		if($status==0)
+		{
+			$count = 0;
+		}
 	}
-	$count++;
 	$disabled = $count==0?'':'disabled';
 	$disabled_colour = $count==0?'':'background-color: #CCC;';
 	$disabled_select = $count==0?'':'border: 2px solid;';
