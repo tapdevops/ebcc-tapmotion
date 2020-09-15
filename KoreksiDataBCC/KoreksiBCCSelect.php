@@ -113,7 +113,7 @@ if($username == "") {
 	oci_execute($result_check_koreksi, OCI_DEFAULT);
 	while(oci_fetch($result_check_koreksi)) { $count++; }
 	//CHECK TPH NON ACTIVE
-	$sql_check_koreksi2 = "SELECT * FROM T_TPH_STATUS WHERE WERKS = '$BA' AND AFD = '$AFD' AND BLOCK_CODE = '$BLOK_NAME' AND TPH = '$BLOK_TPH' AND TPH = '$BLOK_TPH'";
+	$sql_check_koreksi2 = "SELECT * FROM T_TPH_STATUS WHERE WERKS = '$BA' AND AFD = '$AFD' AND BLOCK_CODE = '$ID_BLOK' AND TPH = '$BLOK_TPH' AND TPH = '$BLOK_TPH'";
 	$result_check_koreksi2 = oci_parse($con, $sql_check_koreksi2);
 	oci_execute($result_check_koreksi2, OCI_DEFAULT);
 	while(oci_fetch($result_check_koreksi2)) {
