@@ -409,11 +409,14 @@ body,td,th {
 	         $aslap = $val['krani'][0]['aslap'];
 			 $kabun = $val['krani'][0]['kabun'];
 			 $cetak_status = 0;
-	         foreach ($val['krani'] as $key => $check) 
-	         {
-				 if($check['kabun']!=3)
-				 {
-					$cetak_status++;
+			 if(intval(str_replace('-', '', $sdate1))>20200928)
+			 {
+		         foreach ($val['krani'] as $key => $check) 
+		         {
+					 if($check['kabun']!=3)
+					 {
+						$cetak_status++;
+					 }
 				 }
 			 }
 	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
