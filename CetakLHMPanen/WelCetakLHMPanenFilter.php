@@ -111,6 +111,48 @@ $Date = $_SESSION['Date'];
 	
 ?>
 
+
+<script src="../js/modal-jquery.js"></script>
+<script src="../js/modal.js"></script>
+<link type="text/css" href="../js/modal.css" rel="stylesheet" />
+<div id="login" class="modal">
+  <table style="width: 100%">
+  	<tr>
+  		<td colspan="3"><center><h4><b>APPROVAL EM</b></h4></center></td>
+  	</tr>
+  	<tr>
+  		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username</td>
+  		<td style="width: 30px;">:</td>
+  		<td><input type="text" name="username_em"></td>
+  	</tr>
+  	<tr>
+  		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password</td>
+  		<td>:</td>
+  		<td><input type="password" name="password_em"></td>
+  	</tr>
+  	<tr>
+  		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alasan</td>
+  		<td>:</td>
+  		<td>
+		  <select name="alasan">
+		  	<option value="PIC berhalangan">PIC berhalangan</option>
+		  	<option value="Kondisi lapangan">Kondisi lapangan</option>
+		  </select>
+		</td>
+  	</tr>
+  	<tr>
+  		<td colspan="3"><center><input type="submit" name="submit_em" value="Submit" style="width: 150px;height: 30px; margin: 15px;"></center></td>
+  	</tr>
+  </table>
+</div>
+<script type="text/javascript">
+$('.login').click(function(event) {
+  // alert('asdf');
+});
+</script>
+
+
+
 <script type="text/javascript" src="../datepicker/js/jquery.min.js"></script>
 <script type="text/javascript" src="../datepicker/js/pa.js"></script>
 <script type="text/javascript" src="../datepicker/datepicker/ui.core.js"></script>
@@ -128,11 +170,14 @@ $Date = $_SESSION['Date'];
 
 <script type="text/javascript">
 $(function() {
-	$('#datepicker1,#datepicker2').datepicker({
-		  dateFormat: 'yy-mm-dd',
-		  changeMonth: true,
-		  changeYear: true
-	});
+
+	$(document).ready(function() {
+		$('#datepicker1,#datepicker2').datepicker({
+			  dateFormat: 'yy-mm-dd',
+			  changeMonth: true,
+			  changeYear: true
+		});
+	}); 
 });
 function change(x)
 {
@@ -215,6 +260,9 @@ body,td,th {
 	font-weight:normal;
 }
 </style>
+
+
+
 <form id="submittanggal1" name="submittanggal1" method="post" action="WelCetakLHMPanenFilter.php">
 <table width="978" height="390" border="0" align="center">
   <tr>
@@ -286,7 +334,8 @@ body,td,th {
 							data_list.NIK_KERANI_BUAH, 
 							data_list.Nama_Krani,
 							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
-							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun 
+							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun, 
+							COUNT(compare.VAL_EBCC_CODE) data_compare 
 					FROM 	( select 
 								ta.ID_AFD, 
 								thrp.NIK_Mandor, 
@@ -307,6 +356,8 @@ body,td,th {
 							group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
 					LEFT JOIN
 						t_validasi val ON TRUNC(val.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH 
+					LEFT JOIN
+						MOBILE_INSPECTION.TR_EBCC_COMPARE compare ON TRUNC(compare.VAL_DATE_TIME) = TRUNC(data_list.tanggal_rencana) AND compare.EBCC_NIK_MANDOR = data_list.nik_mandor AND compare.EBCC_NIK_KERANI_BUAH = data_list.NIK_KERANI_BUAH 
 					GROUP BY 
 						ID_AFD,
 						data_list.NIK_MANDOR,
@@ -338,6 +389,7 @@ body,td,th {
 																														 'name' =>	oci_result($result_MD, "NAMA_KRANI"),
 																														 'aslap' =>	oci_result($result_MD, "ASLAP"),
 																														 'kabun' =>	oci_result($result_MD, "KABUN"),
+																														 'compare' =>	oci_result($result_MD, "DATA_COMPARE"),
 																														);
         }
         $jumlahMD = oci_num_rows($result_MD);
@@ -386,12 +438,11 @@ body,td,th {
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>AFDELING</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>MANDOR</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>KRANI BUAH</small></b></td>
-      	<td style="background-color: #CCC;" colspan="2" align="center"><b><small>VALIDASI</small></b></td>
+      	<td style="background-color: #CCC;border-bottom: none;" align="center"><b><small>VALIDASI</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>CETAK LHM</small></b></td>
   	  </tr>
       <tr>
-      	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;ASLAP&nbsp;</small></b></td>
-      	<td style="background-color: #CCC;" align="center"><b><small>&nbsp;KABUN&nbsp;</small></b></td>
+      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>&nbsp;SAMPLING&nbsp;</small></b></td>
   	  </tr>
   	  <?php
         foreach($data_table_mandor as $key => $val){
@@ -408,30 +459,41 @@ body,td,th {
 	         $name = $val['krani'][0]['name'];
 	         $aslap = $val['krani'][0]['aslap'];
 			 $kabun = $val['krani'][0]['kabun'];
+			 $compare = $val['krani'][0]['compare'];
 			 $cetak_status = 0;
-			 if(intval(str_replace('-', '', $sdate1))>20200928)
-			 {
+			 // if(intval(str_replace('-', '', $sdate1))>20200928)
+			 // {
 		         foreach ($val['krani'] as $key => $check) 
 		         {
-					 if($check['kabun']!=3)
+					 // if($check['kabun']!=3)
+					 // {
+						// $cetak_status++;
+					 // }
+					 if($check['compare']!=0)
 					 {
 						$cetak_status++;
 					 }
 				 }
-			 }
+			 // }
 	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         echo "<td align='center'>$aslap</td>"; 
-	         echo "<td align='center'>$kabun</td>"; 
+	         // echo "<td align='center'>$aslap</td>"; 
+	         // echo "<td align='center'>$kabun</td>"; 
+	         echo "<td align='center'>$compare</td>"; 
 	        //  echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
 	        //  echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
-			 if($cetak_status==0)
+			 if($cetak_status!=0)
 			 {
 				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
 			 }
 			 else 
 			 {
 				++$status_cetak_list;
-				echo "<td rowspan='$count' align='center'><small style='color:red;'>Belum Bisa Dilakukan</small></td>"; 
+				echo "<td rowspan='$count' align='center'>
+							<a href='#login' rel='modal:open' class='login'>
+								<button type='button' style='width:100px; height: 32px;font-size:11px;font-weight: 700;'>APPROVAL<br />EM</button>
+							</a>
+					  </td>"; 
+				// echo "<td rowspan='$count' align='center'><small style='color:red;'>Belum Bisa Dilakukan</small></td>"; 
 			 }
 	         echo "</tr>"; 
 	         foreach ($val['krani'] as $key => $val) 
@@ -440,14 +502,16 @@ body,td,th {
 	         	{
 			         echo "<tr>"; 
 			         $nik = $val['nik'];
-			         $name = $val['name'];
-					 $aslap = $val['aslap'];
-					 $kabun = $val['kabun'];
+			         $name = $val['name']; 
+					 $aslap = $val['aslap']; 
+					 $kabun = $val['kabun']; 
+					 $compare = $val['compare']; 
 	         		 echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-					 echo "<td align='center'>$aslap</td>"; 
-					 echo "<td align='center'>$kabun</td>"; 
-			         echo "</tr>"; 
-	         	}
+					 // echo "<td align='center'>$aslap</td>"; 
+					 // echo "<td align='center'>$kabun</td>"; 
+					 echo "<td align='center'>$compare</td>"; 
+			         echo "</tr>";
+	         	} 
 	         }
          }
         } 
