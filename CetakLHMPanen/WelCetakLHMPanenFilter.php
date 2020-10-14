@@ -335,7 +335,8 @@ body,td,th {
 							data_list.Nama_Krani,
 							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
 							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun, 
-							COUNT(compare.VAL_EBCC_CODE) data_compare 
+							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 1 ELSE 0 end) compare_aslap, 
+							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 0 ELSE 1 end) compare_kabun
 					FROM 	( select 
 								ta.ID_AFD, 
 								thrp.NIK_Mandor, 
@@ -389,7 +390,8 @@ body,td,th {
 																														 'name' =>	oci_result($result_MD, "NAMA_KRANI"),
 																														 'aslap' =>	oci_result($result_MD, "ASLAP"),
 																														 'kabun' =>	oci_result($result_MD, "KABUN"),
-																														 'compare' =>	oci_result($result_MD, "DATA_COMPARE"),
+																														 'compare_aslap' =>	oci_result($result_MD, "COMPARE_ASLAP"),
+																														 'compare_kabun' =>	oci_result($result_MD, "COMPARE_KABUN"),
 																														);
         }
         $jumlahMD = oci_num_rows($result_MD);
@@ -438,11 +440,12 @@ body,td,th {
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>AFDELING</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>MANDOR</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>KRANI BUAH</small></b></td>
-      	<td style="background-color: #CCC;border-bottom: none;" align="center"><b><small>VALIDASI</small></b></td>
+      	<td style="background-color: #CCC;" colspan="2" align="center"><b><small>VALIDASI SAMPLING</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>CETAK LHM</small></b></td>
   	  </tr>
       <tr>
-      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>&nbsp;SAMPLING&nbsp;</small></b></td>
+      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>ASLAP</small></b></td>
+      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>KABUN</small></b></td>
   	  </tr>
   	  <?php
         foreach($data_table_mandor as $key => $val){
@@ -459,7 +462,8 @@ body,td,th {
 	         $name = $val['krani'][0]['name'];
 	         $aslap = $val['krani'][0]['aslap'];
 			 $kabun = $val['krani'][0]['kabun'];
-			 $compare = $val['krani'][0]['compare'];
+			 $compare_aslap = $val['krani'][0]['compare_aslap'];
+			 $compare_kabun = $val['krani'][0]['compare_kabun'];
 			 $cetak_status = 0;
 			 // if(intval(str_replace('-', '', $sdate1))>20200928)
 			 // {
@@ -469,16 +473,15 @@ body,td,th {
 					 // {
 						// $cetak_status++;
 					 // }
-					 if($check['compare']!=0)
+					 if($check['compare_aslap']!=0 || $check['compare_kabun']!=0 )
 					 {
 						$cetak_status++;
 					 }
 				 }
 			 // }
 	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-	         // echo "<td align='center'>$aslap</td>"; 
-	         // echo "<td align='center'>$kabun</td>"; 
-	         echo "<td align='center'>$compare</td>"; 
+	         echo "<td align='center'>$compare_aslap</td>"; 
+	         echo "<td align='center'>$compare_kabun</td>"; 
 	        //  echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
 	        //  echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
 			 if($cetak_status!=0)
@@ -505,11 +508,11 @@ body,td,th {
 			         $name = $val['name']; 
 					 $aslap = $val['aslap']; 
 					 $kabun = $val['kabun']; 
-					 $compare = $val['compare']; 
+					 $compare_aslap = $val['compare_aslap']; 
+					 $compare_kabun = $val['compare_kabun']; 
 	         		 echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
-					 // echo "<td align='center'>$aslap</td>"; 
-					 // echo "<td align='center'>$kabun</td>"; 
-					 echo "<td align='center'>$compare</td>"; 
+					 echo "<td align='center'>$compare_aslap</td>"; 
+					 echo "<td align='center'>$compare_kabun</td>"; 
 			         echo "</tr>";
 	         	} 
 	         }
