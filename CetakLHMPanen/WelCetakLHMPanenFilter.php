@@ -1,4 +1,41 @@
 <?php
+if(ISSET($_POST['username_em']))
+{
+	$ch = curl_init( 'localhost:4021/v1.0/login-em' );
+	$payload = json_encode( array( "username"=>$_POST['username_em'],"password"=>$_POST['password_em'] ) );
+	curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+	curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+	$result = curl_exec($ch);
+	curl_close($ch);
+	$result = json_decode($result,true);
+	if($result['message']=='ok')
+	{
+		include("../config/SQL_function.php");
+		include("../config/db_connect.php");
+		$con = connect();
+		$email = $result['user'][0];
+		$query_insert = " INSERT INTO T_APPROVAL_CETAK_LHM 
+						  VALUES 
+						  ( '$_POST[ba_em]',
+						  	'$_POST[afd_em]',
+						  	null,
+						  	null,
+						  	'$_POST[mandor_em]',
+						  	'$_POST[nama_mandor_em]',
+						  	TRUNC(TO_DATE('$_POST[date_em]','YYYY-MM-DD')),
+						  	'$email',
+						  	sysdate,
+						  	'$_POST[alasan_em]'
+						  ) ";
+		$execute = oci_parse($con, $query_insert);
+		oci_execute($execute, OCI_COMMIT_ON_SUCCESS);
+	}
+	echo $result['message'];
+}
+else 
+{
 session_start();
 // echo '<pre>';
 // print_r($_SESSION);
@@ -14,11 +51,13 @@ $Comp_Name = $_SESSION['Comp_Name'];
 $subID_BA_Afd = $_SESSION['subID_BA_Afd'];
 $Date = $_SESSION['Date'];
 	
-	if($username == ""){
+	if($username == "")
+	{
 		$_SESSION[err] = "tolong login dulu!";
 		header("location:../index.php");
 	}
-	else{
+	else
+	{
 		include("../config/SQL_function.php");
 		include("../config/db_connect.php");
 		$con = connect();
@@ -123,32 +162,84 @@ $Date = $_SESSION['Date'];
   	<tr>
   		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username</td>
   		<td style="width: 30px;">:</td>
-  		<td><input type="text" name="username_em"></td>
+  		<td>
+  			<input type="text" name="username_em" maxlength="25">
+  			<input type="hidden" name="mandor_em">
+  			<input type="hidden" name="nama_mandor_em">
+  			<input type="hidden" name="afd_em">
+  			<input type="hidden" name="date_em" <?php if(isset($_POST["date1"])){ echo "value='$_POST[date1]'"; }?>>
+  		</td>
   	</tr>
   	<tr>
   		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password</td>
   		<td>:</td>
-  		<td><input type="password" name="password_em"></td>
+  		<td><input type="password" name="password_em" maxlength="25"></td>
   	</tr>
   	<tr>
   		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alasan</td>
   		<td>:</td>
   		<td>
-		  <select name="alasan">
+		  <select name="alasan_em">
 		  	<option value="PIC berhalangan">PIC berhalangan</option>
 		  	<option value="Kondisi lapangan">Kondisi lapangan</option>
 		  </select>
 		</td>
   	</tr>
   	<tr>
-  		<td colspan="3"><center><input type="submit" name="submit_em" value="Submit" style="width: 150px;height: 30px; margin: 15px;"></center></td>
+  		<td colspan="3"><center>
+  			<input type="button" class="submit_em" name="submit_em" value="Submit" style="width: 150px;height: 30px; margin: 15px;">
+  			<input type="button" class="submit_em_process" value="Memproses..." style="width: 150px;height: 30px; margin: 15px;display: none;">
+  		</center></td>
   	</tr>
   </table>
 </div>
 <script type="text/javascript">
-$('.login').click(function(event) {
-  // alert('asdf');
-});
+	$(document).ready(function() {
+		$('.login').click(function(event) {
+			$('input[name=mandor_em]').val(event.target.getAttribute('data-mandor'));
+			$('input[name=nama_mandor_em]').val(event.target.getAttribute('data-namamandor'));
+			$('input[name=afd_em]').val(event.target.getAttribute('data-afd'));
+			if($('input[name=date_em]').val()=='')
+			{
+				window.location.reload(false); 
+			}
+		});
+		$('.submit_em').click(function(event) {
+			$('input[name=mandor_em]').val();
+			$('input[name=afd_em]').val();
+			$('.submit_em').hide();
+			$('.submit_em_process').show();
+		  	$.ajax({
+			    type: "POST",
+			    url: window.location.pathname,
+			    data: { 
+			    	username_em: $('input[name=username_em]').val(),
+			    	password_em: $('input[name=password_em]').val(),
+			    	alasan_em: $('select[name=alasan_em] option:selected').val(),
+			    	date_em: $('input[name=date_em]').val(),
+			    	ba_em: "<?php echo $_SESSION['subID_BA_Afd']; ?>",
+			    	mandor_em: $('input[name=mandor_em]').val(),
+			    	nama_mandor_em: $('input[name=nama_mandor_em]').val(),
+			    	afd_em: $('input[name=afd_em]').val(),
+				},
+			    success: function(response)
+			    {
+					$('.submit_em').show();
+					$('.submit_em_process').hide();
+				    if(response=='ok')
+				    {
+				    	window.location.reload(false); 
+				    }
+				    else
+				    {
+				    	// $('input[name=username_em]').val('');
+				    	$('input[name=password_em]').val('');
+				    	alert(response);
+				    }
+			    }
+			});
+		});
+	}); 
 </script>
 
 
@@ -336,7 +427,8 @@ body,td,th {
 							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
 							SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun, 
 							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 1 ELSE 0 end) compare_aslap, 
-							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 0 ELSE 1 end) compare_kabun
+							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 0 ELSE 1 end) compare_kabun,
+							COUNT(em.ba) as approval_em
 					FROM 	( select 
 								ta.ID_AFD, 
 								thrp.NIK_Mandor, 
@@ -356,7 +448,9 @@ body,td,th {
 							and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
 							group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
 					LEFT JOIN
-						t_validasi val ON TRUNC(val.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH 
+						t_validasi val ON TRUNC(val.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH
+					LEFT JOIN
+						t_approval_cetak_lhm em ON TRUNC(em.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND em.nik_mandor = data_list.nik_mandor AND em.afdeling = data_list.ID_AFD  
 					LEFT JOIN
 						MOBILE_INSPECTION.TR_EBCC_COMPARE compare ON TRUNC(compare.VAL_DATE_TIME) = TRUNC(data_list.tanggal_rencana) AND compare.EBCC_NIK_MANDOR = data_list.nik_mandor AND compare.EBCC_NIK_KERANI_BUAH = data_list.NIK_KERANI_BUAH 
 					GROUP BY 
@@ -392,6 +486,7 @@ body,td,th {
 																														 'kabun' =>	oci_result($result_MD, "KABUN"),
 																														 'compare_aslap' =>	oci_result($result_MD, "COMPARE_ASLAP"),
 																														 'compare_kabun' =>	oci_result($result_MD, "COMPARE_KABUN"),
+																														 'approval_em' =>	oci_result($result_MD, "APPROVAL_EM"),
 																														);
         }
         $jumlahMD = oci_num_rows($result_MD);
@@ -464,6 +559,7 @@ body,td,th {
 			 $kabun = $val['krani'][0]['kabun'];
 			 $compare_aslap = $val['krani'][0]['compare_aslap'];
 			 $compare_kabun = $val['krani'][0]['compare_kabun'];
+			 $approval_em = $val['krani'][0]['approval_em'];
 			 $cetak_status = 0;
 			 // if(intval(str_replace('-', '', $sdate1))>20200928)
 			 // {
@@ -484,7 +580,7 @@ body,td,th {
 	         echo "<td align='center'>$compare_kabun</td>"; 
 	        //  echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
 	        //  echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
-			 if($cetak_status!=0)
+			 if($cetak_status!=0 || $approval_em>0)
 			 {
 				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
 			 }
@@ -492,8 +588,8 @@ body,td,th {
 			 {
 				++$status_cetak_list;
 				echo "<td rowspan='$count' align='center'>
-							<a href='#login' rel='modal:open' class='login'>
-								<button type='button' style='width:100px; height: 32px;font-size:11px;font-weight: 700;'>APPROVAL<br />EM</button>
+							<a href='#login' rel='modal:open' class='login' data-mandor='$nik_mandor' data-namamandor='$name_mandor' data-afd='$id'>
+								<button type='button' data-mandor='$nik_mandor' data-namamandor='$name_mandor' data-afd='$id' style='width:100px; height: 32px;font-size:11px;font-weight: 700;'>APPROVAL<br />EM</button>
 							</a>
 					  </td>"; 
 				// echo "<td rowspan='$count' align='center'><small style='color:red;'>Belum Bisa Dilakukan</small></td>"; 
@@ -546,3 +642,6 @@ body,td,th {
   </tr>
 </table>
 	</form>
+<?php 
+}
+ ?>
