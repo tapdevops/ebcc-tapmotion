@@ -19,14 +19,16 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 	// RUN PROCEDURE EBCC COMPARE
 	$user = $_SESSION['LoginName'];
 	$user_pt = $_SESSION['subID_CC'];             
-	$procedure = 'BEGIN MOBILE_INSPECTION.prc_tr_ebcc_compare_afd( :A, :B, :C, :D, :E); END;';  
+	$procedure = 'BEGIN MOBILE_INSPECTION.prc_tr_ebcc_compare_afd( :A, :B, :C, :D, :E, :F); END;';  
 	$stmt = oci_parse($con,$procedure);     
 	$date_procedure = date('d-M-Y',strtotime($date1));
+	$werks = $_SESSION['subID_BA_Afd'];
 	oci_bind_by_name($stmt,':A',$date_procedure);           
 	oci_bind_by_name($stmt,':B',$date_procedure);           
-	oci_bind_by_name($stmt,':C',$valueAfdeling);           
-	oci_bind_by_name($stmt,':D',$NIK_Mandor);           
-	oci_bind_by_name($stmt,':E',$user);  
+	oci_bind_by_name($stmt,':C',$werks);           
+	oci_bind_by_name($stmt,':D',$valueAfdeling);           
+	oci_bind_by_name($stmt,':E',$NIK_Mandor);           
+	oci_bind_by_name($stmt,':F',$user);  
 	$cursor = oci_new_cursor($con);
 	oci_execute($stmt);
 
