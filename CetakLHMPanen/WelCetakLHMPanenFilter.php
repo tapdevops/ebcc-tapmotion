@@ -67,6 +67,23 @@ $Date = $_SESSION['Date'];
 		include("../config/db_connect.php");
 		$con = connect();
 		
+		if(ISSET($_POST['cek_validasi']))
+		{
+			// RUN PROCEDURE EBCC COMPARE
+			$user = $_SESSION['LoginName'];
+			$user_pt = $_SESSION['subID_CC'];             
+			$procedure = 'BEGIN MOBILE_INSPECTION.prc_tr_ebcc_compare( :A, :B, :C, :D); END;';  
+			$stmt = oci_parse($con,$procedure);     
+			$date_procedure = date('d-M-Y',strtotime($_POST['date1']));
+			$werks = $_SESSION['subID_CC'].'%';
+			oci_bind_by_name($stmt,':A',$date_procedure);           
+			oci_bind_by_name($stmt,':B',$date_procedure);           
+			oci_bind_by_name($stmt,':C',$werks);           
+			oci_bind_by_name($stmt,':D',$user);  
+			$cursor = oci_new_cursor($con);
+			oci_execute($stmt);
+		}
+
 		$CetakLHMPanen = "";
 		if(isset($_POST["CetakLHMPanen"])){
 			$CetakLHMPanen = $_POST["CetakLHMPanen"];
@@ -517,24 +534,16 @@ body,td,th {
         echo $selectcMD;
         }
         ?></td>
-          <td colspan="3"  valign="top">&nbsp;</td>
+          <td colspan="3"  valign="top" align="right">
+          	<input type="submit" name="cek_validasi" value="Cek Validasi Krani Buah" style="width:160px; height: 30px;margin-top: 10px;margin-bottom: 10px;">
+	        <input name="valueAfd" type="text" id="valueAfd" value="<?=$_SESSION["Afdeling"]?>" onmousedown="return false" style="display:none"/>
+	        <input name="valueAfd_select" type="text" id="valueAfd_select" value="" style="display:none"/>
+	        <input name="NIKMandor_select" type="text" id="NIKMandor_select" value="" style="display:none"/>
+	        <input name="sdate1" type="text" id="sdate1" value="<?=$sdate1?>" onmousedown="return false" style="display:none"/>
+	        <input name="sdate2" type="text" id="sdate2" value="<?=$sdate2?>" onmousedown="return false" style="display:none"/>
+          </td>
           </tr>
-        <input name="valueAfd" type="text" id="valueAfd" value="<?=$_SESSION["Afdeling"]?>" onmousedown="return false" style="display:none"/>
-        <input name="valueAfd_select" type="text" id="valueAfd_select" value="" style="display:none"/>
-        <input name="NIKMandor_select" type="text" id="NIKMandor_select" value="" style="display:none"/>
-        <input name="sdate1" type="text" id="sdate1" value="<?=$sdate1?>" onmousedown="return false" style="display:none"/>
-        <input name="sdate2" type="text" id="sdate2" value="<?=$sdate2?>" onmousedown="return false" style="display:none"/>
       </form>
-      <tr>
-        <td>&nbsp;
-          <?php
-                
-				//echo  $sql_MD. $jumlahMD;
-				?></td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td colspan="3">&nbsp;</td>
-        </tr>
     </table>
     <?php 
  	$status_cetak_list = 0;
