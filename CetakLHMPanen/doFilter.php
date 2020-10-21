@@ -145,7 +145,13 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 
 				// UPDATE BCC HASIL PANEN KUALITAS IF KABUN NEVER VALIDATE
 				if($check_kabun>0)
-				{                                        
+				{       
+					$data['VAL_JML_1'] = $data['VAL_JML_1']==null?0:$data['VAL_JML_1'];                               
+					$data['VAL_JML_6'] = $data['VAL_JML_6']==null?0:$data['VAL_JML_6'];                               
+					$data['VAL_JML_15'] = $data['VAL_JML_15']==null?0:$data['VAL_JML_15'];  
+					$data['VAL_JML_4'] = $data['VAL_JML_4']==null?0:$data['VAL_JML_4'];  
+					$data['VAL_JML_3'] = $data['VAL_JML_3']==null?0:$data['VAL_JML_3'];  
+					                             
 				// UPDATE QUANTITY MENTAH
 				 $update_MENTAH = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_1]' WHERE ID_BCC = $value[EBCC_NO_BCC] AND ID_KUALITAS = 1";
 				 update_data($con,$update_MENTAH);
