@@ -132,13 +132,14 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 				// CHECK DATA VALIDATION KABUN IN T_VALIDASI
 				$check_kabun_validation = "SELECT * FROM T_VALIDASI 
 				                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
-				                           AND ROLES IN('KEPALA KEBUN',
-		                                                'KEPALA_KEBUN',
-		                                                'ASISTEN KEPALA',
-		                                                'ASISTEN_KEPALA',
-		                                                'EM',
-		                                                'SEM GM',
-		                                                'SENIOR ESTATE MANAGER')";
+				                           -- AND ROLES IN('KEPALA KEBUN',
+		                             --                    'KEPALA_KEBUN',
+		                             --                    'ASISTEN KEPALA',
+		                             --                    'ASISTEN_KEPALA',
+		                             --                    'EM',
+		                             --                    'SEM GM',
+		                             --                    'SENIOR ESTATE MANAGER')
+		                                                ";
 				$check_kabun = num_rows($con, $check_kabun_validation);
 
 				// UPDATE BCC HASIL PANEN KUALITAS IF KABUN NEVER VALIDATE
