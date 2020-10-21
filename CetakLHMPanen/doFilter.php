@@ -113,7 +113,11 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 			oci_execute(oci_parse($con, $query_insert1), OCI_DEFAULT);
 
 			// INSERT LOG TO EBCC
-			if(substr($data['VAL_JABATAN_VALIDATOR'],0,7)=='ASISTEN')
+			if(substr($data['VAL_JABATAN_VALIDATOR'],0,7)=='ASISTEN' || 
+			   substr($data['VAL_JABATAN_VALIDATOR'],0,6)=='KEPALA' ||
+			   $data['VAL_JABATAN_VALIDATOR']=='EM' ||
+			   $data['VAL_JABATAN_VALIDATOR']=='SEM GM' ||
+			   $data['VAL_JABATAN_VALIDATOR']=='SENIOR ESTATE MANAGER' )
 			{
 				$query_insert2 = "INSERT INTO T_VALIDASI 
 								  ( TANGGAL_EBCC, NO_BCC, TANGGAL_VALIDASI, ROLES, NIK, NAMA, NIK_KRANI_BUAH, NIK_MANDOR )
@@ -132,6 +136,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 				// CHECK DATA VALIDATION KABUN IN T_VALIDASI
 				$check_kabun_validation = "SELECT * FROM T_VALIDASI 
 				                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
+
 				                           -- AND ROLES IN('KEPALA KEBUN',
 		                             --                    'KEPALA_KEBUN',
 		                             --                    'ASISTEN KEPALA',
