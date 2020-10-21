@@ -113,7 +113,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 			oci_execute(oci_parse($con, $query_insert1), OCI_DEFAULT);
 
 			// INSERT LOG TO EBCC
-			if((substr($data['VAL_EBCC_CODE'],0,1)=='V' && $data['VAL_JABATAN_VALIDATOR'] == 'MI') || $data['VAL_SUMBER'] == 'ME')
+			if((substr($data['VAL_EBCC_CODE'],0,1)=='V' && $data['VAL_SUMBER'] == 'MI') || $data['VAL_SUMBER'] == 'ME')
 			{
 				$query_insert2 = "INSERT INTO T_VALIDASI 
 								  ( TANGGAL_EBCC, NO_BCC, TANGGAL_VALIDASI, ROLES, NIK, NAMA, NIK_KRANI_BUAH, NIK_MANDOR )
