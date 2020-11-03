@@ -16,26 +16,17 @@ if(ISSET($_POST['username_em']))
 		include("../config/db_connect.php");
 		$con = connect();
 		$email = $result['user'][0];
-		$data_krani = explode(',', $_POST['krani_em']);
-		$data_nama_krani = explode(',', $_POST['nama_krani_em']);
-		foreach ($data_krani as $key => $value) 
-		{
-			$query_insert = " INSERT INTO T_APPROVAL_CETAK_LHM 
-							  VALUES 
-							  ( '$_POST[ba_em]',
-							  	'$_POST[afd_em]',
-							  	'$data_krani[$key]',
-							  	'$data_nama_krani[$key]',
-							  	'$_POST[mandor_em]',
-							  	'$_POST[nama_mandor_em]',
-							  	TRUNC(TO_DATE('$_POST[date_em]','YYYY-MM-DD')),
-							  	'$email',
-							  	sysdate,
-							  	'$_POST[alasan_em]'
-							  ) ";
-			$execute = oci_parse($con, $query_insert);
-			oci_execute($execute, OCI_COMMIT_ON_SUCCESS);
-		}
+		$query_insert = " INSERT INTO T_APPROVAL_CETAK_LHM 
+						  VALUES 
+						  ( '$_POST[ba_em]',
+						  	'$_POST[afd_em]',
+						  	TRUNC(TO_DATE('$_POST[date_em]','YYYY-MM-DD')),
+						  	'$email',
+						  	sysdate,
+						  	'$_POST[alasan_em]'
+						  ) ";
+		$execute = oci_parse($con, $query_insert);
+		oci_execute($execute, OCI_COMMIT_ON_SUCCESS);
 	}
 	echo $result['message'];
 }
@@ -186,10 +177,6 @@ $Date = $_SESSION['Date'];
   		<td style="width: 30px;">:</td>
   		<td>
   			<input type="text" name="username_em" maxlength="25">
-  			<input type="hidden" name="mandor_em">
-  			<input type="hidden" name="nama_mandor_em">
-  			<input type="hidden" name="krani_em">
-  			<input type="hidden" name="nama_krani_em">
   			<input type="hidden" name="afd_em">
   			<input type="hidden" name="date_em" <?php if(isset($_POST["date1"])){ echo "value='$_POST[date1]'"; }?>>
   		</td>
@@ -220,10 +207,6 @@ $Date = $_SESSION['Date'];
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('.login').click(function(event) {
-			$('input[name=mandor_em]').val(event.target.getAttribute('data-mandor'));
-			$('input[name=nama_mandor_em]').val(event.target.getAttribute('data-namamandor'));
-			$('input[name=krani_em]').val(event.target.getAttribute('data-krani'));
-			$('input[name=nama_krani_em]').val(event.target.getAttribute('data-namakrani'));
 			$('input[name=afd_em]').val(event.target.getAttribute('data-afd'));
 			if($('input[name=date_em]').val()=='')
 			{
@@ -242,10 +225,6 @@ $Date = $_SESSION['Date'];
 			    	alasan_em: $('select[name=alasan_em] option:selected').val(),
 			    	date_em: $('input[name=date_em]').val(),
 			    	ba_em: "<?php echo $_SESSION['subID_BA_Afd']; ?>",
-			    	mandor_em: $('input[name=mandor_em]').val(),
-			    	nama_mandor_em: $('input[name=nama_mandor_em]').val(),
-			    	krani_em: $('input[name=krani_em]').val(),
-			    	nama_krani_em: $('input[name=nama_krani_em]').val(),
 			    	afd_em: $('input[name=afd_em]').val(),
 				},
 			    success: function(response)
@@ -457,6 +436,7 @@ body,td,th {
 							COUNT(em.ba) as approval_em
 					FROM 	( select 
 								ta.ID_AFD, 
+								ta.ID_BA,
 								thrp.NIK_Mandor, 
 								f_get_empname(thrp.NIK_Mandor) Nama_Mandor,
 								thrp.NIK_KERANI_BUAH, 
@@ -472,11 +452,11 @@ body,td,th {
 								ta.ID_BA = '$subID_BA_Afd' 
 							and ta.id_afd = nvl (decode ('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta.id_afd) 
 							and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
-							group by NIK_Mandor , ta.ID_AFD, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
+							group by NIK_Mandor , ta.ID_AFD, ta.ID_BA, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
 					-- LEFT JOIN
 					-- 	t_validasi val ON TRUNC(val.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH
 					LEFT JOIN
-						t_approval_cetak_lhm em ON TRUNC(em.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND em.nik_mandor = data_list.nik_mandor AND em.afdeling = data_list.ID_AFD  
+						t_approval_cetak_lhm em ON TRUNC(em.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND em.ba = data_list.ID_BA AND em.afdeling = data_list.ID_AFD  
 					LEFT JOIN
 						MOBILE_INSPECTION.TR_EBCC_COMPARE compare ON TRUNC(compare.VAL_DATE_TIME) = TRUNC(data_list.tanggal_rencana) AND compare.EBCC_NIK_MANDOR = data_list.nik_mandor AND compare.EBCC_NIK_KERANI_BUAH = data_list.NIK_KERANI_BUAH 
 					GROUP BY 
@@ -550,14 +530,17 @@ body,td,th {
     if($jumlahMD >0 ){ ?>
     <table border="1" width="100%">
       <tr>
+      	<!-- <td style="background-color: #CCC;" rowspan="2" align="center"><b><small>AFDELING</small></b></td> -->
+      	<!-- <td style="background-color: #CCC;" rowspan="2" align="center"><b><small>MANDOR</small></b></td> -->
+      	<!-- <td style="background-color: #CCC;" rowspan="2" align="center"><b><small>KRANI BUAH</small></b></td> -->
+      	<!-- <td style="background-color: #CCC;" colspan="2" align="center"><b><small>VALIDASI SAMPLING</small></b></td> -->
+      	<!-- <td style="background-color: #CCC;" rowspan="2" align="center"><b><small>CETAK LHM</small></b></td> -->
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>AFDELING</small></b></td>
-      	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>MANDOR</small></b></td>
-      	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>KRANI BUAH</small></b></td>
-      	<td style="background-color: #CCC;" colspan="2" align="center"><b><small>VALIDASI SAMPLING</small></b></td>
+      	<td style="background-color: #CCC;height: 30px;" colspan="2" align="center"><b><small>VALIDASI SAMPLING</small></b></td>
       	<td style="background-color: #CCC;" rowspan="2" align="center"><b><small>CETAK LHM</small></b></td>
   	  </tr>
       <tr>
-      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>ASLAP</small></b></td>
+      	<td style="background-color: #CCC;border-top: none;height: 30px;" align="center"><b><small>ASLAP</small></b></td>
       	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>KABUN</small></b></td>
   	  </tr>
   	  <?php
@@ -565,12 +548,13 @@ body,td,th {
          $id = $val['id'];
          $nik_mandor = $val['nik'];
          $name_mandor = $val['name'];
-         $count = COUNT($val['krani']);
+         // $count = COUNT($val['krani']);
+         $count = 1;
          if($NIKMandor=='ALL' || $NIKMandor==$nik_mandor)
          {
 	         echo "<tr>"; 
 	         echo "<td rowspan='$count' align='center'><small>$id</small></td>"; 
-	         echo "<td rowspan='$count'><small>&nbsp;$name_mandor - $nik_mandor&nbsp;</small></td>"; 
+	         // echo "<td rowspan='$count'><small>&nbsp;$name_mandor - $nik_mandor&nbsp;</small></td>"; 
 	         $nik = $val['krani'][0]['nik'];
 	         $name = $val['krani'][0]['name'];
 	   //       $aslap = $val['krani'][0]['aslap'];
@@ -581,54 +565,32 @@ body,td,th {
 			 $cetak_status = 0;
 			 // if(intval(str_replace('-', '', $sdate1))>20200928)
 			 // {
+				 $compare_aslap = 0;
+				 $compare_kabun = 0;
 		         foreach ($val['krani'] as $key => $check) 
 		         {
-					 // if($check['kabun']!=3)
-					 // {
-						// $cetak_status++;
-					 // }
+					 $compare_aslap += $check['compare_aslap'];
+					 $compare_kabun += $check['compare_kabun'];
 					 if($check['compare_aslap']!=0 || $check['compare_kabun']!=0 )
 					 {
 						$cetak_status++;
 					 }
-					 if(!ISSET($data_krani_em[$nik_mandor.$id]))
-					 {
-					 	$data_krani_em[$nik_mandor.$id] = '';
-					 	$data_name_krani_em[$nik_mandor.$id] = '';
-					 }
-			         $nik_em = $check['nik'];
-			         $name_em = $check['name']; 
-					 $data_krani_em[$nik_mandor.$id] .= ($data_krani_em[$nik_mandor.$id]==''?'':',').$nik_em;
-					 $data_name_krani_em[$nik_mandor.$id] .= ($data_name_krani_em[$nik_mandor.$id]==''?'':',').$name_em;
 				 }
 			 // }
-	         echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
+	         // echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
 	         echo "<td align='center'>$compare_aslap</td>"; 
 	         echo "<td align='center'>$compare_kabun</td>"; 
-	        //  echo "<td rowspan='$count' align='center'><i style='color:red'>&#10006;</i></td>"; 
-	        //  echo "<td rowspan='$count' align='center'><i style='color:green'>&#10004;</i></td>"; 
 			 if($cetak_status!=0 || $approval_em>0)
 			 {
-				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 20px;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
+				echo "<td rowspan='$count' align='center'><small><input type='button' value='CETAK LHM' style='visibility:visible; width:100px; height: 32px;font-size:11px;font-weight: 700;margin: 5px;' onclick='formSubmit(1,`$nik_mandor`,`$id`)'/></small></td>"; 
 			 }
 			 else 
 			 {
 				++$status_cetak_list;
-				 $data_krani_em_ = $data_krani_em[$nik_mandor.$id];
-				 $data_name_krani_em_ = $data_name_krani_em[$nik_mandor.$id];
 				echo "<td rowspan='$count' align='center'>
 							<a href='#login' rel='modal:open' class='login' 
-								data-mandor='$nik_mandor' 
-								data-namamandor='$name_mandor' 
-								data-krani='$data_krani_em_' 
-								data-namakrani='$data_name_krani_em_' 
 								data-afd='$id'>
-								<button type='button' 
-									data-mandor='$nik_mandor' 
-									data-namamandor='$name_mandor' 
-									data-krani='$data_krani_em_' 
-									data-namakrani='$data_name_krani_em_' 
-									data-afd='$id' style='width:100px; height: 32px;font-size:11px;font-weight: 700;'>APPROVAL<br />EM</button>
+								<button type='button' data-afd='$id' style='width:100px; height: 32px;font-size:11px;font-weight: 700;margin:5px;'>APPROVAL<br />EM</button>
 							</a>
 					  </td>"; 
 				// echo "<td rowspan='$count' align='center'><small style='color:red;'>Belum Bisa Dilakukan</small></td>"; 
@@ -636,6 +598,7 @@ body,td,th {
 	         echo "</tr>"; 
 	         foreach ($val['krani'] as $key => $val) 
 	         {
+	         	$key=0;
 	         	if($key!=0)
 	         	{
 			         echo "<tr>"; 
