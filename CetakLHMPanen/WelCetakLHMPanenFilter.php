@@ -429,10 +429,10 @@ body,td,th {
           <td  valign="top"><?php
         //Mandor
 		$sql_MD = "SELECT  ID_AFD,
-							MIN(data_list.NIK_MANDOR) NIK_MANDOR,
-							MIN(data_list.Nama_Mandor) Nama_Mandor, 
-							MIN(data_list.NIK_KERANI_BUAH) NIK_KERANI_BUAH, 
-							MIN(data_list.Nama_Krani) Nama_Krani,
+							data_list.NIK_MANDOR,
+							data_list.Nama_Mandor, 
+							data_list.NIK_KERANI_BUAH, 
+							data_list.Nama_Krani,
 							-- SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
 							-- SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun, 
 							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 1 ELSE 0 end) compare_aslap, 
@@ -441,10 +441,10 @@ body,td,th {
 					FROM 	( select 
 								ta.ID_AFD, 
 								ta.ID_BA,
-								thrp.NIK_Mandor, 
-								f_get_empname(thrp.NIK_Mandor) Nama_Mandor,
-								thrp.NIK_KERANI_BUAH, 
-								f_get_empname(thrp.NIK_KERANI_BUAH) Nama_Krani,
+								MIN(thrp.NIK_Mandor) NIK_Mandor, 
+								f_get_empname(MIN(thrp.NIK_Mandor)) Nama_Mandor,
+								MIN(thrp.NIK_KERANI_BUAH) NIK_KERANI_BUAH, 
+								f_get_empname(MIN(thrp.NIK_KERANI_BUAH)) Nama_Krani,
 								thrp.tanggal_rencana
 							from 
 								t_header_rencana_panen thrp inner join t_detail_rencana_panen tdrp on thrp.id_rencana = tdrp.id_rencana 
@@ -456,15 +456,18 @@ body,td,th {
 								ta.ID_BA = '$subID_BA_Afd' 
 							and ta.id_afd = nvl (decode ('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta.id_afd) 
 							and to_char(thrp.tanggal_rencana,'YYYY-MM-DD') between '$sdate1' and nvl ('$sdate2', '$sdate1')
-							group by NIK_Mandor , ta.ID_AFD, ta.ID_BA, NIK_KERANI_BUAH, thrp.tanggal_rencana ) data_list 
+							group by  ta.ID_AFD, ta.ID_BA,  thrp.tanggal_rencana ) data_list 
 					-- LEFT JOIN
 					-- 	t_validasi val ON TRUNC(val.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND val.nik_mandor = data_list.nik_mandor AND val.NIK_KRANI_BUAH = data_list.NIK_KERANI_BUAH
 					LEFT JOIN
 						t_approval_cetak_lhm em ON TRUNC(em.tanggal_ebcc) = TRUNC(data_list.tanggal_rencana) AND em.ba = data_list.ID_BA AND em.afdeling = data_list.ID_AFD  
 					LEFT JOIN
-						MOBILE_INSPECTION.TR_EBCC_COMPARE compare ON TRUNC(compare.VAL_DATE_TIME) = TRUNC(data_list.tanggal_rencana) AND compare.EBCC_NIK_MANDOR = data_list.nik_mandor AND compare.EBCC_NIK_KERANI_BUAH = data_list.NIK_KERANI_BUAH 
+						MOBILE_INSPECTION.TR_EBCC_COMPARE compare ON TRUNC(compare.VAL_DATE_TIME) = TRUNC(data_list.tanggal_rencana) AND compare.VAL_WERKS = data_list.ID_BA AND compare.VAL_AFD_CODE = data_list.ID_AFD 
 					GROUP BY 
-						ID_AFD
+						ID_AFD,data_list.NIK_MANDOR,
+							data_list.Nama_Mandor, 
+							data_list.NIK_KERANI_BUAH, 
+							data_list.Nama_Krani
 					ORDER BY 
 						ID_AFD";
         // echo '<pre>'.$sql_MD;die;
