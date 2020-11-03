@@ -436,7 +436,7 @@ body,td,th {
 							-- SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
 							-- SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun, 
 							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 1 ELSE 0 end) compare_aslap, 
-							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 0 ELSE 1 end) compare_kabun,
+							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%KEPALA%' THEN 1 ELSE 0 end) compare_kabun,
 							COUNT(em.ba) as approval_em
 					FROM 	( select 
 								ta.ID_AFD, 
