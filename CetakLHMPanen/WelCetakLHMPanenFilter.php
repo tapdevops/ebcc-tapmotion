@@ -425,10 +425,10 @@ body,td,th {
           <td  valign="top"><?php
         //Mandor
 		$sql_MD = "SELECT  ID_AFD,
-							data_list.NIK_MANDOR,
-							data_list.Nama_Mandor, 
-							data_list.NIK_KERANI_BUAH, 
-							data_list.Nama_Krani,
+							MIN(data_list.NIK_MANDOR) NIK_MANDOR,
+							MIN(data_list.Nama_Mandor) Nama_Mandor, 
+							MIN(data_list.NIK_KERANI_BUAH) NIK_KERANI_BUAH, 
+							MIN(data_list.Nama_Krani) Nama_Krani,
 							-- SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 1 ELSE 0 end) Aslap, 
 							-- SUM(CASE WHEN val.roles IS NULL THEN 0 WHEN val.roles LIKE 'ASISTEN%' THEN 0 ELSE 1 end) Kabun, 
 							SUM(CASE WHEN compare.VAL_JABATAN_VALIDATOR IS NULL THEN 0 WHEN compare.VAL_JABATAN_VALIDATOR LIKE '%ASISTEN%' THEN 1 ELSE 0 end) compare_aslap, 
@@ -460,13 +460,9 @@ body,td,th {
 					LEFT JOIN
 						MOBILE_INSPECTION.TR_EBCC_COMPARE compare ON TRUNC(compare.VAL_DATE_TIME) = TRUNC(data_list.tanggal_rencana) AND compare.EBCC_NIK_MANDOR = data_list.nik_mandor AND compare.EBCC_NIK_KERANI_BUAH = data_list.NIK_KERANI_BUAH 
 					GROUP BY 
-						ID_AFD,
-						data_list.NIK_MANDOR,
-						data_list.Nama_Mandor, 
-						data_list.NIK_KERANI_BUAH, 
-						data_list.Nama_Krani
+						ID_AFD
 					ORDER BY 
-						ID_AFD,Nama_Mandor";
+						ID_AFD";
         // echo '<pre>'.$sql_MD;die;
         $data_select_mandor = array();
         $data_table_mandor = array();
