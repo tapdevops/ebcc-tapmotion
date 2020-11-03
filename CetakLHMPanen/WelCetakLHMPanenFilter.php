@@ -420,8 +420,12 @@ body,td,th {
       </tr>
       <!-- <form id="doFilter" name="doFilter" method="post" action="doFilter.php"> -->
         <tr>
-          <td valign="top">Mandor</td>
-          <td valign="top">:</td>
+          <td valign="top">
+	          <!-- Mandor -->
+	      </td>
+          <td valign="top">
+          <!-- : -->
+      	  </td>
           <td  valign="top"><?php
         //Mandor
 		$sql_MD = "SELECT  ID_AFD,
@@ -499,7 +503,7 @@ body,td,th {
         if($jumlahMD >0 ){
         //$jumlahRecord = $_SESSION['jumlahMD'];
         $NIKMandor = ISSET($_POST['NIKMandor'])?$_POST['NIKMandor']:'ALL';
-        $selectoMD = "<select name=\"NIKMandor\" id=\"NIKMandor\" style=\"visibility:visible; font-size: 15px;  height: 25px\">";
+        $selectoMD = "<select name=\"NIKMandor\" id=\"NIKMandor\" style=\"visibility:hidden; font-size: 15px;  height: 25px\">";
         $optiondefMD = "<option value=\"ALL\" ".($NIKMandor=='ALL'?'selected':'')."> ALL </option>";
         echo $selectoMD.$optiondefMD;
         ksort($data_select_mandor);
