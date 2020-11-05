@@ -28,6 +28,7 @@ if(ISSET($_POST['username_em']))
 		$execute = oci_parse($con, $query_insert);
 		oci_execute($execute, OCI_COMMIT_ON_SUCCESS);
 	}
+	$result['message'] = $result['message']==''?'Terjadi kesalahan pada API':$result['message'];
 	echo $result['message'];
 }
 else 
@@ -566,8 +567,10 @@ body,td,th {
 			 $compare_kabun = $val['krani'][0]['compare_kabun'];
 			 $approval_em = $val['krani'][0]['approval_em'];
 			 $cetak_status = 0;
-			 // if(intval(str_replace('-', '', $sdate1))>20200928)
-			 // {
+			 if(intval(str_replace('-', '', $sdate1))<20201201)
+			 {
+				$cetak_status++;
+			 }
 				 $compare_aslap = 0;
 				 $compare_kabun = 0;
 		         foreach ($val['krani'] as $key => $check) 
@@ -579,7 +582,6 @@ body,td,th {
 						$cetak_status++;
 					 }
 				 }
-			 // }
 	         // echo "<td style='padding-top: 7px;padding-bottom: 7px;'><small>&nbsp;$name - $nik&nbsp;</small></td>"; 
 	         echo "<td align='center'>$compare_aslap</td>"; 
 	         echo "<td align='center'>$compare_kabun</td>"; 

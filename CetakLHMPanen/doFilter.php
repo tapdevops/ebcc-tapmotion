@@ -32,143 +32,148 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 	$cursor = oci_new_cursor($con);
 	oci_execute($stmt);
 
-	$data_compare = " SELECT a.*,sap.export_status FROM MOBILE_INSPECTION.tr_ebcc_compare a
-                      LEFT JOIN t_status_to_sap_ebcc sap ON sap.no_bcc = a.ebcc_no_bcc
-                      WHERE  
-                        ( 
-                         	val_jabatan_validator IN ('KEPALA KEBUN', 'KEPALA_KEBUN', 'ASISTEN KEPALA', 'ASISTEN_KEPALA', 'EM', 'SEM GM', 'SENIOR ESTATE MANAGER') 
-                    	OR 
-                         	val_jabatan_validator LIKE 'ASISTEN%' 
-                        )
-                      AND ebcc_nik_mandor = '$NIK_Mandor'
-                      AND val_afd_code = '$valueAfdeling'
-                      AND to_char(val_date_time,'YYYY-MM-DD') =  '$date1'
-                      AND akurasi_sampling_ebcc = 'MATCH'
-                      AND status_tph = 'ACTIVE'
-                      AND NVL (val_ebcc_code, 'x') NOT IN (SELECT NVL (val_ebcc_code, 'x') FROM MOBILE_INSPECTION.tr_validasi_detail) 
-                      AND (( val_sumber = 'MI' AND val_ebcc_code NOT LIKE 'M%' ) OR ( val_sumber = 'ME' )) ";
-	$select_data_compare = oci_parse($con, $data_compare);
-	oci_execute($select_data_compare, OCI_DEFAULT);
-	while(($data = oci_fetch_array($select_data_compare, OCI_ASSOC))) 
+
+	if(intval(str_replace('-', '', $date1))>=20201201)
 	{
-		//  IF DATA NOT EXPORTED TO SAP
-		if($data['EXPORT_STATUS']!='X')
+		$data_compare = " SELECT a.*,COALESCE(sap.export_status,'0') export_status FROM MOBILE_INSPECTION.tr_ebcc_compare a
+	                      LEFT JOIN t_status_to_sap_ebcc sap ON sap.no_bcc = a.ebcc_no_bcc
+	                      WHERE  
+	                        ( 
+	                         	val_jabatan_validator IN ('KEPALA KEBUN', 'KEPALA_KEBUN', 'ASISTEN KEPALA', 'ASISTEN_KEPALA', 'EM', 'SEM GM', 'SENIOR ESTATE MANAGER') 
+	                    	OR 
+	                         	val_jabatan_validator LIKE 'ASISTEN%' 
+	                        )
+	                      AND ebcc_nik_mandor = '$NIK_Mandor'
+	                      AND val_afd_code = '$valueAfdeling'
+	                      AND to_char(val_date_time,'YYYY-MM-DD') =  '$date1'
+	                      AND akurasi_sampling_ebcc = 'MATCH'
+	                      AND status_tph = 'ACTIVE'
+	                      AND NVL (val_ebcc_code, 'x') NOT IN (SELECT NVL (val_ebcc_code, 'x') FROM MOBILE_INSPECTION.tr_validasi_detail) 
+	                      AND (( val_sumber = 'MI' AND val_ebcc_code NOT LIKE 'M%' ) OR ( val_sumber = 'ME' )) ";
+		$select_data_compare = oci_parse($con, $data_compare);
+		oci_execute($select_data_compare, OCI_DEFAULT);
+		while(($data = oci_fetch_array($select_data_compare, OCI_ASSOC))) 
 		{
-            $id_validasi = $data['EBCC_NIK_KERANI_BUAH'].'-'.$data['EBCC_NIK_MANDOR'].'-'.str_replace('-','',$date1);
-            $uuid = $data['EBCC_NO_BCC'].'-'.date('YmdHis');
-
-			// INSERT TO MI VALIDATION_DETAIL
-			$query_insert1 = "INSERT INTO MOBILE_INSPECTION.tr_validasi_detail 
-							  (
-								uuid,id_validasi,data_source,val_ebcc_code,tanggal_ebcc,nik_krani_buah,nama_krani_buah,nik_mandor,nama_mandor,ba_code,ba_name,afd_code,block_code,
-								block_name,no_tph,no_bcc,jjg_ebcc_bm,jjg_ebcc_bk,jjg_ebcc_ms,jjg_ebcc_or,jjg_ebcc_bb,jjg_ebcc_jk,jjg_ebcc_ba,jjg_ebcc_total,jjg_ebcc_1,jjg_ebcc_2,
-								jjg_validate_bm,jjg_validate_bk,jjg_validate_ms,jjg_validate_or,jjg_validate_bb,jjg_validate_jk,jjg_validate_ba,jjg_validate_total,jjg_validate_1,
-								jjg_validate_2,kondisi_foto,insert_time,insert_user,insert_user_fullname,insert_user_userrole
-							  )
-							  VALUES 
-							  (
-								'$uuid',
-								'$id_validasi',
-								'$data[VAL_SUMBER]',
-								'$data[VAL_EBCC_CODE]',
-								'$data[VAL_DATE_TIME]',
-								'$data[EBCC_NIK_KERANI_BUAH]',
-								'$data[EBCC_NAMA_KERANI_BUAH]',
-								'$data[EBCC_NIK_MANDOR]',
-								'$data[EBCC_NAMA_MANDOR]',
-								'$data[VAL_WERKS]',
-								'$data[VAL_EST_NAME]',
-								'$data[VAL_AFD_CODE]',
-								'$data[VAL_BLOCK_CODE]',
-								'$data[VAL_BLOCK_NAME]',
-								'$data[VAL_TPH_CODE]',
-								'$data[EBCC_NO_BCC]',
-								'$data[EBCC_JML_BM]',
-								0,
-								'$data[EBCC_JML_MS]',
-								'$data[EBCC_JML_OR]',
-								'$data[EBCC_JML_BB]',
-								'$data[EBCC_JML_JK]',
-								0,
-								'$data[EBCC_JJG_PANEN]',
-								NULL,
-								NULL,
-								'$data[VAL_JML_1]',
-								'$data[VAL_JML_2]',
-								'$data[VAL_JML_3]',
-								'$data[VAL_JML_4]',
-								'$data[VAL_JML_6]',
-								'$data[VAL_JML_15]',
-								'$data[VAL_JML_16]',
-								'$data[VAL_TOTAL_JJG]',
-								NULL,
-								NULL,
-								NULL,
-								sysdate,
-								'$data[VAL_NIK_VALIDATOR]',
-								'$data[VAL_NAMA_VALIDATOR]',
-								'$data[VAL_JABATAN_VALIDATOR]'
-							  )
-							";
-			oci_execute(oci_parse($con, $query_insert1), OCI_DEFAULT);
-
-			// INSERT LOG TO EBCC
-			if((substr($data['VAL_EBCC_CODE'],0,1)=='V' && $data['VAL_SUMBER'] == 'MI') || $data['VAL_SUMBER'] == 'ME')
+			//  IF DATA NOT EXPORTED TO SAP
+			if($data['EXPORT_STATUS']!='X')
 			{
-				$query_insert2 = "INSERT INTO T_VALIDASI 
-								  ( TANGGAL_EBCC, NO_BCC, TANGGAL_VALIDASI, ROLES, NIK, NAMA, NIK_KRANI_BUAH, NIK_MANDOR )
+	            $id_validasi = $data['EBCC_NIK_KERANI_BUAH'].'-'.$data['EBCC_NIK_MANDOR'].'-'.str_replace('-','',$date1);
+	            $uuid = $data['EBCC_NO_BCC'].'-'.date('YmdHis');
+
+				// INSERT TO MI VALIDATION_DETAIL
+				$query_insert1 = "INSERT INTO MOBILE_INSPECTION.tr_validasi_detail 
+								  (
+									uuid,id_validasi,data_source,val_ebcc_code,tanggal_ebcc,nik_krani_buah,nama_krani_buah,nik_mandor,nama_mandor,ba_code,ba_name,afd_code,block_code,
+									block_name,no_tph,no_bcc,jjg_ebcc_bm,jjg_ebcc_bk,jjg_ebcc_ms,jjg_ebcc_or,jjg_ebcc_bb,jjg_ebcc_jk,jjg_ebcc_ba,jjg_ebcc_total,jjg_ebcc_1,jjg_ebcc_2,
+									jjg_validate_bm,jjg_validate_bk,jjg_validate_ms,jjg_validate_or,jjg_validate_bb,jjg_validate_jk,jjg_validate_ba,jjg_validate_total,jjg_validate_1,
+									jjg_validate_2,kondisi_foto,insert_time,insert_user,insert_user_fullname,insert_user_userrole
+								  )
 								  VALUES 
-								  ( '$data[VAL_DATE_TIME]',
-								  	'$data[EBCC_NO_BCC]',
-								  	sysdate,
-								  	'$data[VAL_JABATAN_VALIDATOR]',
-								  	'$data[VAL_NIK_VALIDATOR]',
-								  	'$data[VAL_NAMA_VALIDATOR]',
-								  	'$data[EBCC_NIK_KERANI_BUAH]',
-								  	'$data[EBCC_NIK_MANDOR]'
-								  ) ";
-				insert_data($con, $query_insert2);
+								  (
+									'$uuid',
+									'$id_validasi',
+									'$data[VAL_SUMBER]',
+									'$data[VAL_EBCC_CODE]',
+									'$data[VAL_DATE_TIME]',
+									'$data[EBCC_NIK_KERANI_BUAH]',
+									'$data[EBCC_NAMA_KERANI_BUAH]',
+									'$data[EBCC_NIK_MANDOR]',
+									'$data[EBCC_NAMA_MANDOR]',
+									'$data[VAL_WERKS]',
+									'$data[VAL_EST_NAME]',
+									'$data[VAL_AFD_CODE]',
+									'$data[VAL_BLOCK_CODE]',
+									'$data[VAL_BLOCK_NAME]',
+									'$data[VAL_TPH_CODE]',
+									'$data[EBCC_NO_BCC]',
+									'$data[EBCC_JML_BM]',
+									0,
+									'$data[EBCC_JML_MS]',
+									'$data[EBCC_JML_OR]',
+									'$data[EBCC_JML_BB]',
+									'$data[EBCC_JML_JK]',
+									0,
+									'$data[EBCC_JJG_PANEN]',
+									NULL,
+									NULL,
+									'$data[VAL_JML_1]',
+									'$data[VAL_JML_2]',
+									'$data[VAL_JML_3]',
+									'$data[VAL_JML_4]',
+									'$data[VAL_JML_6]',
+									'$data[VAL_JML_15]',
+									'$data[VAL_JML_16]',
+									'$data[VAL_TOTAL_JJG]',
+									NULL,
+									NULL,
+									NULL,
+									sysdate,
+									'$data[VAL_NIK_VALIDATOR]',
+									'$data[VAL_NAMA_VALIDATOR]',
+									'$data[VAL_JABATAN_VALIDATOR]'
+								  )
+								";
+				oci_execute(oci_parse($con, $query_insert1), OCI_DEFAULT);
 
-				// CHECK DATA VALIDATION KABUN IN T_VALIDASI
-				$check_kabun_validation = "SELECT * FROM T_VALIDASI 
-				                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
+				// INSERT LOG TO EBCC
+				if((substr($data['VAL_EBCC_CODE'],0,1)=='V' && $data['VAL_SUMBER'] == 'MI') || $data['VAL_SUMBER'] == 'ME')
+				{
+					$query_insert2 = "INSERT INTO T_VALIDASI 
+									  ( TANGGAL_EBCC, NO_BCC, TANGGAL_VALIDASI, ROLES, NIK, NAMA, NIK_KRANI_BUAH, NIK_MANDOR )
+									  VALUES 
+									  ( '$data[VAL_DATE_TIME]',
+									  	'$data[EBCC_NO_BCC]',
+									  	sysdate,
+									  	'$data[VAL_JABATAN_VALIDATOR]',
+									  	'$data[VAL_NIK_VALIDATOR]',
+									  	'$data[VAL_NAMA_VALIDATOR]',
+									  	'$data[EBCC_NIK_KERANI_BUAH]',
+									  	'$data[EBCC_NIK_MANDOR]'
+									  ) ";
+					insert_data($con, $query_insert2);
 
-				                           -- AND ROLES IN('KEPALA KEBUN',
-		                             --                    'KEPALA_KEBUN',
-		                             --                    'ASISTEN KEPALA',
-		                             --                    'ASISTEN_KEPALA',
-		                             --                    'EM',
-		                             --                    'SEM GM',
-		                             --                    'SENIOR ESTATE MANAGER')
-		                                                ";
-				$check_kabun = num_rows($con, $check_kabun_validation);
+					// CHECK DATA VALIDATION KABUN IN T_VALIDASI
+					$check_kabun_validation = "SELECT * FROM T_VALIDASI 
+					                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
 
-				// UPDATE BCC HASIL PANEN KUALITAS IF KABUN NEVER VALIDATE
-				if($check_kabun>0)
-				{       
-					$data['VAL_JML_1'] = $data['VAL_JML_1']==null?0:$data['VAL_JML_1'];                               
-					$data['VAL_JML_6'] = $data['VAL_JML_6']==null?0:$data['VAL_JML_6'];                               
-					$data['VAL_JML_15'] = $data['VAL_JML_15']==null?0:$data['VAL_JML_15'];  
-					$data['VAL_JML_4'] = $data['VAL_JML_4']==null?0:$data['VAL_JML_4'];  
-					$data['VAL_JML_3'] = $data['VAL_JML_3']==null?0:$data['VAL_JML_3'];  
-					                             
-				// UPDATE QUANTITY MENTAH
-				 $update_MENTAH = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_1]' WHERE ID_BCC = $value[EBCC_NO_BCC] AND ID_KUALITAS = 1";
-				 update_data($con,$update_MENTAH);
-				// UPDATE QUANTITY BUSUK
-				 $update_BUSUK = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_6]' WHERE ID_BCC = $value[EBCC_NO_BCC] AND ID_KUALITAS = 6";
-				 update_data($con,$update_BUSUK);
-				// UPDATE QUANTITY JAJANG KOSONG
-				 $update_KOSONG = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_15]' WHERE ID_BCC = $value[EBCC_NO_BCC] AND ID_KUALITAS = 15";
-				 update_data($con,$update_KOSONG);
-				// UPDATE QUANTITY OVERRIPE
-				 $update_OVERRIPE = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_4]' WHERE ID_BCC = $value[EBCC_NO_BCC] AND ID_KUALITAS = 4";
-				 update_data($con,$update_OVERRIPE);
-				// UPDATE QUANTITY MASAK
-				 $update_MASAK = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_3]' WHERE ID_BCC = $value[EBCC_NO_BCC] AND ID_KUALITAS = 3";
-				 update_data($con,$update_MASAK);
+					                           -- AND ROLES IN('KEPALA KEBUN',
+			                             --                    'KEPALA_KEBUN',
+			                             --                    'ASISTEN KEPALA',
+			                             --                    'ASISTEN_KEPALA',
+			                             --                    'EM',
+			                             --                    'SEM GM',
+			                             --                    'SENIOR ESTATE MANAGER')
+			                                                ";
+					$check_kabun = num_rows($con, $check_kabun_validation);
+
+					// UPDATE BCC HASIL PANEN KUALITAS IF KABUN NEVER VALIDATE
+					if($check_kabun==0)
+					{       
+						$data['VAL_JML_1'] = $data['VAL_JML_1']==null?0:$data['VAL_JML_1'];                               
+						$data['VAL_JML_6'] = $data['VAL_JML_6']==null?0:$data['VAL_JML_6'];                               
+						$data['VAL_JML_15'] = $data['VAL_JML_15']==null?0:$data['VAL_JML_15'];  
+						$data['VAL_JML_4'] = $data['VAL_JML_4']==null?0:$data['VAL_JML_4'];  
+						$data['VAL_JML_3'] = $data['VAL_JML_3']==null?0:$data['VAL_JML_3'];  
+
+						                             
+					// UPDATE QUANTITY MENTAH
+					 $update_MENTAH = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_1]' WHERE ID_BCC = '$data[EBCC_NO_BCC]' AND ID_KUALITAS = '1'";
+					 update_data($con,$update_MENTAH);
+					// UPDATE QUANTITY BUSUK
+					 $update_BUSUK = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_6]' WHERE ID_BCC = '$data[EBCC_NO_BCC]' AND ID_KUALITAS = '6'";
+					 update_data($con,$update_BUSUK);
+					// UPDATE QUANTITY JAJANG KOSONG
+					 $update_KOSONG = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_15]' WHERE ID_BCC = '$data[EBCC_NO_BCC]' AND ID_KUALITAS = '15'";
+					 update_data($con,$update_KOSONG);
+					// UPDATE QUANTITY OVERRIPE
+					 $update_OVERRIPE = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_4]' WHERE ID_BCC = '$data[EBCC_NO_BCC]' AND ID_KUALITAS = '4'";
+					 update_data($con,$update_OVERRIPE);
+					// UPDATE QUANTITY MASAK
+					 $update_MASAK = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_3]' WHERE ID_BCC = '$data[EBCC_NO_BCC]' AND ID_KUALITAS = '3'";
+					 update_data($con,$update_MASAK);
+					}   
 				}   
-			}   
+			}
 		}
 	}
 
