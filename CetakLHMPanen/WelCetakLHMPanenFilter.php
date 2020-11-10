@@ -473,7 +473,7 @@ body,td,th {
 							data_list.Nama_Krani
 					ORDER BY 
 						ID_AFD";
-        echo '<pre>'.$sql_MD;die;
+        // echo '<pre>'.$sql_MD;die;
         $data_select_mandor = array();
         $data_table_mandor = array();
         $result_MD = oci_parse($con, $sql_MD);
