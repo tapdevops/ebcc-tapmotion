@@ -545,7 +545,7 @@ body,td,th {
   	  </tr>
       <tr>
       	<td style="background-color: #CCC;border-top: none;height: 30px;" align="center"><b><small>ASLAP</small></b></td>
-      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>KABUN</small></b></td>
+      	<td style="background-color: #CCC;border-top: none;" align="center"><b><small>Kabun/EM/SEM/GM</small></b></td>
   	  </tr>
   	  <?php
         foreach($data_table_mandor as $key => $val){
