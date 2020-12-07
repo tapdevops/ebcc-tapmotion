@@ -268,37 +268,28 @@
 						<td width="277">
 							<?php
 							//Mandor
-							$sql_MD = "
-							 SELECT thrp.nik_mandor, f_get_empname(thrp.nik_mandor) nama_mandor
-								FROM T_HEADER_RENCANA_PANEN THRP
-         INNER JOIN T_EMPLOYEE TE
-            ON THRP.NIK_PEMANEN = TE.NIK
-         INNER JOIN T_AFDELING TA
-            ON TE.ID_BA_AFD = TA.ID_BA_AFD
-         INNER JOIN t_detail_rencana_panen tdrp
-                    ON thrp.id_rencana = tdrp.id_rencana
-         INNER JOIN t_hasil_panen thp
-            ON tdrp.id_rencana = thp.id_rencana
-            AND tdrp.no_rekap_bcc = thp.no_rekap_bcc
-         INNER JOIN t_blok tb
-            ON tdrp.id_ba_afd_blok = tb.id_ba_afd_blok
-         INNER JOIN t_afdeling ta2
-            ON tb.id_ba_afd = ta2.id_ba_afd
-         INNER JOIN t_bussinessarea tba
-            ON tba.id_ba = ta2.id_ba
-         INNER JOIN t_companycode tc
-            ON tba.id_cc = tc.id_cc
-         LEFT JOIN T_DETAIL_GANDENG TDG
-            ON THRP.ID_RENCANA = TDG.ID_RENCANA
-   WHERE     tc.id_cc = '$ID_CC'
-         and tba.id_ba = '$ID_BA'
-		 and ta2.id_afd = nvl(decode('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta2.id_afd)
-		 and thrp.nik_mandor = nvl(decode('ALL', 'ALL', null, 'ALL'), thrp.nik_mandor)
-         and TO_CHAR (thrp.tanggal_rencana, 'YYYY-MM-DD') BETWEEN '$date1' and nvl ('', '$date1')
-		 --and thp.cetak_bcc is not null and thp.cetak_date is not null
-		 group by thrp.nik_mandor
-		 order by nama_mandor
-														";
+							if (!is_null($ID_BA) and !is_null($date1)){
+								$sql_MD = "
+										  SELECT thrp.nik_mandor, emp_name nama_mandor
+											FROM t_header_rencana_panen thrp
+												 INNER JOIN ebcc.t_employee te
+													ON thrp.nik_mandor = te.nik
+												 INNER JOIN ebcc.t_detail_rencana_panen tdrp
+													ON thrp.id_rencana = tdrp.id_rencana
+												 INNER JOIN ebcc.t_blok tb
+													ON tdrp.id_ba_afd_blok = tb.id_ba_afd_blok
+												 INNER JOIN ebcc.t_afdeling ta
+													ON tb.id_ba_afd = ta.id_ba_afd
+										   WHERE ta.id_ba = '$ID_BA' AND ta.id_afd = NVL (DECODE ('$sesAfdeling', 'ALL', NULL, '$sesAfdeling'), ta.id_afd) AND TO_CHAR (thrp.tanggal_rencana, 'YYYY-MM-DD') = '$date1'
+										GROUP BY thrp.nik_mandor, emp_name
+										 ";
+							}
+							else {
+								$sql_MD = "
+										  SELECT ' ' nik_mandor, ' ' nama_mandor
+											FROM dual
+										 ";
+							}
 														/* $sql_MD = "select NIK_Mandor, f_get_empname(NIK_Mandor) Nama_Mandor from t_header_rencana_panen thrp 
 														inner join t_detail_rencana_panen tdrp on thrp.id_rencana = tdrp.id_rencana 
 														inner join t_blok tb on tdrp.id_ba_afd_blok = tb.id_ba_afd_blok 
@@ -312,9 +303,10 @@
 														//echo $sql_MD;
 														$result_MD = oci_parse($con, $sql_MD);
 														oci_execute($result_MD, OCI_DEFAULT);
+														$mandor = array();
 														while (oci_fetch($result_MD)) {	
-															$NIK_Mandor[] 		= oci_result($result_MD, "NIK_MANDOR");
-															$Emp_NameMandor[] 	= oci_result($result_MD, "NAMA_MANDOR");
+															$nikMandor = oci_result($result_MD, "NIK_MANDOR");
+															$mandor[$nikMandor] = oci_result($result_MD, "NAMA_MANDOR");
 														}
 														$jumlahMD = oci_num_rows($result_MD);
 														
@@ -326,13 +318,13 @@
 															$selectoMD = "<select name=\"NIKMandor\" id=\"NIKMandor\" style=\"visibility:visible; font-size: 15px;  height: 25px\">";
 															$optiondefMD = "<option value=\"\">-</option>";
 															echo $selectoMD.$optiondefMD;
-															
-															for($xMD = 0; $xMD < $jumlahMD; $xMD++){
-																if($NIK_Mandor[$xMD]==$_POST['NIKMandor']){
-																	$_SESSION['Emp_NameMandor'] = $Emp_NameMandor[$xMD];
-																	echo "<option selected value=\"$NIK_Mandor[$xMD]\">$NIK_Mandor[$xMD] - $Emp_NameMandor[$xMD]</option>"; 
+															asort($mandor);
+															foreach($mandor as $key => $key_value) {
+															  if($key==$_POST['NIKMandor']){
+																	$_SESSION['Emp_NameMandor'] = $key_value;
+																	echo "<option selected value=\"$key\">$key - $key_value</option>";
 																} else {
-																	echo "<option value=\"$NIK_Mandor[$xMD]\">$NIK_Mandor[$xMD] - $Emp_NameMandor[$xMD]</option>"; 
+																	echo "<option value=\"$key\">$key - $key_value</option>"; 
 																}
 															}
 															$selectcMD = "</select>";
@@ -590,7 +582,10 @@
          THP.STATUS_LOKASI,
          THP.STATUS_TPH,
          THP.STATUS_DETIC
-
+		,CASE
+		WHEN NVL( tts.status, 1 )= 1 THEN 0
+		ELSE 1
+	END tph_status
     FROM T_HEADER_RENCANA_PANEN THRP
          INNER JOIN T_EMPLOYEE TE
             ON THRP.NIK_PEMANEN = TE.NIK
@@ -615,16 +610,22 @@
             ON tba.id_cc = tc.id_cc
          LEFT JOIN T_DETAIL_GANDENG TDG
             ON THRP.ID_RENCANA = TDG.ID_RENCANA
-         LEFT JOIN TAP_DW.TM_TPH@PRODDW_LINK TMT ON TB.ID_BA_AFD_BLOK = TMT.WERKS || TMT.AFD_CODE || TMT.BLOCK_CODE AND THP.NO_TPH = TMT.NO_TPH 
+         LEFT JOIN TAP_DW.TM_TPH@PRODDW_LINK TMT ON TB.ID_BA_AFD_BLOK = TMT.WERKS || TMT.AFD_CODE || Trim(To_char(tmt.block_code, '099') ) AND THP.NO_TPH = TMT.NO_TPH 
+		 LEFT JOIN T_TPH_STATUS tts ON tts.werks = tmt.werks AND tts.afd = tmt.afd_code AND tts.block_code = Trim(To_char(tmt.block_code, '099') ) AND tts.tph = tmt.no_tph
    WHERE     tc.id_cc = '$ID_CC'
          and tba.id_ba = '$ID_BA'
 		 and ta2.id_afd = nvl(decode('$sesAfdeling', 'ALL', null, '$sesAfdeling'), ta2.id_afd)
 		 and thrp.nik_mandor = nvl(decode('".$_POST["NIKMandor"]."', 'ALL', null, '".$_POST["NIKMandor"]."'), thrp.nik_mandor)
          and TO_CHAR (thrp.tanggal_rencana, 'YYYY-MM-DD') BETWEEN '$date1' and nvl ('', '$date1')
 		 --and thp.cetak_bcc is not null and thp.cetak_date is not null
+		 
+		 -- AND THP.NO_TPH NOT IN (
+         	-- SELECT tph FROM T_TPH_STATUS TTS WHERE TTS.WERKS = TMT.WERKS AND TTS.AFD = TMT.AFD_CODE AND TTS.BLOCK_CODE = TMT.BLOCK_CODE AND STATUS = 0
+         -- )
+		 
 ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan_panen desc, nik_gandeng
 		";
-		//echo $sql_Download_Crop_Harv; //exit;
+		// echo $sql_Download_Crop_Harv; die;
 		$result = oci_parse($con, $sql_Download_Crop_Harv);
 		oci_execute($result, OCI_DEFAULT);
 		
@@ -687,9 +688,11 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 				$bcc_export[$count_first]['M_LONGITUDE'] = oci_result($result, "M_LONGITUDE");
 				$bcc_export[$count_first]['LATITUDE'] = oci_result($result, "LATITUDE");
 				$bcc_export[$count_first]['LONGITUDE'] = oci_result($result, "LONGITUDE");
+				$bcc_export[$count_first]['TPH_STATUS'] = oci_result($result, "TPH_STATUS");
 				
 				$count_first++;
-			} else { /*echo "BCC : " . $temp_bcc . " == " . oci_result($result, "NO_BCC") . "<br>";
+			} else { 
+			/*echo "BCC : " . $temp_bcc . " == " . oci_result($result, "NO_BCC") . "<br>";
 				if($temp_bcc==oci_result($result, "NO_BCC")){
 					$bcc_export[$temp_valid]['NIK_GANDENG'][] = oci_result($result, "NIK_GANDENG");
 					$bcc_export[$temp_valid]['GANDENG'][] = oci_result($result, "GANDENG");
@@ -857,6 +860,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 					$bcc_export[$count_first]['M_LONGITUDE'] = oci_result($result, "M_LONGITUDE");
 					$bcc_export[$count_first]['LATITUDE'] = oci_result($result, "LATITUDE");
 					$bcc_export[$count_first]['LONGITUDE'] = oci_result($result, "LONGITUDE");
+					$bcc_export[$count_first]['TPH_STATUS'] = oci_result($result, "TPH_STATUS");
 					$count_first++;
 					
 					
@@ -1049,6 +1053,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 				$lolos_validasi = 0;
 				$valid_me = 0;
 				$jml_valid = 0;
+				$status_validasi_kabun_or_em = '';
 				$jml_record = 0;
 				$valid_cetak = 0;
 				$invalid_latlong = 0;
@@ -1082,6 +1087,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							</tr>
 				<?php }
 				for ($z = 0; $z < $roweffec; $z++) {
+					$inactive[$bcc_export[$z]['NIK_KARYAWAN']] = 0;
 					/*(
                 CASE
                     WHEN THP.STATUS_TPH = 'MANUAL' THEN (
@@ -1165,14 +1171,24 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 						}
 					}
 				}
-				
-				// echo '<pre>';
-				// print_r($tmp);
-				// echo '</pre>';
 				//echo $total_invalid_lokasi;
 				
 				//echo $roweffec;
+				$inactive_tph = 0;
+				$inactive_tph_list = array();
 				for ($counter = 0; $counter < $roweffec; $counter++){
+					if($bcc_export[$counter]['TPH_STATUS']==1){
+						// echo 12345678;die;
+						$inactive[$bcc_export[$counter]['NIK_KARYAWAN']] += 1;
+						$inactive_tph_list[
+							$bcc_export[$counter]['BLOK']
+						][] = array( 
+							$bcc_export[$counter]['BA_KERJA'],
+							$bcc_export[$counter]['BA_KERJA'],
+							$bcc_export[$counter]['BLOK'],
+							$bcc_export[$counter]['NO_TPH'],
+						);
+					}
 					//cek cetak bcc
 					if($bcc_export[$counter]['CETAK_BCC']==''){
 						$valid_cetak++;
@@ -1260,9 +1276,23 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 						if($bcc_export[$counter]['VALIDASI_BCC']!="" and $bcc_export[$counter]['VALIDASI_DATE']!=""){
 							$lolos_validasi++;
 						}
-						
-						if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')){
-						//ini untuk pt yang sudah menggunakan mobile inspection
+						$query_cek_valid_me = "
+							select * from 
+							(select * from MOBILE_ESTATE.TR_EBCC 
+							where  DATA_FROM = 'EBCC_VALIDATION'
+							and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."'
+							UNION
+							select * from MOBILE_INSPECTION.TR_EBCC
+							)
+							where 
+							WERKS = '".$bcc_export[$counter]['BA_KERJA']."' and AFD_CODE = '".$bcc_export[$counter]['AFD_KERJA']."' 
+							and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
+							and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
+							";
+						//echo $query_cek_valid_me;
+						//Table sudah di union dengan mobile_inspection tidak perlu lagi kondisi 
+						/* if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')||($bcc_export[$counter]['BA_KERJA'] == '4123')){
+						 //ini untuk pt yang sudah menggunakan mobile inspection
 							$query_cek_valid_me = "
 							select * from MOBILE_ESTATE.TR_EBCC where 
 							WERKS = '".$bcc_export[$counter]['BA_KERJA']."' and AFD_CODE = '".$bcc_export[$counter]['AFD_KERJA']."' 
@@ -1273,12 +1303,19 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 						}else{
 						//ini untuk pt yang belum menggunakan mobile inspection
 							$query_cek_valid_me = "
-							select * from MOBILE_ESTATE.TR_EBCC where 
+							select * from 
+							(select * from 
+							MOBILE_ESTATE.TR_EBCC 
+							where  DATA_FROM = 'EBCC_VALIDATION'
+							UNION
+							select * from mobile_inspection.tr_ebcc
+							)
+							where 
 							WERKS = '".$bcc_export[$counter]['BA_KERJA']."' and AFD_CODE = '".$bcc_export[$counter]['AFD_KERJA']."' 
 							and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
-							and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."' and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
-							and DATA_FROM = 'EBCC_VALIDATION'";
-						}
+							and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
+							";
+						} */
 						
 						//echo $query_cek_valid_me."<br>";
 						$result_me_cek = oci_parse($con, $query_cek_valid_me);
@@ -1375,6 +1412,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							}
 
 							$status_invalid_lokasi = ($invalid_lokasi < 1) ? "&#x2713;" : "";						//echo $bcc_export[$counter-1]['NAMA_KARYAWAN'] . " -- " . $sementara_TBS . "<br>";//die();
+							//$symbol = ($inactive[$bcc_export[$counter-1]['NIK_KARYAWAN']] < 1) ? "&#x2713;" : ""; //tidak perlu
 
 							?>
 							<tr>
@@ -1405,8 +1443,6 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 											SELECT
 												thp.latitude, thp.longitude, tmt.latitude as m_latitude, tmt.longitude as m_longitude, thp.status_lokasi,
 												(SELECT NILAI FROM T_PARAMETER WHERE KETERANGAN = 'RANGE') AS TOLERANSI_JARAK
-												,TB.ID_BA_AFD_BLOK
-												,THP.NO_TPH
 											FROM
 												t_header_rencana_panen thrp
 											INNER JOIN t_detail_rencana_panen tdrp ON thrp.id_rencana = tdrp.id_rencana
@@ -1420,33 +1456,12 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 											AND   thp.status_lokasi IS NULL
 										";
 
-										// if($counter==2){
-											// $aas = oci_parse($con, "select TMT.WERKS , TMT.AFD_CODE , TMT.NO_TPH, TMT.BLOCK_CODE from TAP_DW.TM_TPH@PRODDW_LINK TMT");
-											// oci_execute($aas);
-											// $sip = oci_fetch_all($aas, $dfg, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
-											// echo '<br>START result TM_TPH:<br>';	
-											// echo json_encode(array('data'=>$sip));	
-											// echo '<br>';	
-											// echo json_encode($dfg);	
-											// echo '<br>';	
-										// }
-										
 										$result_status_lokasi = oci_parse($con, $cek_status_lokasi);
 										oci_execute($result_status_lokasi);
 										$res_status_lokasi = oci_fetch_all($result_status_lokasi, $res_lokasi, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
 										$total_salah = 0;
-										$longlat = array();
 										foreach ($res_lokasi as $k => $v) {
-											$longlat[] = array(
-												'M_LATITUDE'=>$v['M_LATITUDE'],
-												'M_LONGITUDE'=>$v['M_LONGITUDE'],
-												'LATITUDE'=>$v['LATITUDE'],
-												'LONGITUDE'=>$v['LONGITUDE'],
-												'TOLERANSI_JARAK'=>$v['TOLERANSI_JARAK'],
-												'ID_BA_AFD_BLOK'=>$v['ID_BA_AFD_BLOK'],
-												'NO_TPH'=>$v['NO_TPH'],
-											);
 											if (empty($v['M_LATITUDE']) && empty($v['M_LONGITUDE'])) {
 												$jarak = 0.1;
 											} else {
@@ -1459,12 +1474,6 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 										}
 
 										echo ($total_salah > 0) ? "" : "&#x2713;";
-										// echo ' <> Tot X:'.$total_salah;
-										// echo ' <> <br/> $longlat:'.json_encode($longlat);
-										// echo ' <> <br/> jarak:'.$jarak;
-										// echo ' <> <br/> $res_lokasi:'.json_encode($res_lokasi);
-										// echo ' <> <br/> $NIK_KARYAWAN:'.$bcc_export[$counter-1]['NIK_KARYAWAN'];
-										// echo ' <> <br/> SQL:'.$cek_status_lokasi.' XxENDSQLxX';
 									?>
 								</td>
 							</tr>
@@ -1514,7 +1523,20 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							//echo 'Lolos Validasi : ' . $lolos_validasi . '<br />';
 
 							if($valid_me==0){
-								if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')){
+								$query_cek_valid_me = "
+									select * from 
+									(select * from MOBILE_ESTATE.TR_EBCC 
+									where  DATA_FROM = 'EBCC_VALIDATION'
+									and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."'
+									UNION
+									select * from MOBILE_INSPECTION.TR_EBCC
+									)
+									where 
+									WERKS = '".$bcc_export[$counter]['BA_KERJA']."' and AFD_CODE = '".$bcc_export[$counter]['AFD_KERJA']."' 
+									and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
+									and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
+									";
+								/* if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')||($bcc_export[$counter]['BA_KERJA'] == '4123')){
 									//ini buat mobile inspection
 									$query_cek_valid_me = "
 									select * from MOBILE_ESTATE.TR_EBCC where 
@@ -1530,7 +1552,8 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 									and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
 									and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."' and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
 									and DATA_FROM = 'EBCC_VALIDATION'";
-								}
+								} */
+								
 								//echo $query_cek_valid_me."<br>";
 								$result_me_cek = oci_parse($con, $query_cek_valid_me);
 								oci_execute($result_me_cek, OCI_DEFAULT);
@@ -1583,7 +1606,20 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							}
 							
 							if($valid_me==0){
-								if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')){
+								$query_cek_valid_me = "
+									select * from 
+									(select * from MOBILE_ESTATE.TR_EBCC 
+									where  DATA_FROM = 'EBCC_VALIDATION'
+									and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."'
+									UNION
+									select * from MOBILE_INSPECTION.TR_EBCC
+									)
+									where 
+									WERKS = '".$bcc_export[$counter]['BA_KERJA']."' and AFD_CODE = '".$bcc_export[$counter]['AFD_KERJA']."' 
+									and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
+									and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
+									";
+								/* if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')||($bcc_export[$counter]['BA_KERJA'] == '4123')){
 									//dari Mobile Inspection
 									$query_cek_valid_me = "
 									select * from MOBILE_ESTATE.TR_EBCC where 
@@ -1599,7 +1635,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 									and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
 									and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."' and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
 									and DATA_FROM = 'EBCC_VALIDATION'";
-								}			
+								} */
 								
 								//echo $query_cek_valid_me."<br>";
 								$result_me_cek = oci_parse($con, $query_cek_valid_me);
@@ -1608,6 +1644,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 								if($result_me_count>0){
 									$valid_me = 1;
 								}
+								
 								
 							}
 							//echo $valid_me;
@@ -1621,7 +1658,20 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 						}
 						
 						if($valid_me==0){
-							if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')){
+							$query_cek_valid_me = "
+								select * from 
+								(select * from MOBILE_ESTATE.TR_EBCC 
+								where  DATA_FROM = 'EBCC_VALIDATION'
+								and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."'
+								UNION
+								select * from MOBILE_INSPECTION.TR_EBCC
+								)
+								where 
+								WERKS = '".$bcc_export[$counter]['BA_KERJA']."' and AFD_CODE = '".$bcc_export[$counter]['AFD_KERJA']."' 
+								and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
+								and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
+								";
+							/* if (($bcc_export[$counter]['BA_KERJA'] == '4121')||($bcc_export[$counter]['BA_KERJA'] == '4122')||($bcc_export[$counter]['BA_KERJA'] == '4221')||($bcc_export[$counter]['BA_KERJA'] == '4123')){	
 								//dari Mobile Inspection
 								$query_cek_valid_me = "
 								select * from MOBILE_ESTATE.TR_EBCC where 
@@ -1637,7 +1687,8 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 								and BLOCK_CODE = '".$bcc_export[$counter]['BLOK']."' and TPH_CODE = '".$bcc_export[$counter]['NO_TPH']."' 
 								and DELIVERY_TICKET = '".$bcc_export[$counter]['KODE_DELIVERY_TICKET']."' and TO_DATE(TO_CHAR(DATE_TIME, 'DD/MM/YYYY'), 'DD/MM/YYYY') = TO_DATE('".$bcc_export[$counter]['TANGGAL']."','DD.MM.YYYY')
 								and DATA_FROM = 'EBCC_VALIDATION'";
-							}	
+							} */
+							
 							//echo $query_cek_valid_me."<br>";
 							$result_me_cek = oci_parse($con, $query_cek_valid_me);
 							oci_execute($result_me_cek, OCI_DEFAULT);
@@ -1689,6 +1740,39 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							$invalid_lokasi = $invalid_lokasi + 0;
 						}
 						$status_invalid_lokasi = ($invalid_lokasi < 1) ? "&#x2713;" : "";
+						// $symbol = ($inactive[$bcc_export[$counter]['NIK_KARYAWAN']] < 1) ? "&#x2713;" : "";		
+
+
+
+					
+					// START UPDATE AFTER VALIDATION KABUN DEPLOYMENT DECEMBER 2020
+						// CHECK VALID IF HAVE DATA APPROVAL EM 
+						$query_cek_valid_me = "select * from T_APPROVAL_CETAK_LHM 
+						 						where ba='".$bcc_export[$counter]['BA_KERJA']."' 
+						 						and afdeling='".$bcc_export[$counter]['AFD_KERJA']."' 
+						 						and trunc(tanggal_ebcc) = TO_DATE('".$bcc_export[$counter]['TANGGAL']."', 'DD/MM/YYYY')";
+						$result_me_cek = oci_parse($con, $query_cek_valid_me);
+						oci_execute($result_me_cek, OCI_DEFAULT);
+						$result_me_count = oci_fetch_all($result_me_cek, $result_record, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+						if($result_me_count>0){
+							$status_validasi_kabun_or_em = "&#x2713;";
+						}
+						// CHECK VALID IF HAVE DATA IN MOBILE_INSPECTION.TR_EBCC_COMPARE
+						$query_cek_valid_me = "select * from MOBILE_INSPECTION.TR_EBCC_COMPARE
+						 						where val_werks='".$bcc_export[$counter]['BA_KERJA']."' 
+						 						and VAL_AFD_CODE='".$bcc_export[$counter]['AFD_KERJA']."' 
+						 						and trunc(VAL_DATE_TIME) = trunc(TO_DATE('".$bcc_export[$counter]['TANGGAL']."', 'DD/MM/YYYY'))";
+						$result_me_cek = oci_parse($con, $query_cek_valid_me);
+						oci_execute($result_me_cek, OCI_DEFAULT);
+						$result_me_count = oci_fetch_all($result_me_cek, $result_record, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+						if($result_me_count>0){
+							$status_validasi_kabun_or_em = "&#x2713;";
+						}
+						if($jml_valid>0)
+						{
+							$status_validasi_kabun_or_em = "&#x2713;";
+						}
+					// END UPDATE AFTER VALIDATION KABUN DEPLOYMENT DECEMBER 2020
 
 					?>
 					<tr>
@@ -1749,14 +1833,14 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 										}
 
 										echo ($total_salah > 0) ? "" : "&#x2713;";
-										// echo ' <> Tot X:'.$total_salah;
 									?>
 						</td>
 					</tr>
 					<?php
 					}
 					?>
-					
+				
+				
 		<?php } ?>
 		
 				<tr>
@@ -1776,7 +1860,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 					<td align="center"  style="background-color:#CCC"><?= $total_AB ?></td>
 					<td align="center"  style="background-color:#CCC"><?= $total_SF ?></td>
 					<td align="center"  style="background-color:#CCC"><?= $total_BS ?></td>
-					<td align="center"  style="background-color:#CCC"></td>
+					<td align="center"  style="background-color:#CCC"><?= $status_validasi_kabun_or_em ?></td>
 					<td align="center"  style="background-color:#CCC"></td>
 			    </tr>
 				</tbody>
@@ -1788,11 +1872,34 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 			<td height="50" colspan="9" align="right" valign="baseline">
 				<?php
 					$disable = '';
+					$disable_karna = '';
 					if ((int) $total_invalid_lokasi > 0) {
 						$disable = 'disabled="disabled"';
+						$disable_karna .= '- Lokasi BCC tidak sesuai dengan lokasi TPH<br>';
 					} else {
-						if ($jml_valid < 1 || $valid_cetak > 0) {
+						if ($jml_valid < 1 && $status_validasi_kabun_or_em=='') {
 							$disable = 'disabled="disabled"';
+							$disable_karna .= $jml_valid < 1?'- Belum dilakukan BCC Validation<br>':'';
+						}						
+						if ($valid_cetak > 0) {
+							$disable = 'disabled="disabled"';
+							$disable_karna .= $valid_cetak > 0?'- Terdapat BCC yang belum dilakukan cetak LHM Panen<br>':'';
+						}						
+					}
+					
+					$cek_stopper = 0;
+					foreach($inactive as $k => $inac){
+						if($inac > 0 && $cek_stopper==0){
+							$disable = 'disabled="disabled"';
+							$disable_karna .= $inac > 0?'- Terdapat TPH Inactive<br>':'';
+							foreach($inactive_tph_list as $mBlock=>$itl){
+								$disable_karna .= 'Block '.$mBlock.': ';
+								foreach($itl as $k=>$mitl){
+									$disable_karna .= $k<1? $mitl[3] : ', '.$mitl[3];
+								}
+								$disable_karna .= '<br/>';
+							}
+							$cek_stopper++;
 						}
 					}
 					/*if (($jml_valid < 1 || $valid_cetak > 0) && $invalid_lokasi > 0) {
@@ -1811,16 +1918,20 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 						//}
 					}*/
 				?>
-				<input type="submit" data="<?php echo $invalid_latlong.' <> '.$total_invalid_lokasi.' <> '.$jml_valid.' <> '.$valid_cetak ?>" name="btn_export" id="btn_export" value="EXPORT" style="width:120px; height: 30px" <?php echo $disable; ?> />
+				<input type="submit" name="btn_export" id="btn_export" value="EXPORT" style="width:120px; height: 30px" <?php echo $disable; ?> />
+				<div style="width:1100px; text-align:right; color:red; font-style: italic;">
+					<?php echo $disable_karna ?>
+				</div>
 			</td>
 			</form>
 		</div>
-		<div style="width:1100px; text-align:left; color:red; font-style: italic;">
+		<!-- <div style="width:1100px; text-align:left; color:red; font-style: italic;">
 			* Tombol export tidak dapat digunakan jika :<br>
 			- Terdapat BCC yang belum dilakukan cetak LHM Panen<br>
 			- Belum dilakukan BCC Validation<br />
-			- Lokasi BCC tidak sesuai dengan lokasi TPH
-		</div>
+			- Lokasi BCC tidak sesuai dengan lokasi TPH<br />
+			- Terdapat TPH Inactive
+		</div> -->
 		<?php }  ?>
 	<table>
 	<tr>

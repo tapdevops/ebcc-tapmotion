@@ -26,10 +26,26 @@
     tmt.latitude m_latitude, 
     tmt.longitude m_longitude,
     thp.latitude, thp.longitude,
-	NVL(tts.status, 1) AS tph_status,", "INNER JOIN t_companycode tc",'ON tba.id_cc = tc.id_cc LEFT JOIN tap_dw.tm_tph@proddw_link tmt ON tb.id_ba_afd_blok = tmt.werks || tmt.afd_code || Trim(To_char(tmt.block_code, \'099\') ) AND thp.no_tph = tmt.no_tph
-	LEFT JOIN T_TPH_STATUS tts ON tts.werks = tmt.werks AND tts.afd = tmt.afd_code AND tts.block_code = Trim(To_char(tmt.block_code, \'099\') ) AND tts.tph = tmt.no_tph
+	-- NVL(tts.status, 1) AS tph_status,
+	CASE
+			WHEN tst.werks IS NULL THEN 1
+			ELSE 0
+		END tph_status,", "INNER JOIN t_companycode tc",'ON tba.id_cc = tc.id_cc LEFT JOIN tap_dw.tm_tph@proddw_link tmt ON tb.id_ba_afd_blok = tmt.werks || tmt.afd_code || Trim(To_char(tmt.block_code, \'099\') ) AND thp.no_tph = tmt.no_tph
+	-- LEFT JOIN T_TPH_STATUS tts ON tts.werks = tmt.werks AND tts.afd = tmt.afd_code AND tts.block_code = Trim(To_char(tmt.block_code, \'099\') ) AND tts.tph = tmt.no_tph
+	LEFT join(SELECT * FROM ebcc.tm_status_tph status
+		WHERE status = \'INACTIVE\') tst
+		on tst.no_tph = tmt.no_tph
+			AND tst.werks = tmt.werks
+			AND tst.block_code = TRIM( TO_CHAR( tmt.block_code, \'099\' ))
+			AND tst.afd_code = tmt.afd_code
+			AND thrp.tanggal_rencana BETWEEN tst.start_valid AND (
+					CASE 
+						WHEN tst.end_valid IS NULL THEN TRUNC( TO_DATE( \'10-aug-9999\', \'dd-mon-yyyy\' ))
+						ELSE tst.end_valid
+					end
+				)
 	'), $sql_value);
-    // echo $sql_value; die;
+    // echo '<pre>'.$sql_value; die;
 	$print_date = $_SESSION["printdate"];
 	$tgl1 = $_SESSION["tgl1"];
 	$tgl2 = $_SESSION["tgl2"];
@@ -567,7 +583,11 @@
 					tb.id_blok id_blok,
 					tb.blok_name,
 					(SELECT nilai FROM t_parameter WHERE keterangan = 'RANGE') AS toleransi_jarak
-					, nvl(tts.STATUS,1) AS tph_status
+					-- , nvl(tts.STATUS,1) AS tph_status
+					, CASE
+							WHEN tst.werks IS NULL THEN 1
+							ELSE 0
+						END tph_status
 				FROM
 					t_header_rencana_panen thrp
 				INNER JOIN t_employee te ON thrp.nik_pemanen = te.nik
@@ -579,7 +599,19 @@
 				INNER JOIN t_bussinessarea tba ON tba.id_ba = ta.id_ba
 				INNER JOIN t_companycode tc ON tba.id_cc = tc.id_cc 
 				LEFT JOIN tap_dw.tm_tph@proddw_link tmt ON tb.id_ba_afd_blok = tmt.werks || tmt.afd_code || Trim(To_char(tmt.block_code, '099') ) AND thp.no_tph = tmt.no_tph
-				LEFT JOIN T_TPH_STATUS tts ON tts.werks = tmt.werks AND tts.afd = tmt.afd_code AND tts.block_code = Trim(To_char(tmt.block_code, '099') ) AND tts.tph = tmt.no_tph
+				-- LEFT JOIN T_TPH_STATUS tts ON tts.werks = tmt.werks AND tts.afd = tmt.afd_code AND tts.block_code = Trim(To_char(tmt.block_code, '099') ) AND tts.tph = tmt.no_tph
+				LEFT join(SELECT * FROM ebcc.tm_status_tph status
+				WHERE status = 'INACTIVE') tst
+				on tst.no_tph = tmt.no_tph
+					AND tst.werks = tmt.werks
+					AND tst.block_code = TRIM( TO_CHAR( tmt.block_code, '099' ))
+					AND tst.afd_code = tmt.afd_code
+					AND thrp.tanggal_rencana BETWEEN tst.start_valid AND (
+							CASE 
+								WHEN tst.end_valid IS NULL THEN TRUNC( TO_DATE( '10-aug-9999', 'dd-mon-yyyy' ))
+								ELSE tst.end_valid
+							end
+						)
 				where tc.id_cc = '$id_cc'
 					 and tba.id_ba = '$id_ba'
 					 and ta.id_afd = nvl(decode('$IDAfd[$j]', 'ALL', null, '$IDAfd[$j]'), ta.id_afd)
