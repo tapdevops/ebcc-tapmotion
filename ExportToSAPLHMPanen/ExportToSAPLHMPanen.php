@@ -1518,7 +1518,8 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							//echo 'Validasi BCC : ' . $bcc_export[$counter]['VALIDASI_BCC'] . '<br />';
 							//echo 'Validasi Date : ' . $bcc_export[$counter]['VALIDASI_DATE'] . '<br />';
 							if($bcc_export[$counter]['VALIDASI_BCC']!="" and $bcc_export[$counter]['VALIDASI_DATE']!=""){
-								$lolos_validasi++;
+								// DISABLED AT 2020-12-08
+								// $lolos_validasi++;
 							}
 							//echo 'Lolos Validasi : ' . $lolos_validasi . '<br />';
 
@@ -1602,7 +1603,8 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							//echo "3. " . $bcc_export[$counter]['NAMA_KARYAWAN'] . ' - ' . $bcc_export[$counter]['NO_BCC'] . ' - ' . $bcc_export[$counter]['STATUS_TPH'] . ' - ' . $bcc_export[$counter]['STATUS_LOKASI']; echo '<br />';
 							
 							if($bcc_export[$counter]['VALIDASI_BCC']!="" and $bcc_export[$counter]['VALIDASI_DATE']!=""){
-								$lolos_validasi++;
+								// DISABLED AT 2020-12-08
+								// $lolos_validasi++;
 							}
 							
 							if($valid_me==0){
@@ -1654,7 +1656,8 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 					if($counter==$roweffec-1){
 						$jml_record++;
 						if($bcc_export[$counter]['VALIDASI_BCC']!="" and $bcc_export[$counter]['VALIDASI_DATE']!=""){
-							$lolos_validasi++;
+							// DISABLED AT 2020-12-08
+							// $lolos_validasi++;
 						}
 						
 						if($valid_me==0){
@@ -1873,20 +1876,18 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 				<?php
 					$disable = '';
 					$disable_karna = '';
-					if ((int) $total_invalid_lokasi > 0) {
+					if ((int) $total_invalid_lokasi > 0){
 						$disable = 'disabled="disabled"';
 						$disable_karna .= '- Lokasi BCC tidak sesuai dengan lokasi TPH<br>';
-					} else {
-						if ($jml_valid < 1 && $status_validasi_kabun_or_em=='') {
-							$disable = 'disabled="disabled"';
-							$disable_karna .= $jml_valid < 1?'- Belum dilakukan BCC Validation<br>':'';
-						}						
-						if ($valid_cetak > 0) {
-							$disable = 'disabled="disabled"';
-							$disable_karna .= $valid_cetak > 0?'- Terdapat BCC yang belum dilakukan cetak LHM Panen<br>':'';
-						}						
 					}
-					
+					if ($jml_valid < 1 && $status_validasi_kabun_or_em==''){
+						$disable = 'disabled="disabled"';
+						$disable_karna .= $jml_valid < 1?'- Belum dilakukan BCC Validation<br>':'';
+					}						
+					if ($valid_cetak > 0) {
+						$disable = 'disabled="disabled"';
+						$disable_karna .= $valid_cetak > 0?'- Terdapat BCC yang belum dilakukan cetak LHM Panen<br>':'';
+					}	
 					$cek_stopper = 0;
 					foreach($inactive as $k => $inac){
 						if($inac > 0 && $cek_stopper==0){
@@ -1902,6 +1903,7 @@ ORDER BY AFD_PEMANEN asc, nama_pemanen asc, nik_pemanen asc, id_blok asc, luasan
 							$cek_stopper++;
 						}
 					}
+					
 					/*if (($jml_valid < 1 || $valid_cetak > 0) && $invalid_lokasi > 0) {
 						//if ($invalid_lokasi > 0) {
 						$disable = 'disabled="disabled"';
