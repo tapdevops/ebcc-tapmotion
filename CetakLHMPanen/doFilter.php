@@ -100,6 +100,14 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 					}
 					$check_t_validasi_num_rows = num_rows($con, $check_t_validasi);
 
+
+					if($data['VAL_JABATAN_VALIDATOR']=='SEM GM' || 
+					   $data['VAL_JABATAN_VALIDATOR']=='SENIOR ESTATE MANAGER')
+					{
+						// ALWAYS UPDATE IF SEM
+						$check_t_validasi_num_rows = 0;
+					}
+
 					// UPDATE BCC HASIL PANEN KUALITAS IF ROLE ABOVE IS NONE
 					if($check_t_validasi_num_rows==0)
 					{       
