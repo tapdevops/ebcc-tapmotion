@@ -63,32 +63,32 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 				// INSERT LOG TO EBCC
 				if((substr($data['VAL_EBCC_CODE'],0,1)=='V' && $data['VAL_SUMBER'] == 'MI') || $data['VAL_SUMBER'] == 'ME')
 				{
+					$check_t_validasi = "SELECT * FROM T_VALIDASI 
+					                           WHERE NO_BCC = '$data[EBCC_NO_BCC]'";
 					if($data['VAL_JABATAN_VALIDATOR']=='EM')
 					{
-						// CHECK DATA VALIDATION KABUN IN T_VALIDASI
-						$check_kabun_validation = "SELECT * FROM T_VALIDASI 
+						// CHECK DATA VALIDATION EM ABOVE IN T_VALIDASI
+						$check_t_validasi = "SELECT * FROM T_VALIDASI 
 						                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
 						                           AND ROLES IN('SEM GM',
-				                                                'SENIOR ESTATE MANAGER')
-				                                                ";
+				                                                'SENIOR ESTATE MANAGER')";
 					}
 					elseif($data['VAL_JABATAN_VALIDATOR']=='KEPALA KEBUN' || 
 						   $data['VAL_JABATAN_VALIDATOR']=='KEPALA_KEBUN' || 
 						   $data['VAL_JABATAN_VALIDATOR']=='ASISTEN_KEPALA' || 
 						   $data['VAL_JABATAN_VALIDATOR']=='ASISTEN KEPALA')
 					{
-						// CHECK DATA VALIDATION KABUN IN T_VALIDASI
-						$check_kabun_validation = "SELECT * FROM T_VALIDASI 
+						// CHECK DATA VALIDATION KABUN ABOVE IN T_VALIDASI
+						$check_t_validasi = "SELECT * FROM T_VALIDASI 
 						                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
 						                           AND ROLES IN('EM',
 				                                                'SEM GM',
-				                                                'SENIOR ESTATE MANAGER')
-				                                                ";
+				                                                'SENIOR ESTATE MANAGER')";
 					}
 					elseif(substr($data['VAL_JABATAN_VALIDATOR'],0,7)=='ASISTEN')
 					{
-						// CHECK DATA VALIDATION KABUN IN T_VALIDASI
-						$check_kabun_validation = "SELECT * FROM T_VALIDASI 
+						// CHECK DATA VALIDATION ASLAP ABOVE IN T_VALIDASI
+						$check_t_validasi = "SELECT * FROM T_VALIDASI 
 						                           WHERE NO_BCC = '$data[EBCC_NO_BCC]' 
 						                           AND ROLES IN('KEPALA KEBUN',
 				                                                'KEPALA_KEBUN',
@@ -96,13 +96,12 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 				                                                'ASISTEN_KEPALA',
 				                                                'EM',
 				                                                'SEM GM',
-				                                                'SENIOR ESTATE MANAGER')
-				                                                ";
+				                                                'SENIOR ESTATE MANAGER')";
 					}
-					$check_kabun = num_rows($con, $check_kabun_validation);
+					$check_t_validasi_num_rows = num_rows($con, $check_t_validasi);
 
 					// UPDATE BCC HASIL PANEN KUALITAS IF ROLE ABOVE IS NONE
-					if($check_kabun==0)
+					if($check_t_validasi_num_rows==0)
 					{       
 						$data['VAL_JML_1'] = $data['VAL_JML_1']==null?0:$data['VAL_JML_1'];                               
 						$data['VAL_JML_6'] = $data['VAL_JML_6']==null?0:$data['VAL_JML_6'];                               
