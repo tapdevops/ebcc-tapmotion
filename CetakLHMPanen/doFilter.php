@@ -101,7 +101,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 					}
 					$check_kabun = num_rows($con, $check_kabun_validation);
 
-					// UPDATE BCC HASIL PANEN KUALITAS IF KABUN NEVER VALIDATE
+					// UPDATE BCC HASIL PANEN KUALITAS IF ROLE ABOVE IS NONE
 					if($check_kabun==0)
 					{       
 						$data['VAL_JML_1'] = $data['VAL_JML_1']==null?0:$data['VAL_JML_1'];                               
@@ -125,76 +125,76 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 						// UPDATE QUANTITY MASAK
 						 $update_MASAK = "UPDATE T_HASILPANEN_KUALTAS SET QTY = '$data[VAL_JML_3]' WHERE ID_BCC = '$data[EBCC_NO_BCC]' AND ID_KUALITAS = '3'";
 						 update_data($con,$update_MASAK);
-					} 
 
-					// INSERT TO MI VALIDATION_DETAIL
-					$query_insert1 = "INSERT INTO MOBILE_INSPECTION.tr_validasi_detail 
-									  (
-										uuid,id_validasi,data_source,val_ebcc_code,tanggal_ebcc,nik_krani_buah,nama_krani_buah,nik_mandor,nama_mandor,ba_code,ba_name,afd_code,block_code,
-										block_name,no_tph,no_bcc,jjg_ebcc_bm,jjg_ebcc_bk,jjg_ebcc_ms,jjg_ebcc_or,jjg_ebcc_bb,jjg_ebcc_jk,jjg_ebcc_ba,jjg_ebcc_total,jjg_ebcc_1,jjg_ebcc_2,
-										jjg_validate_bm,jjg_validate_bk,jjg_validate_ms,jjg_validate_or,jjg_validate_bb,jjg_validate_jk,jjg_validate_ba,jjg_validate_total,jjg_validate_1,
-										jjg_validate_2,kondisi_foto,insert_time,insert_user,insert_user_fullname,insert_user_userrole
-									  )
-									  VALUES 
-									  (
-										'$uuid',
-										'$id_validasi',
-										'$data[VAL_SUMBER]',
-										'$data[VAL_EBCC_CODE]',
-										'$data[VAL_DATE_TIME]',
-										'$data[EBCC_NIK_KERANI_BUAH]',
-										'$data[EBCC_NAMA_KERANI_BUAH]',
-										'$data[EBCC_NIK_MANDOR]',
-										'$data[EBCC_NAMA_MANDOR]',
-										'$data[VAL_WERKS]',
-										'$data[VAL_EST_NAME]',
-										'$data[VAL_AFD_CODE]',
-										'$data[VAL_BLOCK_CODE]',
-										'$data[VAL_BLOCK_NAME]',
-										'$data[VAL_TPH_CODE]',
-										'$data[EBCC_NO_BCC]',
-										'$data[EBCC_JML_BM]',
-										0,
-										'$data[EBCC_JML_MS]',
-										'$data[EBCC_JML_OR]',
-										'$data[EBCC_JML_BB]',
-										'$data[EBCC_JML_JK]',
-										0,
-										'$data[EBCC_JJG_PANEN]',
-										NULL,
-										NULL,
-										'$data[VAL_JML_1]',
-										'$data[VAL_JML_2]',
-										'$data[VAL_JML_3]',
-										'$data[VAL_JML_4]',
-										'$data[VAL_JML_6]',
-										'$data[VAL_JML_15]',
-										'$data[VAL_JML_16]',
-										'$data[VAL_TOTAL_JJG]',
-										NULL,
-										NULL,
-										NULL,
-										sysdate,
-										'$data[VAL_NIK_VALIDATOR]',
-										'$data[VAL_NAMA_VALIDATOR]',
-										'$data[VAL_JABATAN_VALIDATOR]'
-									  )
-									";
-					oci_execute(oci_parse($con, $query_insert1), OCI_DEFAULT);
-				
-					$query_insert2 = "INSERT INTO T_VALIDASI 
-									  ( TANGGAL_EBCC, NO_BCC, TANGGAL_VALIDASI, ROLES, NIK, NAMA, NIK_KRANI_BUAH, NIK_MANDOR )
-									  VALUES 
-									  ( '$data[VAL_DATE_TIME]',
-									  	'$data[EBCC_NO_BCC]',
-									  	sysdate,
-									  	'$data[VAL_JABATAN_VALIDATOR]',
-									  	'$data[VAL_NIK_VALIDATOR]',
-									  	'$data[VAL_NAMA_VALIDATOR]',
-									  	'$data[EBCC_NIK_KERANI_BUAH]',
-									  	'$data[EBCC_NIK_MANDOR]'
-									  ) ";
-					insert_data($con, $query_insert2);  
+						// INSERT TO MI VALIDATION_DETAIL
+						$query_insert1 = "INSERT INTO MOBILE_INSPECTION.tr_validasi_detail 
+										  (
+											uuid,id_validasi,data_source,val_ebcc_code,tanggal_ebcc,nik_krani_buah,nama_krani_buah,nik_mandor,nama_mandor,ba_code,ba_name,afd_code,block_code,
+											block_name,no_tph,no_bcc,jjg_ebcc_bm,jjg_ebcc_bk,jjg_ebcc_ms,jjg_ebcc_or,jjg_ebcc_bb,jjg_ebcc_jk,jjg_ebcc_ba,jjg_ebcc_total,jjg_ebcc_1,jjg_ebcc_2,
+											jjg_validate_bm,jjg_validate_bk,jjg_validate_ms,jjg_validate_or,jjg_validate_bb,jjg_validate_jk,jjg_validate_ba,jjg_validate_total,jjg_validate_1,
+											jjg_validate_2,kondisi_foto,insert_time,insert_user,insert_user_fullname,insert_user_userrole
+										  )
+										  VALUES 
+										  (
+											'$uuid',
+											'$id_validasi',
+											'$data[VAL_SUMBER]',
+											'$data[VAL_EBCC_CODE]',
+											'$data[VAL_DATE_TIME]',
+											'$data[EBCC_NIK_KERANI_BUAH]',
+											'$data[EBCC_NAMA_KERANI_BUAH]',
+											'$data[EBCC_NIK_MANDOR]',
+											'$data[EBCC_NAMA_MANDOR]',
+											'$data[VAL_WERKS]',
+											'$data[VAL_EST_NAME]',
+											'$data[VAL_AFD_CODE]',
+											'$data[VAL_BLOCK_CODE]',
+											'$data[VAL_BLOCK_NAME]',
+											'$data[VAL_TPH_CODE]',
+											'$data[EBCC_NO_BCC]',
+											'$data[EBCC_JML_BM]',
+											0,
+											'$data[EBCC_JML_MS]',
+											'$data[EBCC_JML_OR]',
+											'$data[EBCC_JML_BB]',
+											'$data[EBCC_JML_JK]',
+											0,
+											'$data[EBCC_JJG_PANEN]',
+											NULL,
+											NULL,
+											'$data[VAL_JML_1]',
+											'$data[VAL_JML_2]',
+											'$data[VAL_JML_3]',
+											'$data[VAL_JML_4]',
+											'$data[VAL_JML_6]',
+											'$data[VAL_JML_15]',
+											'$data[VAL_JML_16]',
+											'$data[VAL_TOTAL_JJG]',
+											NULL,
+											NULL,
+											NULL,
+											sysdate,
+											'$data[VAL_NIK_VALIDATOR]',
+											'$data[VAL_NAMA_VALIDATOR]',
+											'$data[VAL_JABATAN_VALIDATOR]'
+										  )
+										";
+						oci_execute(oci_parse($con, $query_insert1), OCI_DEFAULT);
+					
+						$query_insert2 = "INSERT INTO T_VALIDASI 
+										  ( TANGGAL_EBCC, NO_BCC, TANGGAL_VALIDASI, ROLES, NIK, NAMA, NIK_KRANI_BUAH, NIK_MANDOR )
+										  VALUES 
+										  ( '$data[VAL_DATE_TIME]',
+										  	'$data[EBCC_NO_BCC]',
+										  	sysdate,
+										  	'$data[VAL_JABATAN_VALIDATOR]',
+										  	'$data[VAL_NIK_VALIDATOR]',
+										  	'$data[VAL_NAMA_VALIDATOR]',
+										  	'$data[EBCC_NIK_KERANI_BUAH]',
+										  	'$data[EBCC_NIK_MANDOR]'
+										  ) ";
+						insert_data($con, $query_insert2); 
+					}  
 				}   
 			}
 		}
