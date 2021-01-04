@@ -194,6 +194,7 @@ $Date = $_SESSION['Date'];
 		  <select name="alasan_em">
 		  	<option value="PIC berhalangan">PIC berhalangan</option>
 		  	<option value="Kondisi lapangan">Kondisi lapangan</option>
+		  	<option value="Panen Kontanan">Panen Kontanan</option>
 		  </select>
 		</td>
   	</tr>
