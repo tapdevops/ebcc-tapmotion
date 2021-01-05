@@ -1,0 +1,294 @@
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Session;
+use Config;
+use URL;
+use Storage;
+use Validator;
+use App\LDAP;
+
+//require '../PHPMailer-5.2-stable/PHPMailerAutoload.php';
+
+class MonitoringMSAController extends Controller
+{
+
+    public function __construct()
+    {
+        /*$this->recipient = array(
+            'erwin.susanto@tap-agri.co.id',
+            'rizki.atmajiati@tap-agri.com',
+            'doni.romdoni@tap-agri.com',
+            'nicholas.budihardja@tap-agri.com', 
+            'sentot.santosa@tap-agri.com', 
+            'ihsan.husaeri@tap-agri.co.id'
+        );*/
+        $this->last_error = Storage::get('files/last_error_msa.txt');
+		$this->domain = array(
+			'sample' => array(
+				'detik' => 'www.detik.com',
+                'instagram' => 'www.instagram.com',
+				),
+            'development' => array(
+                'auth' => 'apis.tap-agri.com',
+                'hectare_statement' => 'apis.tap-agri.com',
+                'inspection' => 'apis.tap-agri.com',
+                'ebcc_validation' => 'apis.tap-agri.com',
+                'images' => '149.129.250.199', //:4012
+                'point' => 'apis.tap-agri.com',
+                'internal' => 'msadev.tap-agri.com'
+            ) ,
+			'qa' => array(
+                'auth' => 'apis.tap-agri.com',
+                'hectare_statement' => 'apis.tap-agri.com',
+                'inspection' => 'apis.tap-agri.com',
+                'ebcc_validation' => 'apis.tap-agri.com',
+                'images' => '149.129.246.66', //:5012
+                'point' => 'apis.tap-agri.com',
+                'internal' => 'msaqa.tap-agri.com'
+            ) ,
+            'production' => array(
+                'auth' => 'apis.tap-agri.com',
+                'hectare_statement' => 'apis.tap-agri.com',
+                'inspection' => 'apis.tap-agri.com',
+                'ebcc_validation' => 'apis.tap-agri.com',
+                'images' => 'image.tap-agri.com',// :3012
+                'point' => 'apis.tap-agri.com',
+                'internal' => 'msa.tap-agri.com'
+            )
+		);
+		
+		$this->port = array(
+			'sample' => array(
+				'detik' => 80,
+                'instagram' => 80,
+				),
+            'development' => array(
+                'auth' => 4008,
+                'hectare_statement' => 4009,
+                'inspection' => 4010,
+                'ebcc_validation' => 4015,
+                'images' => 4012,
+                'point' => 4016,
+                'internal' => 80
+            ) ,
+            'qa' => array(
+                'auth' => 5008,
+                'hectare_statement' => 5009,
+                'inspection' => 5010,
+                'ebcc_validation' => 5015,
+                'images' => 5012,
+                'point' => 5016,
+                'internal' => 80
+            ) ,
+            'production' => array(
+                'auth' => 3008,
+                'hectare_statement' => 3009,
+                'inspection' => 3010,
+                'ebcc_validation' => 3015,
+                'images' => 3012,
+                'point' => 3016,
+                'internal' => 80
+            )
+		);
+			
+        $this->url = array(
+			'sample' => array(
+				'detik' => 'https://detik.com',
+                'instagram' => 'https://instagram.com',
+				),
+            /*'development' => array(
+                'auth' => 'http://apis.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/',
+                'hectare_statement' => 'http://apis.tap-agri.com/mobileinspectiondev/ins-msa-dev-hectarestatement/',
+                'inspection' => 'http://apis.tap-agri.com/mobileinspectiondev/ins-msa-dev-inspection/',
+                'ebcc_validation' => 'http://apis.tap-agri.com/mobileinspectiondev/ins-msa-dev-ebccval/',
+                'images' => 'http://149.129.250.199:4012',
+                'point' => 'http://apis.tap-agri.com/mobileinspectiondev/ins-msa-dev-point/',
+                'internal' => 'http://msadev.tap-agri.com'
+            ) ,
+            'qa' => array(
+				'auth' => 'http://apis.tap-agri.com/mobileinspectionqa/ins-msa-qa-auth/',
+				'hectare_statement' => 'http://apis.tap-agri.com/mobileinspectionqa/ins-msa-qa-hectarestatement/',
+				'inspection' => 'http://apis.tap-agri.com/mobileinspectionqa/ins-msa-qa-inspection/',
+				'ebcc_validation' => 'http://apis.tap-agri.com/mobileinspectionqa/ins-msa-qa-ebccval/',
+				'images' => 'http://149.129.246.66:5012',
+				'point' => 'http://apis.tap-agri.com/mobileinspectionqa/ins-msa-qa-point/',
+				'internal' => 'http://msaqa.tap-agri.com'
+            ),*/
+            'production' => array(
+                'auth' => 'http://apis.tap-agri.com/mobileinspection/ins-msa-auth/',
+                'hectare_statement' => 'http://apis.tap-agri.com/mobileinspection/ins-msa-hectarestatement/',
+                'inspection' => 'http://apis.tap-agri.com/mobileinspection/ins-msa-inspection/',
+                'ebcc_validation' => 'http://apis.tap-agri.com/mobileinspection/ins-msa-ebccval/',
+                'images' => 'http://image.tap-agri.com:3012',
+                'point' => 'http://apis.tap-agri.com/mobileinspection/ins-msa-point/',
+                'internal' => 'http://msa.tap-agri.com'                
+            )
+			
+        );
+    }
+
+    function checkURL($url, $domain, $port)
+    {
+        //array of valid http codes
+        $validStatus=array(200,301,302);
+        if (!function_exists('curl_init')) die("Curl PHP package not installed!");
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		/*curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0); 
+		curl_setopt($ch, CURLOPT_TIMEOUT, 5);*/ //timeout in seconds
+        $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        $statusCode = intval($info['http_code']);
+        $filesize = $info['size_download'];
+		//var_dump($info);
+		$result['response'] = $response;
+		$result['info'] = $info;
+		$result['statusCode'] = $statusCode;
+		$result['filesize'] = $filesize;
+		if(!in_array($statusCode,$validStatus)) {
+			$result['color'] = '#FF0000';
+			/*$latency = null;*/
+		}
+		else{
+			$result['color'] = '#00FF00';
+			/*$tB = microtime(true); 
+			$fP = @fSockOpen($domain, $port, $errno, $errstr, 0);  
+			$tA = microtime(true); 
+			$latency = round((($tA - $tB) * 1000), 0)." ms";*/
+		}
+		/*$result['latency'] = $latency;*/
+		
+		return $result;
+    }
+
+    public function do_check()
+	{	
+		
+        $htmlMessage = '<HTML><BODY><table border="1" width="100%" height="85%" cellpadding="1" cellspacing="0">
+		<tr bgcolor = "#b0bcd1">
+		<th> No. </th>
+		<th> Name </th>
+		<th> URL </th>
+		<th> Code </th>
+		</tr>';
+        $noUrut = 1;
+        $hasError = false;
+        date_default_timezone_set('Asia/Jakarta');
+        foreach ($this->url as $key1 => $innerArray)
+        {
+
+            if (is_array($innerArray) /* and $key1 == $this->env */)
+            {
+                foreach ($innerArray as $key2 => $value)
+                {
+                    $result = $this->checkURL($value, $this->domain[$key1][$key2], $this->port[$key1][$key2]);
+                    if ($result['response'] == 0 || $result['response'] >= 400)
+                    {
+                        //echo $response_code.'-'.$key1.'-'.$key2.' ('.$value.')<br/>';
+                        /* $htmlMessage .= '<tr>
+										<td>' . $noUrut . '</td>
+										<td>' . $key1 . '</td>
+										<td>' . $key2 . '</td>
+										<td>' . $value . '</td>
+										<td align="center">' . $response_code . '</td>
+										</tr>';
+                        $noUrut++; */
+                        $hasError = true;
+                    }
+					//echo $noUrut.'-'.$result['statusCode'].'-'.$key1.'-'.$key2.' ('.$value.')<br/>';
+					$htmlMessage .=    '<tr align="center" bgcolor="'. ($key1 == 'sample' ? '#dbd7d7' : '').'">
+										<td>' . $noUrut . '</td>
+										<td>' . $key1.'-'.$key2 . '</td>
+										<td align="center"><a href="' . $value . '" target="_blank">'. $value .'</td>
+										<td align="center" bgcolor="'.$result['color'].'">'. $result['statusCode'] .'</td>
+										</tr>';
+					$noUrut++;
+                }
+            }
+            else
+            {
+                //var_dump( $innerArray )	;
+            }
+        }
+        $htmlMessage .= '</table></BODY></HTML>';
+		echo $htmlMessage;
+        if ($hasError)
+        {
+            $dateNow = new \DateTime("now");
+            $dateLast = new \DateTime($this->last_error);
+            $minInterval = $dateNow->diff($dateLast)->format("%i");
+            if ($minInterval > 60)
+            {
+                Storage::disk('local')->put('files/last_error_msa.txt', date('Y-m-d H:i'));
+                /* foreach ($this->recipient as $to)
+                {
+                    $this->email($to, $htmlMessage);
+                } */
+            }
+            else
+            {
+                //echo 'Masih dibawah 60 menit.';
+            }
+        }
+        else
+        {
+            //echo 'Horray, tidak ada MSA yang cacat.';
+        }
+    }
+
+    /*public function email($to, $message)
+    {
+        $mail = new \PHPMailer;
+
+        //$mail->SMTPDebug = 3;                               // Enable verbose debug output
+        $mail->isSMTP();
+        $mail->SMTPDebug = 2; // Set mailer to use SMTP
+        $mail->Host = 'smtp.tap-agri.com';
+        $mail->Port = 587; // Specify main and backup SMTP servers
+        $mail->SMTPAuth = false; // Enable SMTP authentication
+        $mail->Username = 'erwin.susanto@tap-agri.co.id'; // SMTP username
+        $mail->Password = 'TAP12345'; // SMTP password
+        $mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
+        // TCP port to connect to
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        $mail->setFrom('System@tap-agri.co.id', 'System');
+        $mail->addAddress($to, 'User'); // Add a recipient
+        // $mail->addAddress('ellen@example.com');               // Name is optional
+        // $mail->addReplyTo('no-reply@tap-agri.com', 'Custodian');
+        // $mail->addCC('cc@example.com');
+        // $mail->addBCC('bcc@example.com');
+        // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+        // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+        $mail->isHTML(true); // Set email format to HTML
+        $mail->Subject = 'TAP MSA RESPONSE';
+        $mail->Body = $message;
+        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+        if (!$mail->send())
+        {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        }
+        else
+        {
+            echo 'Message has been sent';
+        }
+    }*/
+
+}
+
