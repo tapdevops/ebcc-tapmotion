@@ -48,7 +48,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 	                      AND to_char(val_date_time,'YYYY-MM-DD') =  '$date1'
 	                      AND akurasi_sampling_ebcc = 'MATCH'
 	                      AND status_tph = 'ACTIVE'
-	                      AND NVL (val_ebcc_code, 'x') NOT IN (SELECT NVL (val_ebcc_code, 'x') FROM MOBILE_INSPECTION.tr_validasi_detail) 
+	                    --   AND NVL (val_ebcc_code, 'x') NOT IN (SELECT NVL (val_ebcc_code, 'x') FROM MOBILE_INSPECTION.tr_validasi_detail) 
 	                      AND (( val_sumber = 'MI' AND val_ebcc_code NOT LIKE 'M%' ) OR ( val_sumber = 'ME' )) ";
 		$select_data_compare = oci_parse($con, $data_compare);
 		oci_execute($select_data_compare, OCI_DEFAULT);
@@ -358,7 +358,7 @@ order by   tgl_panen, thrp.nik_mandor,  nama_pemanen,  tdrp.no_rekap_bcc,  thrp.
          SF,
          BS";
 			
-			//echo $sql_cetak_LHM_panen; die();
+			// echo '<pre>'.$sql_cetak_LHM_panen; die();
 			//order by tdrp.no_rekap_bcc, thrp.id_rencana, thrp.nik_mandor, tgl_panen, nama_pemanen, thp.no_bcc
 			$_SESSION["sql_cetak_LHM_panen"] = $sql_cetak_LHM_panen;
 			$_SESSION["printdate"] = $printdate;			
