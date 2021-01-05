@@ -19,7 +19,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 	// RUN PROCEDURE EBCC COMPARE
 	$user = $_SESSION['LoginName'];
 	$user_pt = $_SESSION['subID_CC'];             
-	$procedure = 'BEGIN MOBILE_INSPECTION.prc_tr_ebcc_compare_afd( :A, :B, :C, :D, :E, :F); END;';  
+	$procedure = 'BEGIN MOBILE_INSPECTION.prc_tr_ebcc_compare_afd( :A, :B, :C, :D, NULL, :F); END;';  
 	$stmt = oci_parse($con,$procedure);     
 	$date_procedure = date('d-M-Y',strtotime($date1));
 	$werks = $_SESSION['subID_BA_Afd'];
@@ -27,7 +27,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 	oci_bind_by_name($stmt,':B',$date_procedure);           
 	oci_bind_by_name($stmt,':C',$werks);           
 	oci_bind_by_name($stmt,':D',$valueAfdeling);           
-	oci_bind_by_name($stmt,':E',$NIK_Mandor);           
+	// oci_bind_by_name($stmt,':E',$NIK_Mandor);           
 	oci_bind_by_name($stmt,':F',$user);  
 	$cursor = oci_new_cursor($con);
 	oci_execute($stmt);
@@ -43,7 +43,7 @@ if(isset($_POST["valueAfd_select"]) || isset($_POST["NIKMandor_select"]) || isse
 	                    	OR 
 	                         	val_jabatan_validator LIKE 'ASISTEN%' 
 	                        )
-	                      AND ebcc_nik_mandor = '$NIK_Mandor'
+	                      -- AND ebcc_nik_mandor = '$NIK_Mandor'
 	                      AND val_afd_code = '$valueAfdeling'
 	                      AND to_char(val_date_time,'YYYY-MM-DD') =  '$date1'
 	                      AND akurasi_sampling_ebcc = 'MATCH'
